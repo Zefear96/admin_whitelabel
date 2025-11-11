@@ -1,0 +1,56 @@
+.formContainer {
+  max-width: 640px;
+  min-width: 440px;
+  gap: 15px;
+  display: grid;
+  place-items: center;
+  /* height: 360px; */
+  background: rgba(242, 245, 247, 0.493);
+  backdrop-filter: blur(10px);
+  /* -webkit-backdrop-filter: blur(25px); */
+  border-radius: 10px;
+  border: 1px solid rgba(64, 140, 165, 0.3);
+  box-shadow: 
+    0 8px 22px rgba(64, 140, 165, 1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 6px 3px rgba(255, 255, 255, 0.3);
+  /* position: relative; */
+  /* overflow: hidden; */
+  padding: 25px 50px;
+}
+/* 
+.formContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(160, 33, 33, 0.473),
+    transparent
+  );
+}
+
+.formContainer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.514),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+} */
+
+.formContainer form {
+    width: 100%;
+    text-align: center;
+}

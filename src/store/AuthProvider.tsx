@@ -1,0 +1,195 @@
+import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import type { User } from "../types/User";
+import type { KeycloakInstance } from "keycloak-js";
+import keycloakInstance from "../config/keycloak/keycloak";
+
+interface AuthContextType {
+  // Keycloak данные
+  keycloak: KeycloakInstance;
+  initialized: boolean;
+  authenticated: boolean;
+
+  // Пользовательские данные
+  user: User | null;
+  isLoading: boolean;
+
+  // Методы
+  login: () => Promise<boolean>;
+  logout: () => void;
+}
+
+interface Props {
+  children: ReactNode;
+}
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export default function AuthProvider({ children }: Props) {
+  // Keycloak состояния
+  const isRun = useRef(false)
+  const [initialized, setInitialized] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  // Пользовательские состояния
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Инициализация Keycloak
+  useEffect(() => {
+    // if (isRun.current) return;
+    // isRun.current = true;
+
+    const initKeycloak = async () => {
+      // if (keycloakInstance.didInitialize) return;
+      console.log('Starting Keycloak initialization...');
+
+      try {
+        const auth = await keycloakInstance.init({
+          onLoad: 'login-required',
+          silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+          checkLoginIframe: true,
+          pkceMethod: 'S256',
+        });
+
+
+        setAuthenticated(auth);
+        setInitialized(true)
+        console.log('Keycloak initialized successfully, authenticated:', auth);
+
+      } catch (error) {
+        console.error('Keycloak initialization failed:', error);
+        setAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initKeycloak();
+  }, []);
+
+  // Обработка данных пользователя
+  useEffect(() => {
+    console.log('AuthProvider user effect - initialized:', initialized, 'authenticated:', authenticated);
+
+    if (!initialized || !authenticated) {
+      setUser(null);
+      return;
+    }
+
+    if (authenticated && keycloakInstance.tokenParsed) {
+      const parsed: any = keycloakInstance.tokenParsed;
+      console.log('Setting user data from token:', parsed);
+      console.log("User data: ")
+      setUser({
+        name: parsed.name || `${parsed.given_name || ''} ${parsed.family_name || ''}`.trim() || "-",
+        email: parsed.email || "-",
+        firstName: parsed.given_name || "-",
+        secondName: parsed.family_name || "-",
+        token: keycloakInstance.token || "-",
+        id: parsed.sub || "-",
+        roles: parsed.roles || [],
+      });
+    } else {
+      console.log('User not authenticated, clearing user data');
+      setUser(null);
+    }
+
+    setIsLoading(false);
+  }, [initialized, authenticated, keycloakInstance.tokenParsed]);
+
+  // Обработчики событий Keycloak
+  useEffect(() => {
+    if (initialized) {
+      const onAuthSuccess = () => {
+        console.log('Keycloak auth success');
+        setAuthenticated(true);
+        if (keycloakInstance.tokenParsed) {
+          const parsed: any = keycloakInstance.tokenParsed;
+          setUser({
+            name: parsed.name || `${parsed.given_name || ''} ${parsed.family_name || ''}`.trim() || "-",
+            email: parsed.email || "-",
+            firstName: parsed.given_name || "-",
+            secondName: parsed.family_name || "-",
+            token: keycloakInstance.token || "-",
+            id: parsed.sub || "-",
+            roles: parsed.roles || [],
+          });
+          console.log("User data: " + user?.email)
+        }
+      };
+
+      const onAuthError = (error: any) => {
+        console.error('Keycloak auth error:', error);
+        setAuthenticated(false);
+        setUser(null);
+      };
+
+      const onAuthLogout = () => {
+        console.log('Keycloak auth logout');
+        setAuthenticated(false);
+        setUser(null);
+      };
+
+      const onTokenExpired = () => {
+        console.log('Token expired, refreshing...');
+        keycloakInstance.updateToken(30).catch(() => {
+          console.error('Token refresh failed');
+          logout();
+        });
+      };
+
+      keycloakInstance.onAuthSuccess = onAuthSuccess;
+      keycloakInstance.onAuthError = onAuthError;
+      keycloakInstance.onAuthLogout = onAuthLogout;
+      keycloakInstance.onTokenExpired = onTokenExpired;
+
+      return () => {
+        keycloakInstance.onAuthSuccess = undefined;
+        keycloakInstance.onAuthError = undefined;
+        keycloakInstance.onAuthLogout = undefined;
+        keycloakInstance.onTokenExpired = undefined;
+      };
+    }
+  }, [initialized]);
+
+  const login = useCallback(async (): Promise<boolean> => {
+    try {
+      console.log('Attempting to login with Keycloak...');
+      await keycloakInstance.login({
+        redirectUri: window.location.origin
+      });
+      return true;
+    } catch (err) {
+      console.error("Keycloak login error:", err);
+      return false;
+    }
+  }, []);
+
+  const logout = useCallback(() => {
+    try {
+      console.log('Logging out...');
+      setUser(null);
+      keycloakInstance.logout({
+        redirectUri: window.location.origin
+      });
+    } catch (err) {
+      console.error("Keycloak logout error:", err);
+    }
+  }, []);
+
+  const value: AuthContextType = {
+    keycloak: keycloakInstance,
+    initialized,
+    authenticated,
+    user,
+    isLoading,
+    login,
+    logout,
+  };
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
