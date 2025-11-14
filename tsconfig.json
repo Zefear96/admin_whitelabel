@@ -4,7 +4,8 @@
     "module": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "jsx": "react-jsx",
-    "moduleResolution": "Node",
+    "types": ["node"],
+    "moduleResolution": "bundler",
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -14,5 +15,5 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }

@@ -1,7 +1,7 @@
-import type { Section } from "../types/sections"
+import type { SectionMenuType } from "../types/sections"
 
 
-export const sections2: Section[] = [
+export const sections2: SectionMenuType[] = [
     {
         "id": "c01ce69e-72ba-4bef-98d4-5ecff5e4eba1",
         "name": "Управление доступами",
@@ -408,7 +408,7 @@ export const sections2: Section[] = [
                         "children": []
                     },
                     {
-                        "id": "70f1ea76-3c80-45f4-b7d2-1114fec746c3",
+                        "id": "70f1ea76-3c80-45f4-b722-1114fec746c3",
                         "name": "Группы",
                         "link": null,
                         "icon": null,
@@ -418,7 +418,7 @@ export const sections2: Section[] = [
                         "children": []
                     },
                     {
-                        "id": "70f1ea76-3c80-45f4-b7d2-1114fec746c3",
+                        "id": "70f1ea76-3c81-45f4-b7d2-1114fec746c3",
                         "name": "Привилегии",
                         "link": null,
                         "icon": null,
@@ -430,7 +430,7 @@ export const sections2: Section[] = [
                 ]
             },
             {
-                "id": "70f1ea76-3c80-45f4-b7d2-1114fec746c3",
+                "id": "70f1ea76-3c80-45f4-b7d3-1114fec746c3",
                 "name": "Агентские настройки",
                 "link": null,
                 "icon": null,
@@ -439,7 +439,7 @@ export const sections2: Section[] = [
                 "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
                 "children": [
                     {
-                        "id": "70f1ea76-3c80-45f4-b7d2-1114fec746c3",
+                        "id": "70f1ea76-3c80-45f1-b7d2-1114fec746c3",
                         "name": "Агенты",
                         "link": null,
                         "icon": null,
@@ -449,7 +449,7 @@ export const sections2: Section[] = [
                         "children": []
                     },
                     {
-                        "id": "70f1ea76-3c80-45f4-b7d2-1114fec746c3",
+                        "id": "70f1ea76-3c11-45f4-b7d2-1114fec746c3",
                         "name": "Счета",
                         "link": null,
                         "icon": null,

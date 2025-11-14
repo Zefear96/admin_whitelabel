@@ -5,7 +5,7 @@ export default function ContentEib() {
     return (
         <Content
             style={{
-                margin: '24px 16px 0',
+                margin: '24px 16px 1000px',
                 overflow: 'initial',
                 height: "100vh",
                 background: "#fff",

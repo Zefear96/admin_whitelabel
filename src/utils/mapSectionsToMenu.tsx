@@ -1,10 +1,10 @@
 import type { MenuProps } from 'antd';
-import type { Section } from '../types/sections';
+import type { SectionMenuType } from '../types/sections';
 import { Link } from 'react-router-dom';  // <-- вот здесь
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-export function mapSectionsToMenuItems(sections:Section[]): MenuItem[] {
+export function mapSectionsToMenuItems(sections:SectionMenuType[]): MenuItem[] {
   return sections.map((section) => ({
     key: section.id,
     label: typeof section.link === 'string' ? (

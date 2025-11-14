@@ -1,6 +1,6 @@
 import type { Role } from "./roles";
 
-export interface User {
+export interface UserKeycloakType {
   name: string;
   email?: string;
   firstName?: string;

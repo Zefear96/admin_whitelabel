@@ -1,8 +1,8 @@
 import axios from "axios";
-import type { Section } from "../types/sections";
+import type { SectionMenuType } from "../types/sections";
 import { sections2 } from "../config/sections2";
 
-export async function fetchMenuSections(): Promise<Section[]> {
+export async function fetchMenuSections(): Promise<SectionMenuType[]> {
     try {
         // const response = await axios.get('/api/sections');
         // return response.data;

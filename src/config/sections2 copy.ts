@@ -1,7 +1,7 @@
-import type { Section } from "../types/sections"
+import type { SectionMenuType } from "../types/sections"
 
 
-export const sections2: Section[] = [
+export const sections2: SectionMenuType[] = [
     {
         "id": "c01ce69e-72ba-4bef-98d4-5ecff5e4eba1",
         "name": "Управление доступами",

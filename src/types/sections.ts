@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import type { Role } from "./roles";
 
-export interface Section {
+export interface SectionMenuType {
   id: string;
   name: string;
   link: string | ReactElement | null;
@@ -9,5 +9,5 @@ export interface Section {
   isEnabled: boolean;
   iconPosition: 'left' | 'right';
   parentId: string | null;
-  children?: Section[] | null;
+  children?: SectionMenuType[] | null;
 }

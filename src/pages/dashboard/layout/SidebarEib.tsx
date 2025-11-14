@@ -1,17 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Menu, Skeleton, Switch } from 'antd';
-import eibIcon from '../../assets/eib-icon.svg';
-import { useAuth } from '../../hooks/useAuth';
-import { mapSectionsToMenuItems } from '../../utils/mapSectionsToMenu';
-import { useTheme } from '../../hooks/useTheme';
-import { fetchMenuSections } from '../../services/fetchMenuSections';
-import { filterEnabledSections } from '../../utils/filterEnabledSections';
+import eibIcon from '../../../assets/eib-icon.svg';
+import { useAuth } from '../../../hooks/useAuth';
+import { mapSectionsToMenuItems } from '../../../utils/mapSectionsToMenu';
+import { useTheme } from '../../../hooks/useTheme';
+import { fetchMenuSections } from '../../../services/fetchMenuSections';
+import { filterEnabledSections } from '../../../utils/filterEnabledSections';
 import type { MenuProps } from 'antd';
-import SwitchModeEib from '../dataEntry/SwitchModeEib';
-import SwitchThemeEib from '../dataEntry/SwitchThemeEib';
-import MenuItem from 'antd/es/menu/MenuItem';
-import ButtonLogout from '../dataEntry/ButtonLogout';
-import { Option } from 'antd/es/mentions';
 import { useNavigate } from 'react-router-dom';
 
 export default function SidebarEib() {
@@ -62,7 +57,7 @@ export default function SidebarEib() {
     scrollbarGutter: 'stable',
     backgroundColor: colors.background,
     color: colors.text,
-    
+
   };
 
   return (
@@ -78,9 +73,9 @@ export default function SidebarEib() {
         alignItems: "center",
         padding: "5px",
         justifyContent: "space-between",
-        cursor:"pointer"
+        cursor: "pointer"
       }}
-      onClick={() => navigate("/")}
+        onClick={() => navigate("/")}
       >
         <img src={eibIcon} alt="EIB Logo"
           style={{

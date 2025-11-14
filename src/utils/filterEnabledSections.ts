@@ -1,7 +1,7 @@
 import type { Role } from "../types/roles";
-import type { Section } from "../types/sections";
+import type { SectionMenuType } from "../types/sections";
 
-export function filterEnabledSections(sections : Section[]): Section[] {
+export function filterEnabledSections(sections : SectionMenuType[]): SectionMenuType[] {
   return sections
     .filter((section) => section.isEnabled)
     .map(section => ({

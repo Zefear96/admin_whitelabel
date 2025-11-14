@@ -1,9 +1,9 @@
 import { Header } from 'antd/es/layout/layout';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import DrawerEib from './DrawerEib';
-import { useTheme } from '../../hooks/useTheme';
-import PopoverNotif from '../dataDisplay/PopoverNotif';
+import { useTheme } from '../../../hooks/useTheme';
+import PopoverNotif from '../../../components/dataDisplay/PopoverNotif';
 
 export default function HeaderEib() {
   const { logout } = useAuth();

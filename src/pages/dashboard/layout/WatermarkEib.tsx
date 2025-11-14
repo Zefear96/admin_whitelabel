@@ -1,5 +1,5 @@
 import { Watermark } from "antd";
-import { useTheme } from "../../hooks/useTheme";
+import { useTheme } from "../../../hooks/useTheme";
 import eibBackofficeLogo from "../../../src/assets/eibBackofficeLogo3.png"
 
 export default function WatermarkEib({ children }: { children: React.ReactNode }) {

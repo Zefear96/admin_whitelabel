@@ -1,18 +1,21 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import LoginPage from "../pages/auth/LoginPage";
 import HomePage from "../pages/dashboard/HomePage";
-import TestKeycloakPage from "../pages/auth/TestKeycloakPage";
 import ProtectedRoute from "./ProtectedRoute";
 import { mapSectionsToMenuItems } from "../utils/mapSectionsToMenu";
 import { useEffect, useState } from "react";
 import { fetchMenuSections } from "../services/fetchMenuSections";
 import { filterEnabledSections } from "../utils/filterEnabledSections";
-import type { Section } from "../types/sections";
+import type { SectionMenuType } from "../types/sections";
 import { mapSectionsToRoutes } from "../utils/mapSectionsToRoutes";
 import Loader from "../components/dataDisplay/loader/Loader";
+import ServiceDeskClientsPage from "../pages/service-desk/clients/ServiceDeskClientsPage";
+import ServiceDeskRequestsPage from "../pages/service-desk/ServiceDeskRequestsPage";
+import ServiceDeskTransactionsPage from "../pages/service-desk/transactionHistory/ServiceDeskTransactionsPage";
+import ServiceDeskDisputesPage from "../pages/service-desk/ServiceDeskDisputesPage";
+import ClientDetails from "../pages/service-desk/clients/ClientDetails";
 
 export default function AppRoutes() {
-  const [sections, setSections] = useState<Section[]>([]);
+  const [sections, setSections] = useState<SectionMenuType[]>([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
@@ -41,8 +44,6 @@ export default function AppRoutes() {
 
   return (
     <Routes>
-      {/* <Route path="/test-keycloak" element={<TestKeycloakPage />} /> */}
-
       {/* Защищённая главная страница */}
       <Route
         path="/"
@@ -52,7 +53,18 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        {mapSectionsToRoutes(sections)}
+        {/* {mapSectionsToRoutes(sections)} */}
+        <Route path="/service-desk/clients" element={<ServiceDeskClientsPage/>}/>
+        <Route path="/service-desk/requests" element={<ServiceDeskRequestsPage/>}/>
+        <Route path="/service-desk/transactions" element={<ServiceDeskTransactionsPage />}/>
+        <Route path="/service-desk/disputes" element={<ServiceDeskDisputesPage/>}/>
+        <Route path="/service-desk/clients/details/:id" element={<ClientDetails/>} />
+        {/* <Route path="/service-desk/clients" element={<ServiceDeskPage/>}/>
+        <Route path="/service-desk/clients" element={<ServiceDeskPage/>}/>
+        <Route path="/service-desk/clients" element={<ServiceDeskPage/>}/>
+        <Route path="/service-desk/clients" element={<ServiceDeskPage/>}/>
+        <Route path="/service-desk/clients" element={<ServiceDeskPage/>}/> */}
+
       </Route>
 
       {/* <Route path="/login" element={<LoginPage />} /> */}

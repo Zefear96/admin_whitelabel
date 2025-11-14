@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Avatar, Button, Col, Divider, Drawer, List, Row } from 'antd';
-import { AuthContext } from '../../store/AuthProvider';
-import { useAuth } from '../../hooks/useAuth';
-import { useTheme } from '../../hooks/useTheme';
-import SwitchThemeEib from '../dataEntry/SwitchThemeEib';
-import ButtonLogout from '../dataEntry/ButtonLogout';
-import SwitchModeEib from '../dataEntry/SwitchModeEib';
+import { AuthContext } from '../../../store/AuthProvider';
+import { useAuth } from '../../../hooks/useAuth';
+import { useTheme } from '../../../hooks/useTheme';
+import SwitchThemeEib from '../../../components/dataEntry/SwitchThemeEib';
+import ButtonLogout from '../../../components/dataEntry/ButtonLogout';
+import SwitchModeEib from '../../../components/dataEntry/SwitchModeEib';
 
 interface DescriptionItemProps {
     title: string;
