@@ -1,4 +1,4 @@
-import type { SectionMenuType } from "../types/sections"
+import type { SectionMenuType } from "../../types/sections"
 
 
 export const sections2: SectionMenuType[] = [

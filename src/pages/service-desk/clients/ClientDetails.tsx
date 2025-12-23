@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import type { TabsProps } from 'antd';
 import {  Descriptions, Tabs, Tag } from 'antd';
-import type { CustomerProfileType } from '../../../types/customerProfile';
+import type { CustomerProfileType } from '../../../types/client/customerProfile';
 import { useParams } from 'react-router-dom';
-import { useClientQuery } from '../../../hooks/useClientProfileApi';
+import { useClientProfile } from '../../../hooks/client/useClientProfile';
+import { useClientDevices } from '../../../hooks/client/useClientDevices';
+import DeviceHistory from './DeviceHistory';
+import './style.css'
+import { useTheme } from '../../../hooks/useTheme';
 
 
 export default function ClientDetails() {
   const {id} = useParams<{id: string}>();
-  const {data:client, isLoading, error} = useClientQuery(id)
+  const {data:client, isLoading, error} = useClientProfile(id)
   const [activeKey, setActiveKey] = useState('1');
-
+  const { colors } = useTheme();
   
   if (isLoading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка загрузки клиента</p>;
@@ -21,14 +25,14 @@ export default function ClientDetails() {
       label: "Общая информация",
       key: "1",
       children: client ? (
-        <Descriptions bordered column={1} size="middle">
+        <Descriptions bordered column={1} size="middle" style={{ backgroundColor: colors.background, color: colors.text }}>
+          <Descriptions.Item label="Имя">{client.firstName}</Descriptions.Item>
+          <Descriptions.Item label="Фамилия">{client.lastName}</Descriptions.Item>
+          <Descriptions.Item label="ИНН">{client.inn}</Descriptions.Item>
           <Descriptions.Item label="ID">{client.id}</Descriptions.Item>
           <Descriptions.Item label="ABS ID">{client.absClientId}</Descriptions.Item>
           <Descriptions.Item label="MPC ID">{client.mpcClientId || "-"}</Descriptions.Item>
           <Descriptions.Item label="Keycloak ID">{client.keycloakClientId}</Descriptions.Item>
-          <Descriptions.Item label="ИНН">{client.inn}</Descriptions.Item>
-          <Descriptions.Item label="Имя">{client.firstName}</Descriptions.Item>
-          <Descriptions.Item label="Фамилия">{client.lastName}</Descriptions.Item>
           <Descriptions.Item label="Дата рождения">
             {client.birthDate ? new Date(client.birthDate).toLocaleDateString() : "-"}
           </Descriptions.Item>
@@ -68,13 +72,9 @@ export default function ClientDetails() {
       ),
     },
     {
-      label: "Устройства",
+      label: "История входов",
       key: "2",
-      children: (
-        <div>
-          <h3>Страница в разработке</h3>
-        </div>
-      ),
+      children: <DeviceHistory absId={client.absClientId}/>,
     },
     // {
     //   label: "Роли",
@@ -92,9 +92,10 @@ export default function ClientDetails() {
       <Tabs
         activeKey={activeKey}
         onChange={setActiveKey}
-        type="card"
+        // type="card"
         size="large"
         items={items}
+        className="activeTab"
       />
     </div>
   )

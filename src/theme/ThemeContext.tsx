@@ -6,7 +6,13 @@ import { ThemeContext } from '../hooks/useTheme';
 import { themeConfig } from './themeConfig';
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [themeMode, setThemeMode] = useState<ThemeMode>('light');
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    if (typeof window === 'undefined') return 'light';
+
+    const stored = window.localStorage.getItem('theme') as ThemeMode | null;
+    return stored === 'dark' ? 'dark' : 'light';
+  });
+
   const [menuMode, setMenuMode] = useState<'vertical' | 'inline'>('inline');
 
   const theme = useMemo(() => ({
@@ -24,9 +30,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }), [themeMode, menuMode]);
 
   useEffect(() => {
-    localStorage.setItem('theme', themeMode);
+    window.localStorage.setItem('theme', themeMode);
     document.body.setAttribute('data-theme', themeMode);
-    
+
     // Apply CSS variables
     const root = document.documentElement;
     const themeColors = themeConfig.colors[themeMode];

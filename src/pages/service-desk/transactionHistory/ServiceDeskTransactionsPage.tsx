@@ -1,4 +1,4 @@
-import { Table, Tag, Avatar, Card, Space } from "antd";
+import { Table, Tag, Avatar, Card, Space, Modal, Descriptions } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import SearchInput from "../../../components/dataEntry/SearchInput";
 import type { TransactionHistoryType } from "../../../types/transactionHistoryTypes";
@@ -12,13 +12,15 @@ export default function ServiceDeskTransactionsPage() {
     const [fromDate, setFromDate] = useState<string>("");
     const [toDate, setToDate] = useState<string>("");
     const { data, isLoading, error } = useHistoryTransactions(fromDate, toDate);
-    
+    const [selectedTransaction, setSelectedTransaction] = useState<TransactionHistoryType | null>(null);
+    const [isModalTransactionHistoryDetails, setIsModalTransactionHistoryDetails] = useState(false);
+
     const columns: ColumnsType<TransactionHistoryType> = [
         {
-            title: "",
+            title: "Logo",
             dataIndex: "imageUrl",
-            width: 60,
-            render: (url: string) => <Avatar shape="square" size="large" src={url} />,
+            width: 30,
+            render: (url: string, row) => <Avatar shape="square" size="large" src={url} />,
         },
         {
             title: "Описание",
@@ -36,7 +38,7 @@ export default function ServiceDeskTransactionsPage() {
             title: "Тип",
             dataIndex: "paymentType",
             width: 110,
-            render: (type: string) => <Tag color="blue">{type}</Tag>,
+            render: (type: string, row) => <Tag color="blue">{type}</Tag>,
         },
         {
             title: "Сумма",
@@ -65,7 +67,7 @@ export default function ServiceDeskTransactionsPage() {
             title: "Дата",
             dataIndex: "createdAt",
             width: 180,
-            render: (value: string) => dayjs(value).format("DD.MM.YYYY HH:mm"),
+            render: (value: string, row) => dayjs(value).format("DD.MM.YYYY HH:mm"),
             sorter: (a, b) =>
                 dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
         },
@@ -73,7 +75,7 @@ export default function ServiceDeskTransactionsPage() {
             title: "Статус",
             dataIndex: "status",
             width: 120,
-            render: (status: string) =>
+            render: (status: string, row) =>
                 status === "SUCCESS" ? (
                     <Tag color="green">Успешно</Tag>
                 ) : (
@@ -81,6 +83,11 @@ export default function ServiceDeskTransactionsPage() {
                 ),
         },
     ];
+
+    const handleDetailsClick = (item: TransactionHistoryType) => {
+        setIsModalTransactionHistoryDetails(true);
+        setSelectedTransaction(item);
+    }
 
     return (
         <Card title="История транзакций" style={{ margin: 20 }}>
@@ -96,7 +103,7 @@ export default function ServiceDeskTransactionsPage() {
                         />
                     </div>
 
-                    <div>
+                    <div className=" d-flex">
                         <div style={{ marginBottom: 6 }}>До</div>
                         <DatePicker
                             onChange={(v) => setToDate(v?.toISOString() ?? "")}
@@ -108,13 +115,44 @@ export default function ServiceDeskTransactionsPage() {
 
                 {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
 
-                <Table
+                <Table<TransactionHistoryType>
                     rowKey="transactionId"
                     columns={columns}
                     loading={isLoading}
                     dataSource={data ?? []}
                     pagination={{ pageSize: 10 }}
+                    onRow={(record) => ({
+                        onClick: () => handleDetailsClick(record),
+                    })}
+                    style={{ cursor: "pointer" }}
                 />
+                <Modal
+                    title="Детали транзакции"
+                    open={isModalTransactionHistoryDetails}
+                    onCancel={() => setIsModalTransactionHistoryDetails(false)}
+                    style={{ minWidth: "60%" }}
+                    footer={false}>
+                    {/* <h1 style={{margin:"20px auto"}}>Детали транзакции</h1> */}
+                    {
+                        
+                        selectedTransaction && (
+                            <Descriptions
+                                bordered
+                                column={1}
+                                size="small"
+                                layout="horizontal"
+                                labelStyle={{ width: "30%", fontWeight: 600 }}     // фиксируем ширину колонки ключей
+                                contentStyle={{ wordBreak: "break-word" }}         // перенос значений
+                            >
+                                {Object.entries(selectedTransaction).map(([key, value]) => (
+                                    <Descriptions.Item key={key} label={key}>
+                                        {value != null ? String(value) : "-"}
+                                    </Descriptions.Item>
+                                ))}
+                            </Descriptions>
+                        )
+                    }
+                </Modal>
             </Space>
         </Card>
     )

@@ -1,0 +1,10 @@
+/* CustomTabs.module.css */
+.ant-tabs-tab ant-tabs-tab-active {
+    color: rgb(65, 140, 166) !important;
+    font-weight: 600;
+  }
+  
+  .ant-tabs-tab ant-tabs-tab-active {
+    background-color: rgb(65, 140, 166) !important;
+  }
+  

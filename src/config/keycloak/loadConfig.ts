@@ -1,5 +1,5 @@
 // src/config/loadConfig.ts
-import type { KeycloakTypes } from "../../types/keycloakTypes";
+import type { KeycloakTypes } from "../../types/client/keycloakTypes";
 
 export async function loadConfig(): Promise<KeycloakTypes> {
   const mode = import.meta.env.VITE_MODE || "localhost";

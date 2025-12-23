@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import type { UserKeycloakType } from "../types/User";
+import type { UserKeycloakType } from "../types/client/User";
 import type { KeycloakInstance } from "keycloak-js";
 import keycloakInstance from "../config/keycloak/keycloak";
 

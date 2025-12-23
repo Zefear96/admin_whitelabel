@@ -1,11 +1,15 @@
+@import "tailwindcss";
+
+/* Базовые значения CSS‑переменных на случай,
+   если JS/ThemeProvider ещё не успел применить тему */
 :root {
-  --color-primary: #1976d2;
-  --color-secondary: #9c27b0;
+  --color-primary: #4a99b0;
+  --color-secondary: #f5f5f5;
   --color-background: #ffffff;
   --color-text: #212121;
-  --color-surface: #f5f5f5;
-  --typography-fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif';
-  --typography-fontSize: '16px';
+  --color-surface: #171717;
+  --typography-fontFamily: "Roboto", "Helvetica", "Arial", sans-serif;
+  --typography-fontSize: 16px;
 }
 
 * {
@@ -21,7 +25,12 @@ body {
   color: var(--color-text);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   line-height: 1.1;
   color: var(--color-primary);
 }

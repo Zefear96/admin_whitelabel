@@ -1,5 +1,5 @@
 import { Header } from 'antd/es/layout/layout';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '../../../hooks/client/useAuth';
 import { useNavigate } from 'react-router-dom';
 import DrawerEib from './DrawerEib';
 import { useTheme } from '../../../hooks/useTheme';

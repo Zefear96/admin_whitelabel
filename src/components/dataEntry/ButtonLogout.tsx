@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/client/useAuth";
 import { useTheme } from "../../hooks/useTheme";
 
 export default function ButtonLogout() {

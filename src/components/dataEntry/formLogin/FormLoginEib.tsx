@@ -1,6 +1,6 @@
 import type { FormProps } from 'antd';
 import { Flex, Form } from 'antd';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '../../../hooks/client/useAuth';
 import { useNavigate } from 'react-router-dom';
 import './formLogin.css';
  

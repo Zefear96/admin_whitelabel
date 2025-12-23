@@ -1,4 +1,4 @@
-import type { SectionMenuType } from "../types/sections"
+import type { SectionMenuType } from "../../types/sections"
 
 
 export const sections2: SectionMenuType[] = [
@@ -236,6 +236,77 @@ export const sections2: SectionMenuType[] = [
                 "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
                 "children": [
                     {
+                        "id": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
+                        "name": "Справочники",
+                        "link": null,
+                        "icon": null,
+                        "isEnabled": true,
+                        "iconPosition": "left",
+                        "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
+                        "children": [
+                            {
+                                "id": "fb5e0181-bdd5-111b-8e04-990a98c8b123",
+                                "name": "Настройки счетов",
+                                "link": "/administration/dictionary/accounts",
+                                "icon": null,
+                                "isEnabled": true,
+                                "iconPosition": "left",
+                                "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
+                                "children": []
+                            },
+                            {
+                                "id": "fb5e0181-bdd5-112b-8e04-990a98c8b123",
+                                "name": "SWIFT",
+                                "link": "/administration/dictionary/swift",
+                                "icon": null,
+                                "isEnabled": true,
+                                "iconPosition": "left",
+                                "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
+                                "children": []
+                            },
+                            {
+                                "id": "fb5e0181-bdd5-113b-8e04-990a98c8b123",
+                                "name": "Список стран",
+                                "link": "/administration/dictionary/countries",
+                                "icon": null,
+                                "isEnabled": true,
+                                "iconPosition": "left",
+                                "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
+                                "children": []
+                            },
+                            {
+                                "id": "fb5e0181-bdd5-114b-8e04-990a98c8b123",
+                                "name": "Список валют",
+                                "link": "/administration/dictionary/currencies",
+                                "icon": null,
+                                "isEnabled": true,
+                                "iconPosition": "left",
+                                "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
+                                "children": []
+                            },
+                            {
+                                "id": "fb5e0181-bdd5-115b-8e04-990a98c8b123",
+                                "name": "Типы транзакций",
+                                "link": "/administration/dictionary/transaction-types",
+                                "icon": null,
+                                "isEnabled": true,
+                                "iconPosition": "left",
+                                "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
+                                "children": []
+                            },
+                            {
+                                "id": "fb5e0181-bdd5-116b-8e04-990a98c8b123",
+                                "name": "Уровни риска",
+                                "link": "/administration/dictionary/risk-levels",
+                                "icon": null,
+                                "isEnabled": true,
+                                "iconPosition": "left",
+                                "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
+                                "children": []
+                            },
+                        ]
+                    },
+                    {
                         "id": "70f1ea76-3c80-45f4-b7d2-0224fec746c4",
                         "name": "Продукты",
                         "link": null,
@@ -398,7 +469,7 @@ export const sections2: SectionMenuType[] = [
                         "children": []
                     },
                     {
-                        "id": "70f1ea76-3c11-45f4-b7d2-1114fec746c3",
+                        "id": "70f1ea76-3c11-45f4-b7d3-1114fec746c3",
                         "name": "Пользователи",
                         "link": null,
                         "icon": null,
@@ -432,32 +503,32 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "70f1ea76-3c80-45f4-b7d3-1114fec746c3",
                 "name": "Агентские настройки",
-                "link": null,
+                "link": "/administration/agents",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
                 "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
                 "children": [
-                    {
-                        "id": "70f1ea76-3c80-45f1-b7d2-1114fec746c3",
-                        "name": "Агенты",
-                        "link": null,
-                        "icon": null,
-                        "isEnabled": true,
-                        "iconPosition": "left",
-                        "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
-                        "children": []
-                    },
-                    {
-                        "id": "70f1ea76-3c11-45f4-b7d2-1114fec746c3",
-                        "name": "Счета",
-                        "link": null,
-                        "icon": null,
-                        "isEnabled": true,
-                        "iconPosition": "left",
-                        "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
-                        "children": []
-                    },
+                    // {
+                    //     "id": "70f1ea76-3c80-45f1-b7d2-1114fec746c3",
+                    //     "name": "Агенты",
+                    //     "link": "/administration/agents",
+                    //     "icon": null,
+                    //     "isEnabled": true,
+                    //     "iconPosition": "left",
+                    //     "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
+                    //     "children": []
+                    // },
+                    // {
+                    //     "id": "70f1ea76-3c11-45f4-b7d2-1114fec746c3",
+                    //     "name": "Счета",
+                    //     "link": null,
+                    //     "icon": null,
+                    //     "isEnabled": true,
+                    //     "iconPosition": "left",
+                    //     "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
+                    //     "children": []
+                    // },
                 ]
             },
             {

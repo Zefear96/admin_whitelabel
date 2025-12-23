@@ -1,16 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { ClientProfileApi } from "../api/clientProfileApi";
+import { ClientProfileApi } from "../../api/clientProfileApi";
 import { message } from "antd";
-import type { CustomerProfileType } from "../types/customerProfile";
+import type { CustomerProfileType } from "../../types/client/customerProfile";
 import type { AxiosError } from "axios";
 import { useEffect } from "react";
 
-export const useClientQuery = (absId?: string) => {
+export const useClientProfile = (absId?: string) => {
   const query = useQuery<CustomerProfileType, AxiosError>({
     queryKey: ["clientProfile", absId],
     queryFn: async () => {
       if(!absId) return null;
       const { data } = await ClientProfileApi.getClientByAbs(absId);
+      console.log(`ClientProfileApi.getClientByAbs(absId): ${data}`)
       return data;
     },
     enabled: !!absId,

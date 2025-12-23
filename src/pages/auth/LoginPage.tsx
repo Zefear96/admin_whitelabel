@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/client/useAuth';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/dataDisplay/loader/Loader';
 

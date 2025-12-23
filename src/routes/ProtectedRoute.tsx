@@ -1,6 +1,6 @@
 import { useEffect, type JSX } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/client/useAuth";
 import Loader from "../components/dataDisplay/loader/Loader";
 
 interface Props {

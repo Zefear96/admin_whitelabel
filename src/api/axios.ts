@@ -2,8 +2,19 @@ import axios from "axios";
 import keycloak from "../config/keycloak/keycloak";
 
 export const apiClient = axios.create({
-  // baseURL: "https://key.eib.kg",
-  baseURL: "https://ff8c4f88-1fb1-4ee4-9d3d-83f827af4f00.mock.pstmn.io"
+  baseURL: import.meta.env.VITE_BASE_URL,
+  // baseURL: "http://10.206.36.208:8117",
+  // baseURL: "https://3f10da9e-5871-48ca-a97c-5704c21da2e8.mock.pstmn.io"
+});
+
+// Логируем каждый запрос
+apiClient.interceptors.request.use((config) => {
+  console.log(
+      `API REQUEST: ${config.baseURL ?? ""}${config.url ?? ""},
+      ${config.method?.toUpperCase() ?? ""},
+      ${config.params ?? ""}`
+  );
+  return config;
 });
 
 apiClient.interceptors.request.use(async (config) => {

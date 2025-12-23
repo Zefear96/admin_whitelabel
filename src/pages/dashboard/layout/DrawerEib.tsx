@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Avatar, Button, Col, Divider, Drawer, List, Row } from 'antd';
 import { AuthContext } from '../../../store/AuthProvider';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '../../../hooks/client/useAuth';
 import { useTheme } from '../../../hooks/useTheme';
 import SwitchThemeEib from '../../../components/dataEntry/SwitchThemeEib';
 import ButtonLogout from '../../../components/dataEntry/ButtonLogout';

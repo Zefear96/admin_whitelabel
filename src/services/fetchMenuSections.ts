@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { SectionMenuType } from "../types/sections";
-import { sections2 } from "../config/sections2";
+import { sections2 } from "../config/menu/sections2";
 
 export async function fetchMenuSections(): Promise<SectionMenuType[]> {
     try {
