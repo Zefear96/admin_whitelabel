@@ -4,14 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev:localhost": "vite --mode localhost",
-    "dev:dev": "vite --mode dev",
-    "dev:test": "vite --mode test",
-    "dev:prod": "vite --mode prod",
-    "build:localhost": "vite build --mode localhost",
-    "build:dev": "vite build --mode dev",
-    "build:test": "vite build --mode test",
-    "build:prod": "vite build --mode prod",
+    "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

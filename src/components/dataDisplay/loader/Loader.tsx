@@ -1,8 +1,6 @@
-import VideoLoader from '../../../assets/video/Loader.mp4';
 import { useTheme } from '../../../hooks/useTheme';
 import './loaderStyle.css';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-// import LottieAnim from '../../../assets/video/Live chatbot().json';
 
 
 
@@ -25,7 +23,7 @@ export default function Loader() {
                 }}
             /> */}
             <DotLottieReact
-                src="video\Live_chatbot_optimized.json"
+                src="lottie\Live_chatbot_optimized.json"
                 loop
                 autoplay
                 style={{

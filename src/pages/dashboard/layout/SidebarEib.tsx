@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Menu, Skeleton, Switch } from 'antd';
-import eibIcon from '../../../assets/eib-icon.svg';
+import eibIcon from '../../../assets/images/eib-icon.svg';
 import { useAuth } from '../../../hooks/client/useAuth';
 import { mapSectionsToMenuItems } from '../../../utils/mapSectionsToMenu';
 import { useTheme } from '../../../hooks/useTheme';

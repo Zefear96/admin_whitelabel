@@ -1,7 +1,7 @@
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import type { UserKeycloakType } from "../types/client/User";
-import type { KeycloakInstance } from "keycloak-js";
+import type { UserKeycloakType } from "../types/client/user";
+import type  KeycloakInstance from "keycloak-js";
 import keycloakInstance from "../config/keycloak/keycloak";
 
 interface AuthContextType {
@@ -52,7 +52,6 @@ export default function AuthProvider({ children }: Props) {
           silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
           pkceMethod: "S256",
           checkLoginIframe: false,
-          thirdPartyCookies: false,
         });
 
         setAuthenticated(auth);

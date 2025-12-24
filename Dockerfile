@@ -1,24 +1,23 @@
-# ---------- STAGE 1: build ----------
-    FROM node:18 AS build
+# ====== build stage ======
+FROM node:20-alpine AS build
+WORKDIR /app
 
-    WORKDIR /app
-    
-    COPY package*.json ./
-    RUN npm install
-    
-    COPY . .
-    RUN npm run build
-    
-    
-    # ---------- STAGE 2: nginx ----------
-    FROM nginx:alpine
-    
-    RUN rm /etc/nginx/conf.d/default.conf
-    
-    COPY nginx.conf /etc/nginx/conf.d
-    COPY --from=build /app/dist /usr/share/nginx/html
-    
-    EXPOSE 80
-    
-    CMD ["nginx", "-g", "daemon off;"]
-    
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+RUN npm run build
+
+# ====== runtime stage ======
+FROM nginx:1.27-alpine AS runtime
+WORKDIR /usr/share/nginx/html
+
+COPY --from=build /app/dist ./
+COPY public/env-config.js ./env-config.js
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+EXPOSE 80
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
