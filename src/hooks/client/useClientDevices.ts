@@ -1,7 +1,7 @@
 import { useQueries, useQuery } from "@tanstack/react-query"
 import type { DeviceHistoryType } from "../../types/client/deviceType"
 import type { AxiosError } from "axios"
-import { DeviceServiceApi } from "../../api/deviceServiceApi"
+import { DeviceServiceApi } from "../../api/clients/deviceServiceApi"
 import { keepPreviousData } from "@tanstack/react-query";
 
 export const useClientDevices = (

@@ -1,6 +1,7 @@
 import { useTheme } from '../../../hooks/useTheme';
 import './loaderStyle.css';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+// import lottieAnim from '../../../assets/lottie/Live_chatbot_optimized.json'
 
 
 
@@ -14,22 +15,14 @@ export default function Loader() {
                 backgroundColor: colors.background
             }}
             id='preloader'>
-            {/* <DotLottieReact
-                src="https://lottie.host/369da733-b69c-4ddc-92b6-80598495c497/38CGcHBgJa.json"
-                loop
-                autoplay
-                style={{
-                    width:"20%"
-                }}
-            /> */}
             <DotLottieReact
-                src="lottie\Live_chatbot_optimized.json"
+                src="/assets/lottie/Live_chatbot_optimized.json"
                 loop
                 autoplay
                 style={{
-                    width:"20%"
+                    width: "20%"
                 }}
-                // speed={1}
+            // speed={1}
             />
         </div>
     )

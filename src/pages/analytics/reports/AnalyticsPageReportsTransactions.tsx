@@ -49,7 +49,7 @@ export default function AnalyticsPageReportsTransactions() {
                     columns={columns}
                     loading={isLoading}
                     dataSource={data ?? []}
-                    pagination={{ pageSize: 10 }}
+                    pagination={false}
                     onRow={(record) => ({
                         onClick: () => navigate(`./${record.code}`),
                     })}

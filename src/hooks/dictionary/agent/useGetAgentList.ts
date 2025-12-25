@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { DictionaryServiceApi } from "../../../api/dictionaryServiceApi"
+import { DictionaryServiceApi } from "../../../api/clients/dictionaryServiceApi"
 
 export const useGetAgentList = () => {
     return useQuery({

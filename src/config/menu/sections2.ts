@@ -45,7 +45,7 @@ export const sections2: SectionMenuType[] = [
     },
     {
         "id": "fa5cc36c-236b-4226-b3d8-f49e733a4095",
-        "name": "Комплаенс",
+        "name": "Комплаенс*",
         "link": null,
         "icon": null,
         "isEnabled": true,
@@ -54,7 +54,7 @@ export const sections2: SectionMenuType[] = [
         "children": [
             {
                 "id": "ff1080f0-03ee-4f29-99bc-8eb6582c45b7",
-                "name": "Клиенты",
+                "name": "Клиенты*",
                 "link": "/compliance/clients",
                 "icon": null,
                 "isEnabled": true,
@@ -64,7 +64,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "0f0c95f3-88d4-433d-8777-b432cd24f78d",
-                "name": "Операции",
+                "name": "Операции*",
                 "link": "/compliance/operations",
                 "icon": null,
                 "isEnabled": true,
@@ -74,7 +74,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "c4beb81b-1402-4a77-8494-1a77d65ecf65",
-                "name": "Блэклист",
+                "name": "Блэклист*",
                 "link": "/compliance/blacklist",
                 "icon": null,
                 "isEnabled": true,
@@ -84,7 +84,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "2f65bc3c-f499-41fc-9eb7-9796f4613252",
-                "name": "Антифрод",
+                "name": "Антифрод*",
                 "link": "/compliance/antifraud",
                 "icon": null,
                 "isEnabled": true,
@@ -114,7 +114,7 @@ export const sections2: SectionMenuType[] = [
                 "children": [
                     {
                         "id": "93f85c98-753c-43c5-bc27-074f69db3e17",
-                        "name": "Клиенты",
+                        "name": "Клиенты*",
                         "link": "/analytics/reports/clients",
                         "icon": null,
                         "isEnabled": true,
@@ -136,7 +136,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "9e2a32e8-fcd3-4619-b236-e70a207f11b3",
-                "name": "Акты сверки",
+                "name": "Акты сверки*",
                 "link": "/analytics/acts",
                 "icon": null,
                 "isEnabled": true,
@@ -146,7 +146,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "9e2a32e8-fcd3-4619-b236-e70a207f07b3",
-                "name": "Диспуты",
+                "name": "Диспуты*",
                 "link": "/analytics/disputes",
                 "icon": null,
                 "isEnabled": true,
@@ -156,7 +156,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "9e2a32e8-fcd3-4619-b211-e70a207f07b3",
-                "name": "Бизнес мониторинг",
+                "name": "Бизнес мониторинг*",
                 "link": "/analytics/monitoring",
                 "icon": null,
                 "isEnabled": true,
@@ -187,7 +187,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "8f044fd0-5818-4da0-9f80-bf2803c3a018",
-                "name": "Заявки",
+                "name": "Заявки*",
                 "link": "/service-desk/requests",
                 "icon": null,
                 "isEnabled": true,
@@ -207,7 +207,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "8f044fd0-5818-4da0-9f80-bf2203c1a022",
-                "name": "Диспуты",
+                "name": "Диспуты*",
                 "link": "/service-desk/disputes",
                 "icon": null,
                 "isEnabled": true,
@@ -294,21 +294,21 @@ export const sections2: SectionMenuType[] = [
                                 "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
                                 "children": []
                             },
-                            {
-                                "id": "fb5e0181-bdd5-116b-8e04-990a98c8b123",
-                                "name": "Уровни риска",
-                                "link": "/administration/dictionary/risk-levels",
-                                "icon": null,
-                                "isEnabled": true,
-                                "iconPosition": "left",
-                                "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
-                                "children": []
-                            },
+                            // {
+                            //     "id": "fb5e0181-bdd5-116b-8e04-990a98c8b123",
+                            //     "name": "Уровни риска",
+                            //     "link": "/administration/dictionary/risk-levels",
+                            //     "icon": null,
+                            //     "isEnabled": true,
+                            //     "iconPosition": "left",
+                            //     "parentId": "22f1ea12-3c80-45f4-b7d2-0224fec746c3",
+                            //     "children": []
+                            // },
                         ]
                     },
                     {
                         "id": "70f1ea76-3c80-45f4-b7d2-0224fec746c4",
-                        "name": "Продукты",
+                        "name": "Продукты*",
                         "link": null,
                         "icon": null,
                         "isEnabled": true,
@@ -317,7 +317,7 @@ export const sections2: SectionMenuType[] = [
                         "children": [
                             {
                                 "id": "fb5e0181-bdd5-499b-8e04-990a98c8b123",
-                                "name": "Счета",
+                                "name": "Счета*",
                                 "link": "/administration/products/accounts",
                                 "icon": null,
                                 "isEnabled": true,
@@ -327,7 +327,7 @@ export const sections2: SectionMenuType[] = [
                             },
                             {
                                 "id": "fb5e0181-bdd5-499b-8e04-990a98c8b222",
-                                "name": "Карты",
+                                "name": "Карты*",
                                 "link": "/administration/products/cards",
                                 "icon": null,
                                 "isEnabled": true,
@@ -337,7 +337,7 @@ export const sections2: SectionMenuType[] = [
                             },
                             {
                                 "id": "fb5e0181-bdd5-499b-8e04-990a98c8b333",
-                                "name": "Мудараба",
+                                "name": "Мудараба*",
                                 "link": "/administration/products/mudaraba",
                                 "icon": null,
                                 "isEnabled": true,
@@ -347,7 +347,7 @@ export const sections2: SectionMenuType[] = [
                             },
                             {
                                 "id": "fb5e0181-bdd5-499b-8e04-990a98c8b231",
-                                "name": "Мурабаха",
+                                "name": "Мурабаха*",
                                 "link": "/administration/products/murabaha",
                                 "icon": null,
                                 "isEnabled": true,
@@ -357,7 +357,7 @@ export const sections2: SectionMenuType[] = [
                             },
                             {
                                 "id": "fb5e0181-bdd5-499b-8e04-990a98c8b112",
-                                "name": "Сейфовые ячейки",
+                                "name": "Сейфовые ячейки*",
                                 "link": "/administration/products/safe",
                                 "icon": null,
                                 "isEnabled": true,
@@ -533,7 +533,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "70f1ea76-3c80-45f4-b7d2-2222fec746c3",
-                "name": "Клиентские настройки",
+                "name": "Клиентские настройки*",
                 "link": null,
                 "icon": null,
                 "isEnabled": true,
@@ -545,7 +545,7 @@ export const sections2: SectionMenuType[] = [
     },
     {
         "id": "cb33018a-60ba-4f8f-bac3-dccb6770db3a",
-        "name": "Маркетинг",
+        "name": "Маркетинг*",
         "link": null,
         "icon": null,
         "isEnabled": true,
@@ -554,7 +554,7 @@ export const sections2: SectionMenuType[] = [
         "children": [
             {
                 "id": "928dc56d-3b56-4100-b69c-2591c7b8a74b",
-                "name": "Акции",
+                "name": "Акции*",
                 "link": "/marketing/promotions",
                 "icon": null,
                 "isEnabled": true,
@@ -564,7 +564,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "5045edc7-af95-4253-b55f-942bf320af6a",
-                "name": "Баннеры",
+                "name": "Баннеры*",
                 "link": "/marketing/banners",
                 "icon": null,
                 "isEnabled": true,
@@ -574,7 +574,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "5045edc7-af95-4253-b55f-942bf320af2a",
-                "name": "Новости",
+                "name": "Новости*",
                 "link": "/marketing/news",
                 "icon": null,
                 "isEnabled": true,

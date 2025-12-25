@@ -1,4 +1,4 @@
-export interface TxHistoryBanksReport {
+export interface TransactionBankReportType {
     paymentId:       string;
     transactionType: string;
     amount:          number;

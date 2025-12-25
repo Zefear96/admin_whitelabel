@@ -1,4 +1,5 @@
-import { apiClient } from "./axios"
+import { apiClient } from "../axios/apiClient"
+import { historyTx } from "../mock/historyTx";
 
 export const TransactionsBankHistoryAnalyticsApi = {
     getAnalyticsTransactionsBankApi(code: string, fromDate?:string, toDate?:string) {
@@ -8,6 +9,9 @@ export const TransactionsBankHistoryAnalyticsApi = {
         if (toDate) params.append("toDate", toDate);
         console.log("Request URL:", `/api/analytics/reports/bank-payments?${params.toString()}`);
 
-        return apiClient.get(`/api/analytics/reports/bank-payments?${params.toString()}`)
+        // return apiClient.get(`/api/analytics/reports/bank-payments?${params.toString()}`)
+        console.log({historyTx});
+        const data = historyTx;
+        return data;
     }
 }

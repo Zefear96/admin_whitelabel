@@ -10,29 +10,45 @@ interface Props {
 export default function ProtectedRoute({ children }: Props) {
   const { keycloak, initialized, authenticated, isLoading } = useAuth();
 
-  console.log('ProtectedRoute - initialized:', initialized, 'authenticated:', authenticated);
+  console.log(`ProtectedRoute - initialized: '${initialized}, 'authenticated: ' ${authenticated}`);
 
-  useEffect(() => {
-    if (initialized && !authenticated) {
-      console.log('User not authenticated, triggering Keycloak login...');
-      keycloak?.login({
-        redirectUri: window.location.origin + window.location.pathname
-      });
-    }
-  }, [initialized, authenticated, keycloak]);
-
-  // Пока Keycloak не инициализировался — просто ждём
+  // 1. Ждём завершения init + check-sso
   if (!initialized || isLoading) {
-    console.log('Keycloak not initialized, showing loading...');
-    return <Loader/>;
+    return <Loader />;
   }
-  
-  // Если уже инициализирован, но не авторизован — редиректим
-  // if (!authenticated) {
-  //   console.log('User not authenticated, redirecting to Keycloak login...');
-  //   return <Navigate to="/login" replace />;
-  // }
 
+  // 2. SSO проверен, сессии НЕТ → логинимся
+  if (!authenticated) {
+    keycloak.login({
+      redirectUri: window.location.origin + window.location.pathname,
+    });
+
+    return <Loader />;
+  }
+
+  // 3. Пользователь аутентифицирован
   console.log('User authenticated, rendering protected content');
   return children;
 }
+
+
+  // useEffect(() => {
+  //   // Ждём инициализации и окончания проверки SSO
+  //   if (!initialized) return;
+
+  //   if (!authenticated) {
+  //     console.log('User not authenticated, triggering Keycloak login...');
+  //     keycloak?.login({
+  //       redirectUri: window.location.origin + window.location.pathname
+  //     });
+  //   }
+  // }, [initialized, authenticated, keycloak]);
+
+  // // Пока Keycloak не инициализировался — просто ждём
+  // if (!initialized || isLoading) {
+  //   console.log('Keycloak not initialized, showing loading...');
+  //   return <Loader />;
+  // }
+
+  // console.log('User authenticated, rendering protected content');
+  // return children;

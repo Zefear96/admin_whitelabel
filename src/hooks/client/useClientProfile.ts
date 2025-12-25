@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ClientProfileApi } from "../../api/clientProfileApi";
+import { ClientProfileApi } from "../../api/clients/clientProfileApi";
 import { message } from "antd";
 import type { CustomerProfileType } from "../../types/client/customerProfile";
 import type { AxiosError } from "axios";

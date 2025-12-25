@@ -24,16 +24,25 @@ npm install
 ### Development
 ```bash
 npm run dev
-npm run dev:localhost  # Подхватит .env.localhost
-npm run dev:dev        # Подхватит .env.dev
-npm run dev:test       # Подхватит .env.test
-npm run dev:prod       # Подхватит .env.prod
+
 ```
 
 ### Production Build
 ```bash
 npm run build
 ```
+
+# сборка образа
+docker build -t backoffice-react-app:latest .
+
+# запуск контейнера с runtime переменными
+docker run -p 8080:80 \
+  -e VITE_APP_NAME="variable" \
+  -e VITE_KEYCLOAK_URL="variable" \
+  -e VITE_BASE_URL="variable" \
+  -e VITE_KEYCLOAK_REALM="variable" \
+  -e VITE_KEYCLOAK_CLIENT="variable" \
+  backoffice-react-app:latest
 
 ## Architecture
 

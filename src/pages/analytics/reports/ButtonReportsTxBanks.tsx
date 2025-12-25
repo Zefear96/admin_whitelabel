@@ -1,14 +1,14 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Button, Modal } from "antd";
-import type { TxHistoryBanksReport } from "../../../types/txHistoryBanksReportsType";
+import type { TransactionBankReportType } from "../../../types/transactionBankReportType";
 import { RobotoRegularBase64 } from '../../../utils/Roboto-Regular-base64';
 import dayjs from "dayjs";
 import { DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
 interface ExportButtonProps {
-  transactions: TxHistoryBanksReport[];
+  transactions: TransactionBankReportType[];
   bankCode: string;
 }
 
@@ -68,7 +68,7 @@ export const ButtonReportsTxBanks = ({ transactions, bankCode }: ExportButtonPro
       startY: 44,
       head: [tableColumns.map(c => c.header)],
       body: tableData.map(row => tableColumns.map(c => row[c.dataKey])),
-      foot: [[ "", "Итого", "", "", "", totalAmount.toFixed(2) ]],
+      foot: [[ "", "Total amount", "", "", "", totalAmount.toFixed(2) ]],
       theme: "grid",       // линии вокруг всех ячеек
       headStyles: {
         fillColor: [220, 220, 220],

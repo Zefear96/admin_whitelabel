@@ -45,7 +45,7 @@ import AdministrationPageLimitsOnline from "../pages/administration/limits/Admin
 import MarketingPagePromotions from "../pages/marketing/MarketingPagePromotions";
 import MarketingPageBanners from "../pages/marketing/MarketingPageBanners";
 import MarketingPageNews from "../pages/marketing/MarketingPageNews";
-import DetailsTransactionsBank from "../pages/service-desk/transactionHistory/DetailsTransactionsBank";
+import DetailsTransactionsBank from "../pages/analytics/reports/DetailsTransactionsBank";
 import DictionaryAccountPage from "../pages/administration/dictionary/accounts/DictionaryAccountPage";
 import DictionarySwiftPage from "../pages/administration/dictionary/swift/DictionarySwiftPage";
 import DictionaryCountryPage from "../pages/administration/dictionary/countries/DictionaryCountryPage";

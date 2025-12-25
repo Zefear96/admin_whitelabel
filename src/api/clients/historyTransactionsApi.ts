@@ -1,4 +1,4 @@
-import {apiClient} from "./axios";
+import {apiClient} from "../axios/apiClient";
 
 export const HistoryTransactionsApi = {
     getAllHistoryTransactions(fromDate: string, toDate: string) {

@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom"
 import { useTxBanksHistory } from "../../../hooks/useTxBanksHistory";
-import type { TxHistoryBanksReport } from "../../../types/txHistoryBanksReportsType";
+import type { TransactionBankReportType } from "../../../types/transactionBankReportType";
 import type { ColumnsType } from "antd/es/table";
 import { Card, Table, Tag } from "antd";
-import { ButtonReportsTxBanks } from "../../analytics/reports/ButtonReportsTxBanks";
+import { ButtonReportsTxBanks } from "./ButtonReportsTxBanks";
 import dayjs from "dayjs";
 
 export default function DetailsTransactionsBank() {
@@ -13,7 +13,7 @@ export default function DetailsTransactionsBank() {
     // const firstKey = Object.keys(data)[0];
     // const arrayData = data[firstKey] || [];
 
-    const columns: ColumnsType<TxHistoryBanksReport> = [
+    const columns: ColumnsType<TransactionBankReportType> = [
 
         {
             title: "ID",
@@ -63,7 +63,7 @@ export default function DetailsTransactionsBank() {
             <ButtonReportsTxBanks transactions={data ?? []} bankCode={code ?? ""} />
             <Card title={`Транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
                 {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
-                <Table<TxHistoryBanksReport>
+                <Table<TransactionBankReportType>
                     rowKey={(row) => row.paymentId}
                     columns={columns}
                     loading={isLoading}
