@@ -11,10 +11,10 @@ export default defineConfig({
   server: {
     host: true,
     port: 3001, // любой свободный порт
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'certs/localhost-key.pem')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'certs/localhost.pem')),
-    },
+    // https: {
+    //   key: fs.readFileSync(path.resolve(__dirname, 'certs/localhost-key.pem')),
+    //   cert: fs.readFileSync(path.resolve(__dirname, 'certs/localhost.pem')),
+    // },
   },
   assetsInclude: ['**/*.lottie'],
 })
