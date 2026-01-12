@@ -32,17 +32,30 @@ npm run dev
 npm run build
 ```
 
-# сборка образа
-docker build -t backoffice-react-app:latest .
+### Docker Build
 
-# запуск контейнера с runtime переменными
-docker run -p 8080:80 \
-  -e VITE_APP_NAME="variable" \
-  -e VITE_KEYCLOAK_URL="variable" \
-  -e VITE_BASE_URL="variable" \
-  -e VITE_KEYCLOAK_REALM="variable" \
-  -e VITE_KEYCLOAK_CLIENT="variable" \
-  backoffice-react-app:latest
+# Создайте .env файл в корне проекта:
+# VITE_APP_NAME=your-app-name
+# VITE_KEYCLOAK_URL=https://keycloak.example.com
+# VITE_BASE_URL=https://api.example.com
+# VITE_KEYCLOAK_REALM=your-realm
+# VITE_KEYCLOAK_CLIENT=your-client-id
+
+# Сборка образа с переменными окружения (через build args)
+docker build -t backoffice-react-app:latest \
+  --build-arg VITE_APP_NAME="your-app-name" \
+  --build-arg VITE_KEYCLOAK_URL="https://keycloak.example.com" \
+  --build-arg VITE_BASE_URL="https://api.example.com" \
+  --build-arg VITE_KEYCLOAK_REALM="your-realm" \
+  --build-arg VITE_KEYCLOAK_CLIENT="your-client-id" \
+  .
+
+# Запуск контейнера (порт 3000 внутри контейнера)
+docker run -p 8080:3000 backoffice-react-app:latest
+
+# Или используя docker-compose с .env файлом
+docker-compose build
+docker-compose up
 
 ## Architecture
 

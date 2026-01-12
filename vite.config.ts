@@ -8,14 +8,15 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(),],
-  server: mode === 'dev' ? {
+  server: {
     host: true,
     port: 3001, // любой свободный порт
     https: {
       key: fs.readFileSync(path.resolve(__dirname, 'certs/localhost-key.pem')),
       cert: fs.readFileSync(path.resolve(__dirname, 'certs/localhost.pem')),
     },
-  } : undefined,
-  base: '/backoffice/', // for kuber
+  },
+  // base path только для production (Kubernetes), в dev режиме используем корневой путь
+  base: mode === 'production' ? '/backoffice/' : '/',
   assetsInclude: ['**/*.lottie'],
 }))

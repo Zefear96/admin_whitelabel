@@ -16,7 +16,7 @@ export default function Loader() {
             }}
             id='preloader'>
             <DotLottieReact
-                src="/assets/lottie/Live_chatbot_optimized.json"
+                src={`${import.meta.env.BASE_URL}assets/lottie/Live_chatbot_optimized.json`}
                 loop
                 autoplay
                 style={{
