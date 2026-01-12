@@ -40,6 +40,7 @@ export default function AuthProvider({ children }: Props) {
           pkceMethod: "S256",
           flow: "standard",
           checkLoginIframe: true,
+          redirectUri: window.location.origin + "/backoffice"
         });
 
         console.log("KC:", {
