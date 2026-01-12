@@ -65,17 +65,26 @@ export default function AppRoutes() {
   }, []);
 
   useEffect(() => {
-    if(location.pathname === "/") {
-      setLoading(true);
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 3000)
+    setLoading(true);
+    fetchMenuSections().then(data => {
+      setSections(filterEnabledSections(data));
+    }).finally(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   if(location.pathname === "/") {
+  //     setLoading(true);
+  //     const timer = setTimeout(() => {
+  //       setLoading(false);
+  //     }, 3000)
       
-      return () => clearTimeout(timer);
-    } else {
-      setLoading(false)
-    }
-  }, [location.pathname]);
+  //     return () => clearTimeout(timer);
+  //   } else {
+  //     setLoading(false)
+  //   }
+  // }, [location.pathname]);
 
   if(loading) {
     return <Loader/>;
