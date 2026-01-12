@@ -3,18 +3,15 @@ import { BrowserRouter } from 'react-router-dom';
 import AuthProvider from "./auth/AuthProvider";  // провайдер
 import AppRoutes from './routes/AppRoutes';
 import { ThemeProvider } from './theme/ThemeContext';
-import { KeycloakProvider } from './store/KeycloakProvider';
 
 function App() {
   return (
       <ThemeProvider>
-        {/* <KeycloakProvider> */}
           <AuthProvider>
             <BrowserRouter>
               <AppRoutes />
             </BrowserRouter>
           </AuthProvider>
-        {/* </KeycloakProvider> */}
       </ThemeProvider>
   )
 }

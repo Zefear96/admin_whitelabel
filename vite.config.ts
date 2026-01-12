@@ -6,15 +6,16 @@ import tailwindcss from '@tailwindcss/vite'
 
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(),],
-  server: {
+  server: mode === 'dev' ? {
     host: true,
     port: 3001, // любой свободный порт
     https: {
       key: fs.readFileSync(path.resolve(__dirname, 'certs/localhost-key.pem')),
       cert: fs.readFileSync(path.resolve(__dirname, 'certs/localhost.pem')),
     },
-  },
+  } : undefined,
+  base: '/backoffice/', // for kuber
   assetsInclude: ['**/*.lottie'],
-})
+}))
