@@ -17,6 +17,6 @@ export default defineConfig(({ mode }) => ({
     },
   },
   // base path только для production (Kubernetes), в dev режиме используем корневой путь
-  base: mode === 'production' ? '/backoffice/' : '/',
+  base: '/backoffice/',
   assetsInclude: ['**/*.lottie'],
 }))

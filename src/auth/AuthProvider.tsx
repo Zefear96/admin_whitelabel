@@ -39,7 +39,7 @@ export default function AuthProvider({ children }: Props) {
           silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
           pkceMethod: "S256",
           flow: "standard",
-          checkLoginIframe: true,
+          checkLoginIframe: false,
           redirectUri: window.location.origin + "/backoffice"
         });
 
