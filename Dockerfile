@@ -15,6 +15,7 @@ WORKDIR /usr/share/nginx/html
 
 COPY --from=build /app/dist ./
 COPY public/env-config.js ./env-config.js
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
