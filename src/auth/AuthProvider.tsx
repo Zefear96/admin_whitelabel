@@ -35,10 +35,10 @@ export default function AuthProvider({ children }: Props) {
     const initKeycloak = async () => {
       try {
         const auth = await keycloakInstance.init({
-          onLoad: "check-sso",
-          silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+          onLoad: "login-required",
+          // silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
           pkceMethod: "S256",
-          flow: "standard",
+          // flow: "standard",
           checkLoginIframe: false,
           redirectUri: window.location.origin + "/backoffice"
         });
