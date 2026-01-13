@@ -21,6 +21,17 @@ export const DictionaryServiceApi = {
     },
     getSwiftCodesList() {
         return apiClient.get('/admin-backend/api/dictionary/api/v1/dictionary/swift')
+    },
+    getAgentOperations(agent:string, isActive?:string) {
+        const params = new URLSearchParams({
+            agent,
+        });
+
+        if (isActive !== undefined) {
+            params.append("isActive", isActive);
+        }
+
+        return apiClient.get(`/admin-backend/api/v1/dictionary/agent-operation/search?${params.toString()}`)
     }
 
 }

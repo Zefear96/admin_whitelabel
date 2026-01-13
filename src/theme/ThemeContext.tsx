@@ -1,7 +1,7 @@
 // src/theme/ThemeContext.tsx
 import React, { useEffect, useState, useMemo } from 'react';
 import type { ReactNode } from "react";
-import type { ThemeMode } from '../types/theme';
+import type { ThemeMode, MenuMode } from '../types/theme';
 import { ThemeContext } from '../hooks/useTheme';
 import { themeConfig } from './themeConfig';
 
@@ -13,7 +13,12 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     return stored === 'dark' ? 'dark' : 'light';
   });
 
-  const [menuMode, setMenuMode] = useState<'vertical' | 'inline'>('inline');
+  const [menuMode, setMenuMode] = useState<MenuMode>(() => {
+    if (typeof window === 'undefined') return 'inline';
+
+    const stored = window.localStorage.getItem('menuMode') as MenuMode | null;
+    return stored === 'inline' ? 'inline' : 'vertical';
+  });
 
   const theme = useMemo(() => ({
     mode: themeMode,
@@ -43,6 +48,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       root.style.setProperty(`--typography-${key}`, value);
     });
   }, [themeMode]);
+
+  useEffect(() => {
+    window.localStorage.setItem('menuMode', menuMode);
+  }, [menuMode]);
 
   return (
     <ThemeContext.Provider value={theme}>

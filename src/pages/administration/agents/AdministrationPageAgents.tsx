@@ -3,7 +3,7 @@ import { useGetAgentList } from "../../../hooks/dictionary/agent/useGetAgentList
 import type { BankType } from "../../../types/dictionary/bankType";
 import type { ColumnsType } from "antd/es/table";
 import { Avatar, Button, Card, Descriptions, Modal, Table, Tag } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useState } from "react";
 
 export default function AdministrationPageAgents() {
@@ -43,77 +43,30 @@ export default function AdministrationPageAgents() {
             width: 80,
             render: (status: boolean, row) => status ? (<Tag color="green">Active</Tag>) : (<Tag color="red">Inactive</Tag>)
         },
+        {
+            width: 10,
+            render: () => (<span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"><EyeTwoTone /></span>)
+        },
     ]
     return (
         <>
             <Card title="Агенты" style={{ margin: 20 }}>
                 {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
                 <Table<BankType>
+                    rowClassName={() => "group"}
                     rowKey={(row) => row.id}
                     columns={columns}
                     loading={isLoading}
                     dataSource={data ?? []}
                     pagination={false}
                     onRow={(record) => ({
-                        onClick: () => { setIsModalOpen(true); setSelectedRow(record) },
+                        // onClick: () => { setIsModalOpen(true); setSelectedRow(record) },
+                        onClick:() => navigate(`/administration/agents/${record?.code}`)
                     })}
                     style={{ cursor: "pointer" }}
                 />
             </Card>
 
-            <Modal
-                title="Детали агента"
-                open={isModalOpen}
-                onCancel={() => setIsModalOpen(false)}
-                style={{ minWidth: "60%" }}
-                footer={false}
-            >
-                <Button color="cyan" variant="solid" style={{ margin: "10px auto" }}>
-                    Редактировать <EditOutlined />
-                </Button>
-                {selectedRow && (
-                    <Descriptions bordered column={1} size="small">
-                        <Descriptions.Item label="ID">
-                            {selectedRow.id ?? "—"}
-                        </Descriptions.Item>
-                        
-                        <Descriptions.Item label="Logo">
-                            {selectedRow.logoUrl ?? "—"}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label="Agent">
-                            {selectedRow.agent ?? "—"}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label="BIC">
-                            {selectedRow.bic ?? "—"}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label="Account">
-                            {selectedRow.bankAccount ?? "—"}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label="Status">
-                            {selectedRow.isActive ? (<Tag color="green">Active</Tag>) : (<Tag color="red">Inactive</Tag>)}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label="Bank code">
-                            {selectedRow.code ?? "—"}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label="Updated by">
-                            {selectedRow.username ?? "—"}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label="Change date">
-                            {selectedRow.changeDate ?? "—"}
-                        </Descriptions.Item>
-
-
-
-                    </Descriptions>
-                )}
-            </Modal>
         </>
     )
 }

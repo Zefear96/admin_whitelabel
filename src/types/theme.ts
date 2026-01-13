@@ -1,5 +1,5 @@
 export type ThemeMode = 'light' | 'dark';
-export type MenuMode = 'vertical' | 'inline';
+export type MenuMode =  'inline' | 'vertical';
 
 export interface ThemeColors {
   primary: string;

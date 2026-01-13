@@ -7,7 +7,7 @@ export default function SwitchModeEib() {
     return (
         <Switch
             onChange={toggleMenuMode}
-            checked={menuMode === 'vertical'}
+            checked={menuMode === 'inline'}
             style={{
                 color: colors.text,
                 backgroundColor: colors.primary,

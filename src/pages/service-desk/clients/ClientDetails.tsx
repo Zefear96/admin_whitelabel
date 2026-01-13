@@ -77,7 +77,7 @@ export default function ClientDetails() {
       children: <DeviceHistory absId={client.absClientId}/>,
     },
     // {
-    //   label: "Роли",
+    //   label: "Роли", // В дальнейших разработках
     //   key: "3",
     //   children: (
     //     <div>

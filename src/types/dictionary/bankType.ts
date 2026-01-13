@@ -3,7 +3,7 @@ export interface BankType {
     code: string;
     agent: string;
     bic: string;
-    username: string;
+    changedBy: string;
     bankAccount: string;
     isActive: boolean;
     changeDate: string;

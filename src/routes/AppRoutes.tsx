@@ -52,6 +52,7 @@ import DictionaryCountryPage from "../pages/administration/dictionary/countries/
 import DictionaryCurrenciesPage from "../pages/administration/dictionary/currencies/DictionaryCurrenciesPage";
 import DictionaryTransactionTypesPage from "../pages/administration/dictionary/transactionTypes/DictionaryTransactionTypesPage";
 import AdministrationPageAgents from "../pages/administration/agents/AdministrationPageAgents";
+import AgentDetailsPage from "../pages/administration/agents/AgentDetailsPage";
 
 export default function AppRoutes() {
   const [sections, setSections] = useState<SectionMenuType[]>([]);
@@ -146,6 +147,7 @@ export default function AppRoutes() {
         <Route path="/administration/dictionary/currencies" element={<DictionaryCurrenciesPage/>}/>
         <Route path="/administration/dictionary/transaction-types" element={<DictionaryTransactionTypesPage/>}/>
         <Route path="/administration/agents" element={<AdministrationPageAgents/>}/>
+        <Route path="/administration/agents/:agent" element={<AgentDetailsPage />}/>
 
         {/* Marketing */}
         <Route path="/marketing/promotions" element={<MarketingPagePromotions/>}/>
