@@ -53,6 +53,7 @@ import DictionaryCurrenciesPage from "../pages/administration/dictionary/currenc
 import DictionaryTransactionTypesPage from "../pages/administration/dictionary/transactionTypes/DictionaryTransactionTypesPage";
 import AdministrationPageAgents from "../pages/administration/agents/AdministrationPageAgents";
 import AgentDetailsPage from "../pages/administration/agents/AgentDetailsPage";
+import LogoutPage from "../pages/logout/LogoutPage";
 
 export default function AppRoutes() {
   const [sections, setSections] = useState<SectionMenuType[]>([]);
@@ -158,6 +159,7 @@ export default function AppRoutes() {
 
       {/* <Route path="/login" element={<LoginPage />} /> */}
 
+      <Route path="/logout" element={<LogoutPage />} />
       {/* Редирект всех неизвестных путей на главную страницу */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

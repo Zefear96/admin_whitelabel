@@ -7,7 +7,7 @@ export interface AuthContextType {
     authenticated: boolean;
     user: UserKeycloakType | null;
     isLoading: boolean;
-    // login: () => Promise<boolean>;
+    login: () => void;
     logout: () => void;
   }
   

@@ -6,6 +6,7 @@ import AgentOperationsPage from "./AgentOperationsPage";
 import { EditOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import type { BankType } from "../../../types/dictionary/bankType";
+import { formatRuDate } from "../../../utils/dateFormatter";
 
 export default function AgentDetailsPage() {
     const { agent } = useParams<{ agent: string }>()
@@ -63,7 +64,7 @@ export default function AgentDetailsPage() {
                         </Descriptions.Item>
 
                         <Descriptions.Item label="Change date">
-                            {agentData.changeDate ?? "—"}
+                            {formatRuDate(agentData.changeDate) ?? "—"}
                         </Descriptions.Item>
                     </Descriptions>
                 </Card>

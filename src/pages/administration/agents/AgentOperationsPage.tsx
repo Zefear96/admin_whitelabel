@@ -2,6 +2,7 @@ import { Table, Tag, Alert } from "antd";
 import { useGetAgentOperations } from "../../../hooks/dictionary/agent/useGetAgentOperations";
 import type { ColumnsType } from "antd/es/table";
 import type { AgentOperationType } from "../../../types/dictionary/agentOperationType";
+import { formatRuDate } from "../../../utils/dateFormatter";
 
 interface AgentOperationsPageProps {
     agent?: string;
@@ -38,7 +39,7 @@ export default function AgentOperationsPage({ agent }: AgentOperationsPageProps)
         {
             title: "ChangeDate",
             dataIndex: "changeDate",
-            render: (text: string) => <span>{text}</span>
+            render: (text: string) => <span>{formatRuDate(text)}</span>
         },
         {
             title: "changedBy",
@@ -48,12 +49,12 @@ export default function AgentOperationsPage({ agent }: AgentOperationsPageProps)
         {
             title: "startDate",
             dataIndex: "startDate",
-            render: (text: string) => <span>{text}</span>
+            render: (text: string) => <span>{formatRuDate(text)}</span>
         },
         {
             title: "endDate",
             dataIndex: "endDate",
-            render: (text: string) => <span>{text}</span>
+            render: (text: string) => <span>{formatRuDate(text)}</span>
         },
         {
             title: "minAmount",
@@ -93,6 +94,7 @@ export default function AgentOperationsPage({ agent }: AgentOperationsPageProps)
             //     onClick: () => navigate(`./${record.code}`),
             // })}
             style={{ cursor: "pointer" }}
+            scroll={{x:'max-content'}}
         />
     )
 }

@@ -31,7 +31,7 @@ export const DictionaryServiceApi = {
             params.append("isActive", isActive);
         }
 
-        return apiClient.get(`/admin-backend/api/v1/dictionary/agent-operation/search?${params.toString()}`)
+        return apiClient.get(`/admin-backend/api/dictionary/api/v1/dictionary/agent-operation/search?${params.toString()}`)
     }
 
 }

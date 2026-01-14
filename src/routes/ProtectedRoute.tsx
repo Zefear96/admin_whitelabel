@@ -11,10 +11,11 @@ export default function ProtectedRoute({ children }: Props) {
     return <Loader />;
   }
 
-  if (!authenticated) {
-    keycloak.login(); // ← ТОЛЬКО здесь
-    return <Loader />;
-  }
+  // if (!authenticated) {
+  //   console.log("User not authenticated, redirecting to login");
+  //   keycloak.login(); // ← ТОЛЬКО здесь
+  //   return <Loader />;
+  // }
 
   return children;
 }
