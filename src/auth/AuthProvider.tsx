@@ -90,10 +90,11 @@ export default function AuthProvider({ children }: Props) {
     localStorage.removeItem(USER_STORAGE_KEY);
     setUser(null);
 
+    console.log(window.location.origin + basePath + '/logout')
     // полный SSO logout
-    window.location.href = keycloakInstance.createLogoutUrl({
-      redirectUri: window.location.origin + basePath + "/logout",
-    });
+    keycloakInstance.logout({
+      redirectUri: window.location.origin + basePath + '/logout',
+    });    
   }, []);
 
   const value: AuthContextType = {

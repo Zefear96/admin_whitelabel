@@ -110,9 +110,9 @@ export default function AppRoutes() {
         }
       >
         {/* Access Control */}
-        <Route path="/backoffice/access-control/roles" element={<AccessControlPageRoles/>}/>
-        <Route path="/backoffice/access-control/privileges" element={<AccessControlPagePrivileges/>}/>
-        <Route path="/backoffice/access-control/profiles" element={<AccessControlPageProfiles/>}/>
+        <Route path="/access-control/roles" element={<AccessControlPageRoles/>}/>
+        <Route path="/access-control/privileges" element={<AccessControlPagePrivileges/>}/>
+        <Route path="/access-control/profiles" element={<AccessControlPageProfiles/>}/>
         
         {/* Compliance */}
         <Route path="/compliance/clients" element={<CompliancePageClients/>}/>
