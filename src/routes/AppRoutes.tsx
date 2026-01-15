@@ -61,12 +61,6 @@ export default function AppRoutes() {
   const location = useLocation();
 
   useEffect(() => {
-    fetchMenuSections().then(data => {
-      setSections(filterEnabledSections(data));
-    });
-  }, []);
-
-  useEffect(() => {
     setLoading(true);
     fetchMenuSections().then(data => {
       setSections(filterEnabledSections(data));
@@ -74,6 +68,18 @@ export default function AppRoutes() {
       setLoading(false);
     });
   }, []);
+
+  // // Редирект с /backoffice на /backoffice/ (если пользователь зашел без слеша)
+  // useEffect(() => {
+  //   const basePath = (import.meta.env.BASE_URL || '/backoffice').replace(/\/$/, '');
+  //   if (basePath !== '/' && location.pathname === basePath) {
+  //     // Используем window.location.replace для правильного редиректа
+  //     const newPath = basePath + '/';
+  //     if (window.location.pathname !== newPath) {
+  //       window.location.replace(newPath);
+  //     }
+  //   }
+  // }, [location.pathname]);
 
   // useEffect(() => {
   //   if(location.pathname === "/") {
