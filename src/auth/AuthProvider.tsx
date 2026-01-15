@@ -18,13 +18,16 @@ export default function AuthProvider({ children }: Props) {
     if (isRun.current) return;
     isRun.current = true;
 
+    // Базовый путь приложения
+    const basePath = import.meta.env.BASE_URL || '/backoffice/';
+
     keycloakInstance
       .init({
         onLoad: "check-sso",
         pkceMethod: "S256",
         checkLoginIframe: true,
         silentCheckSsoRedirectUri:
-          window.location.origin + "/silent-check-sso.html",
+          window.location.origin + basePath + "silent-check-sso.html",
       })
       .then((auth) => {
         setAuthenticated(auth);
@@ -55,15 +58,17 @@ export default function AuthProvider({ children }: Props) {
 
   // ---------------- LOGIN ----------------
   const login = useCallback(() => {
+    const basePath = import.meta.env.BASE_URL || '/backoffice/';
     keycloakInstance.login({
-      redirectUri: window.location.origin + "/",
+      redirectUri: window.location.origin + basePath,
     });
   }, []);
 
   // ---------------- LOGOUT ----------------
   const logout = useCallback(() => {
+    const basePath = import.meta.env.BASE_URL || '/backoffice/';
     window.location.href = keycloakInstance.createLogoutUrl({
-      redirectUri: window.location.origin + "/logout",
+      redirectUri: window.location.origin + basePath + "logout",
     });
   }, []);
 

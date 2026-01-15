@@ -16,7 +16,8 @@ export default defineConfig(({ mode }) => ({
       cert: fs.readFileSync(path.resolve(__dirname, 'certs/localhost.pem')),
     },
   },
-  // base path только для production (Kubernetes), в dev режиме используем корневой путь
-  base: mode === 'production' ? '/backoffice/' : '/',
+  // base path для работы приложения в подпапке /backoffice
+  // В production используем /backoffice/, в dev можно использовать / для локальной разработки
+  base: '/backoffice/',
   assetsInclude: ['**/*.lottie'],
 }))
