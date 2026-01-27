@@ -1,10 +1,14 @@
-import { Input, Space, Card, Descriptions, Skeleton } from 'antd';
+import { Input, Space, Card, Descriptions, Skeleton, Table } from 'antd';
 import { AudioOutlined } from '@ant-design/icons';
 import type { GetProps } from 'antd';
 import { useClientProfile } from '../../../hooks/client/useClientProfile';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ClientDetails from './ClientDetails';
+import { useGetClientList } from '../../../hooks/client/useGetClientList';
+import type { ColumnsType } from 'antd/es/table';
+import type { CustomerProfileType } from '../../../types/client/customerProfile';
+import ClientList from './ClientList';
 
 type SearchProps = GetProps<typeof Input.Search>;
 const { Search } = Input;
@@ -16,8 +20,11 @@ export default function ServiceDeskClientsPage() {
   const { data: client, isLoading, error } = useClientProfile(absId);
   const navigate = useNavigate();
 
+
   if (isLoading) return <Skeleton/>;
   if (error) return <p>Ошибка загрузки</p>;
+
+
 
   return (
     <>
@@ -42,6 +49,10 @@ export default function ServiceDeskClientsPage() {
           </Card>
         )}
       </Space>
+      {
+        !client && <ClientList />
+      }
+      
       {/* <ClientDetails client={client || null} /> */}
     </>
   );

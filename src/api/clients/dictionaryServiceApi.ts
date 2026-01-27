@@ -2,25 +2,25 @@ import { apiClient } from "../axios/apiClient"
 
 export const DictionaryServiceApi = {
     getBankAgents() {
-        return apiClient.get('/admin-backend/api/dictionary/api/v1/dictionary/agents')
+        return apiClient.get('/admin-backend/dictionary/api/v1/dictionary/agents')
     }, 
     getCountries() {
-        return apiClient.get('/admin-backend/api/dictionary/api/v1/dictionary/country')
+        return apiClient.get('/admin-backend/dictionary/api/v1/dictionary/country')
     },
     getCurrencies() {
-        return apiClient.get('/admin-backend/api/dictionary/api/v1/dictionary/currency')
+        return apiClient.get('/admin-backend/dictionary/api/v1/dictionary/currency')
     },
     getTransactionTypes() {
-        return apiClient.get('/admin-backend/api/dictionary/api/v1/dictionary/transaction_type')
+        return apiClient.get('/admin-backend/dictionary/api/v1/dictionary/transaction_type')
     },
     getRiskLevels() {
-        return apiClient.get('/admin-backend/api/dictionary/api/v1/dictionary/risk-level')
+        return apiClient.get('/admin-backend/dictionary/api/v1/dictionary/risk-level')
     },
     getAccountEibList() {
-        return apiClient.get('/admin-backend/api/dictionary/api/v1/dictionary/eib_account')
+        return apiClient.get('/admin-backend/dictionary/api/v1/dictionary/eib_account')
     },
     getSwiftCodesList() {
-        return apiClient.get('/admin-backend/api/dictionary/api/v1/dictionary/swift')
+        return apiClient.get('/admin-backend/dictionary/api/v1/dictionary/swift')
     },
     getAgentOperations(agent:string, isActive?:string) {
         const params = new URLSearchParams({
@@ -31,7 +31,7 @@ export const DictionaryServiceApi = {
             params.append("isActive", isActive);
         }
 
-        return apiClient.get(`/admin-backend/api/dictionary/api/v1/dictionary/agent-operation/search?${params.toString()}`)
+        return apiClient.get(`/admin-backend/dictionary/api/v1/dictionary/agent-operation/search?${params.toString()}`)
     }
 
 }

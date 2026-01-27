@@ -114,7 +114,7 @@ export const sections2: SectionMenuType[] = [
                 "children": [
                     {
                         "id": "93f85c98-753c-43c5-bc27-074f69db3e17",
-                        "name": "Клиенты*",
+                        "name": "Клиенты",
                         "link": "/analytics/reports/clients",
                         "icon": null,
                         "isEnabled": true,
