@@ -9,6 +9,6 @@ export const DeviceServiceApi = {
             direction: sortDirection,
         }).toString()
 
-        return apiClient.get(`/admin-backend/api/v1/admin/dfp/${absId}/devices/last?${params}`)
+        return apiClient.get(`/admin-backend/device/api/v1/dfp/${absId}/devices/last?${params}`)
     }
 }
