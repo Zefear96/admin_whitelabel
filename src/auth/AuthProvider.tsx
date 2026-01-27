@@ -40,7 +40,7 @@ export default function AuthProvider({ children }: Props) {
     }
     isRun.current = true;
 
-    const basePath = import.meta.env.BASE_URL || "/backoffice";
+    const basePath = "/backoffice";
     const silentCheckSsoUri =
       window.location.origin + basePath + "/silent-check-sso.html";
     
