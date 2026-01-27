@@ -14,7 +14,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "c12349e-72ba-4bef-98d4-5ecff5e4eba1",
                 "name": "Роли",
-                "link": "/backoffice/access-control/roles",
+                "link": "/access-control/roles",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
@@ -24,7 +24,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "c01ce33e-72ba-4bef-98d4-5ecff5e4eba1",
                 "name": "Привилегии",
-                "link": "/backoffice/access-control/privileges",
+                "link": "/access-control/privileges",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
@@ -34,7 +34,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "c01ce643-72ba-4bef-98d4-5ecff5e4eba1",
                 "name": "Профили",
-                "link": "/backoffice/access-control/profiles",
+                "link": "/access-control/profiles",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",

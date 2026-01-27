@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 export const useClientProfile = (absId?: string) => {
   const query = useQuery<CustomerProfileType, AxiosError>({
-    queryKey: ["clientProfile", absId],
+    queryKey: ["client-profile", absId],
     queryFn: async () => {
       if(!absId) return null;
       const { data } = await ClientProfileApi.getClientByAbs(absId);

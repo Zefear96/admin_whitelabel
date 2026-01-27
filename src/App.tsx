@@ -5,7 +5,9 @@ import AppRoutes from './routes/AppRoutes';
 import { ThemeProvider } from './theme/ThemeContext';
 
 // Базовый путь приложения (для работы в подпапке /backoffice)
-const BASE_PATH = import.meta.env.BASE_URL || '/backoffice/';
+// Vite автоматически устанавливает import.meta.env.BASE_URL из vite.config.ts
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '');
+// const BASE_PATH = import.meta.env.BASE_URL || '/';
 
 function App() {
   return (
