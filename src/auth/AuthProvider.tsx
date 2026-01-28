@@ -40,7 +40,13 @@ export default function AuthProvider({ children }: Props) {
     }
     isRun.current = true;
 
-    const basePath = import.meta.env.BASE_URL || "/backoffice";
+    // Нормализуем basePath: гарантируем ведущий "/" и убираем последний "/"
+    const rawBasePath = import.meta.env.BASE_URL || "/backoffice/";
+    const basePath =
+      (rawBasePath.startsWith("/") ? rawBasePath : `/${rawBasePath}`).replace(
+        /\/$/,
+        ""
+      );
     const silentCheckSsoUri =
       window.location.origin + basePath + "/silent-check-sso.html";
     
@@ -110,8 +116,8 @@ export default function AuthProvider({ children }: Props) {
         onLoad: "login-required",
         pkceMethod: "S256",
         checkLoginIframe: false, // Отключаем iframe проверку, чтобы избежать проблем с асинхронностью
-        // silentCheckSsoRedirectUri: `${window.location.origin}/${basePath}/silent-check-sso.html`,
-        redirectUri: `${window.location.origin}/${basePath}`,
+        // silentCheckSsoRedirectUri: `${window.location.origin}${basePath}/silent-check-sso.html`,
+        redirectUri: window.location.origin + basePath,
       })
       .then(async (auth) => {
         console.log("🟦 [AuthProvider] Keycloak init() completed");
@@ -314,7 +320,12 @@ export default function AuthProvider({ children }: Props) {
   // ---------------- LOGIN ----------------
   const login = useCallback(() => {
     console.log("🔵 [AuthProvider] login() called");
-    const basePath = import.meta.env.BASE_URL || "/backoffice";
+    const rawBasePath = import.meta.env.BASE_URL || "/backoffice/";
+    const basePath =
+      (rawBasePath.startsWith("/") ? rawBasePath : `/${rawBasePath}`).replace(
+        /\/$/,
+        ""
+      );
     const redirectUri = window.location.origin + basePath;
     console.log("🔵 [AuthProvider] Redirecting to Keycloak login:", redirectUri);
     keycloakInstance.login({
@@ -324,7 +335,12 @@ export default function AuthProvider({ children }: Props) {
 
   // ---------------- LOGOUT ----------------
   const logout = useCallback(() => {
-    const basePath = import.meta.env.BASE_URL || "/backoffice";
+    const rawBasePath = import.meta.env.BASE_URL || "/backoffice/";
+    const basePath =
+      (rawBasePath.startsWith("/") ? rawBasePath : `/${rawBasePath}`).replace(
+        /\/$/,
+        ""
+      );
 
     // очищаем локальные данные
     localStorage.removeItem(USER_STORAGE_KEY);
