@@ -107,10 +107,11 @@ export default function AuthProvider({ children }: Props) {
 
     keycloakInstance
       .init({
-        onLoad: "check-sso",
+        onLoad: "login-required",
         pkceMethod: "S256",
         checkLoginIframe: false, // Отключаем iframe проверку, чтобы избежать проблем с асинхронностью
-        silentCheckSsoRedirectUri: `${window.location.origin}/${basePath}/silent-check-sso.html`,
+        // silentCheckSsoRedirectUri: `${window.location.origin}/${basePath}/silent-check-sso.html`,
+        redirectUri: `${window.location.origin}/${basePath}`,
       })
       .then(async (auth) => {
         console.log("🟦 [AuthProvider] Keycloak init() completed");
