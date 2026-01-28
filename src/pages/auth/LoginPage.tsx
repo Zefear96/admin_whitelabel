@@ -26,10 +26,10 @@ export default function LoginPage() {
 
         // Небольшая задержка чтобы избежать проблем с навигацией
         setTimeout(() => {
-          const basePath = import.meta.env.BASE_URL || '/backoffice/';
+          const basePath = import.meta.env.BASE_URL || '/backoffice';
           keycloak.login({
             // Перенаправляем на главную страницу после логина, а не обратно на /login
-            redirectUri: `${window.location.origin}${basePath}`
+            redirectUri: `${window.location.origin}${basePath}/`
           });
         }, 100);
       }

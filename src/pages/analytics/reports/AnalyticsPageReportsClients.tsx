@@ -174,11 +174,19 @@ export default function AnalyticsPageReportsClients() {
                     <Card
                         title="Статусы клиентов"
                         loading={isLoading}
+<<<<<<< HEAD
                     // extra={
                     //     <Text type="secondary" style={{ fontSize: 12 }}>
                     //         По загруженным данным
                     //     </Text>
                     // }
+=======
+                        // extra={
+                        //     <Text type="secondary" style={{ fontSize: 12 }}>
+                        //         По загруженным данным
+                        //     </Text>
+                        // }
+>>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
                     >
                         <Table
                             size="small"
@@ -210,7 +218,11 @@ export default function AnalyticsPageReportsClients() {
                 <Col xs={24} md={12}>
                     <Card
                         title="Гражданство клиентов"
+<<<<<<< HEAD
 
+=======
+                        bordered
+>>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
                         loading={isLoading}
                     >
                         <Row justify="space-between" align="middle">
@@ -252,7 +264,11 @@ export default function AnalyticsPageReportsClients() {
             {/* <Card
                 title="Последние зарегистрированные клиенты"
                 style={{ marginTop: 16 }}
+<<<<<<< HEAD
                 
+=======
+                bordered
+>>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
                 loading={isLoading}
             >
                 <Table<CustomerProfileType>
@@ -271,7 +287,11 @@ export default function AnalyticsPageReportsClients() {
             <Card
                 title="Список всех клиентов"
                 style={{ marginTop: 16 }}
+<<<<<<< HEAD
 
+=======
+                bordered
+>>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
             >
                 <ClientList />
             </Card>

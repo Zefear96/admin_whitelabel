@@ -14,7 +14,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "c12349e-72ba-4bef-98d4-5ecff5e4eba1",
                 "name": "Роли",
-                "link": "/backoffice/access-control/roles",
+                "link": "/access-control/roles",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
@@ -24,7 +24,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "c01ce33e-72ba-4bef-98d4-5ecff5e4eba1",
                 "name": "Привилегии",
-                "link": "/backoffice/access-control/privileges",
+                "link": "/access-control/privileges",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
@@ -34,7 +34,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "c01ce643-72ba-4bef-98d4-5ecff5e4eba1",
                 "name": "Профили",
-                "link": "/backoffice/access-control/profiles",
+                "link": "/access-control/profiles",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
@@ -271,7 +271,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "70f1ea54-3c80-45f4-b7d2-0224fec746c3",
                 "name": "Настройка оповещений",
-                "link": "/backoffice/notifications",
+                "link": "/administration/notifications",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
@@ -281,7 +281,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "70f1ea13-3c80-45f4-b7d2-0224fec746c3",
                 "name": "Настройка сервисов",
-                "link": "/backoffice/services",
+                "link": "/administration/services",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
@@ -291,7 +291,7 @@ export const sections2: SectionMenuType[] = [
             {
                 "id": "70f1ea31-3c80-45f4-b7d2-0224fec746c3",
                 "name": "Настройка тарифов",
-                "link": "/backoffice/tariffs",
+                "link": "/administration/tariffs",
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",

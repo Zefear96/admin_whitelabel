@@ -6,4 +6,8 @@ export interface CustomerListType {
     size: number
     totalElements: number
     totalPages: number
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
