@@ -18,6 +18,6 @@ export default defineConfig(({ mode }) => ({
   },
   // base path для работы приложения в подпапке /backoffice
   // В production используем /backoffice/, в dev можно использовать / для локальной разработки
-  base: '/backoffice',
+  base: mode === 'production' ? '/backoffice/' : '/',
   assetsInclude: ['**/*.lottie'],
 }))
