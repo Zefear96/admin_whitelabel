@@ -175,11 +175,15 @@ export default function AnalyticsPageReportsClients() {
                         title="Статусы клиентов"
                         loading={isLoading}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
                     // extra={
                     //     <Text type="secondary" style={{ fontSize: 12 }}>
                     //         По загруженным данным
                     //     </Text>
                     // }
+<<<<<<< HEAD
 =======
                         // extra={
                         //     <Text type="secondary" style={{ fontSize: 12 }}>
@@ -187,6 +191,8 @@ export default function AnalyticsPageReportsClients() {
                         //     </Text>
                         // }
 >>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
+=======
+>>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
                     >
                         <Table
                             size="small"
@@ -219,10 +225,14 @@ export default function AnalyticsPageReportsClients() {
                     <Card
                         title="Гражданство клиентов"
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                         bordered
 >>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
+=======
+
+>>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
                         loading={isLoading}
                     >
                         <Row justify="space-between" align="middle">
@@ -265,10 +275,14 @@ export default function AnalyticsPageReportsClients() {
                 title="Последние зарегистрированные клиенты"
                 style={{ marginTop: 16 }}
 <<<<<<< HEAD
+<<<<<<< HEAD
                 
 =======
                 bordered
 >>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
+=======
+                
+>>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
                 loading={isLoading}
             >
                 <Table<CustomerProfileType>
@@ -288,10 +302,14 @@ export default function AnalyticsPageReportsClients() {
                 title="Список всех клиентов"
                 style={{ marginTop: 16 }}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
                 bordered
 >>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
+=======
+
+>>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
             >
                 <ClientList />
             </Card>
