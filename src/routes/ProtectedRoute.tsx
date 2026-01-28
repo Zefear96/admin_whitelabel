@@ -40,7 +40,8 @@ export default function ProtectedRoute({ children }: Props) {
   }
 
   if (!authenticated) {
-    console.log("🛡️ [ProtectedRoute] Showing loader - user not authenticated");
+    console.log("User not authenticated, redirecting to login");
+    keycloak.login(); // ← ТОЛЬКО здесь
     return <Loader />;
   }
 
