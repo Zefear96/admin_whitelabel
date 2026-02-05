@@ -174,25 +174,6 @@ export default function AnalyticsPageReportsClients() {
                     <Card
                         title="Статусы клиентов"
                         loading={isLoading}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
-                    // extra={
-                    //     <Text type="secondary" style={{ fontSize: 12 }}>
-                    //         По загруженным данным
-                    //     </Text>
-                    // }
-<<<<<<< HEAD
-=======
-                        // extra={
-                        //     <Text type="secondary" style={{ fontSize: 12 }}>
-                        //         По загруженным данным
-                        //     </Text>
-                        // }
->>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
-=======
->>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
                     >
                         <Table
                             size="small"
@@ -224,15 +205,6 @@ export default function AnalyticsPageReportsClients() {
                 <Col xs={24} md={12}>
                     <Card
                         title="Гражданство клиентов"
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-                        bordered
->>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
-=======
-
->>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
                         loading={isLoading}
                     >
                         <Row justify="space-between" align="middle">
@@ -271,45 +243,9 @@ export default function AnalyticsPageReportsClients() {
                 </Col>
             </Row>
 
-            {/* <Card
-                title="Последние зарегистрированные клиенты"
-                style={{ marginTop: 16 }}
-<<<<<<< HEAD
-<<<<<<< HEAD
-                
-=======
-                bordered
->>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
-=======
-                
->>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
-                loading={isLoading}
-            >
-                <Table<CustomerProfileType>
-                    size="small"
-                    rowKey={(row) => row.id || row.absClientId}
-                    dataSource={clients.slice(0, 10)}
-                    columns={lastClientsColumns}
-                    pagination={false}
-                />
-                <Text type="secondary" style={{ fontSize: 12 }}>
-                    Полный список клиентов доступен в разделе &quot;Service
-                    Desk &gt; Клиенты&quot;.
-                </Text>
-            </Card> */}
-
             <Card
                 title="Список всех клиентов"
                 style={{ marginTop: 16 }}
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
-                bordered
->>>>>>> 94236feb5259e50984921a5dd09279e927edfaea
-=======
-
->>>>>>> a7fd64bb483ae3b2a2690d4dbfe159a7ac41b6e4
             >
                 <ClientList />
             </Card>
