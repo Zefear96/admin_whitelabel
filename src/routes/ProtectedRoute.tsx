@@ -33,15 +33,11 @@ export default function ProtectedRoute({ children }: Props) {
     }
   }, [authenticated, initialized, isLoading, login]);
 
-  // Ждём инициализацию Keycloak
-  if (!initialized || isLoading) {
-    console.log("🛡️ [ProtectedRoute] Showing loader - waiting for initialization");
-    return <Loader />;
-  }
-
-  if (!authenticated) {
-    console.log("User not authenticated, redirecting to login");
-    keycloak.login(); // ← ТОЛЬКО здесь
+  // Ждём инициализацию Keycloak И завершения проверки аутентификации.
+  // Пока initialized === false или isLoading === true или пользователь не аутентифицирован,
+  // показываем лоадер и НЕ реагируем напрямую на authenticated === false.
+  if (!initialized || isLoading || !authenticated) {
+    console.log("🛡️ [ProtectedRoute] Showing loader - waiting for initialization/auth check");
     return <Loader />;
   }
 

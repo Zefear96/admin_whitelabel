@@ -17,7 +17,7 @@ export default function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<UserKeycloakType | null>(() => {
     try {
       const raw = localStorage.getItem(USER_STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
+      return raw ? (JSON.parse(raw) as UserKeycloakType) : null;
     } catch {
       return null;
     }
@@ -79,6 +79,9 @@ export default function AuthProvider({ children }: Props) {
           secondName: p.family_name,
           roles: p.roles || [],
           token: keycloakInstance.token!,
+          refreshToken: keycloakInstance.refreshToken || undefined,
+          idToken: keycloakInstance.idToken || undefined,
+          timeSkew: keycloakInstance.timeSkew ?? undefined,
         };
         console.log("🟢 [AuthProvider] onAuthSuccess: Saving user to localStorage:", {
           id: userData.id,
@@ -111,14 +114,39 @@ export default function AuthProvider({ children }: Props) {
       });
     };
 
+    // Пытаемся восстановить сессию из localStorage, передавая токены в init,
+    // как описано в документации Keycloak (options: token, refreshToken, idToken, timeSkew)
+    const initOptions: any = {
+      onLoad: "login-required",
+      pkceMethod: "S256",
+      checkLoginIframe: false, // Отключаем iframe проверку, чтобы избежать проблем с асинхронностью
+      // silentCheckSsoRedirectUri: `${window.location.origin}${basePath}/silent-check-sso.html`,
+      redirectUri: window.location.origin + basePath,
+    };
+
+    if (user?.token) {
+      initOptions.token = user.token;
+    }
+    if (user?.refreshToken) {
+      initOptions.refreshToken = user.refreshToken;
+    }
+    if (user?.idToken) {
+      initOptions.idToken = user.idToken;
+    }
+    if (typeof user?.timeSkew === "number") {
+      initOptions.timeSkew = user.timeSkew;
+    }
+
+    console.log("🔵 [AuthProvider] Keycloak init options with persisted tokens:", {
+      hasUserInState: !!user,
+      hasToken: !!user?.token,
+      hasRefreshToken: !!user?.refreshToken,
+      hasIdToken: !!user?.idToken,
+      timeSkew: user?.timeSkew,
+    });
+
     keycloakInstance
-      .init({
-        onLoad: "login-required",
-        pkceMethod: "S256",
-        checkLoginIframe: false, // Отключаем iframe проверку, чтобы избежать проблем с асинхронностью
-        // silentCheckSsoRedirectUri: `${window.location.origin}${basePath}/silent-check-sso.html`,
-        redirectUri: window.location.origin + basePath,
-      })
+      .init(initOptions)
       .then(async (auth) => {
         console.log("🟦 [AuthProvider] Keycloak init() completed");
         console.log("🟦 [AuthProvider] Init result:", {
@@ -153,6 +181,9 @@ export default function AuthProvider({ children }: Props) {
             secondName: p.family_name,
             roles: p.roles || [],
             token: keycloakInstance.token!,
+            refreshToken: keycloakInstance.refreshToken || undefined,
+            idToken: keycloakInstance.idToken || undefined,
+            timeSkew: keycloakInstance.timeSkew ?? undefined,
           };
           console.log("🟨 [AuthProvider] Saving user to localStorage:", userData);
           setUser(userData);
@@ -194,6 +225,9 @@ export default function AuthProvider({ children }: Props) {
                   secondName: p.family_name,
                   roles: p.roles || [],
                   token: keycloakInstance.token!,
+                  refreshToken: keycloakInstance.refreshToken || undefined,
+                  idToken: keycloakInstance.idToken || undefined,
+                  timeSkew: keycloakInstance.timeSkew ?? undefined,
                 };
 
                 setUser(userData);
@@ -243,6 +277,9 @@ export default function AuthProvider({ children }: Props) {
             secondName: p.family_name,
             roles: p.roles || [],
             token: keycloakInstance.token!, // можно убрать, если не нужен
+            refreshToken: keycloakInstance.refreshToken || undefined,
+            idToken: keycloakInstance.idToken || undefined,
+            timeSkew: keycloakInstance.timeSkew ?? undefined,
           };
 
           console.log("🟢 [AuthProvider] User data:", userData);
@@ -286,6 +323,9 @@ export default function AuthProvider({ children }: Props) {
                         secondName: p.family_name,
                         roles: p.roles || [],
                         token: keycloakInstance.token!,
+                        refreshToken: keycloakInstance.refreshToken || undefined,
+                        idToken: keycloakInstance.idToken || undefined,
+                        timeSkew: keycloakInstance.timeSkew ?? undefined,
                       };
                       setUser(userData);
                       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
