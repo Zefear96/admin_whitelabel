@@ -52,7 +52,7 @@ export default function HomePage() {
           style={{
             margin: '24px 16px 0',
             overflow: 'initial',
-            height: "100vh",
+            minHeight: "100vh",
             background: colors.background,
             borderRadius: borderRadiusLG,
             padding: "20px",

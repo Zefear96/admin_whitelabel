@@ -1,8 +1,8 @@
 import { Card, Col, Progress, Row, Statistic, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import ClientList from "../../service-desk/clients/ClientList";
-import { useGetClientList } from "../../../hooks/client/useGetClientList";
-import type { CustomerProfileType } from "../../../types/client/customerProfile";
+import ClientList from "../../../service-desk/clients/ClientList";
+import { useGetClientList } from "../../../../hooks/client/useGetClientList";
+import type { CustomerProfileType } from "../../../../types/client/customerProfile";
 
 const { Title, Text } = Typography;
 
