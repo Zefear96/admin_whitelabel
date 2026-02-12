@@ -16,5 +16,6 @@ export const useGetAllTransactions = (page: number, size: number, sort: string, 
             return response.data
         },
         staleTime: 1000 * 30,
+        refetchOnMount:'always',
     })
 }

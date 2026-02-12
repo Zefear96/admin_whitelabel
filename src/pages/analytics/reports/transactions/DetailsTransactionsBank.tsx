@@ -2,14 +2,17 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useTxBanksHistory } from "../../../../hooks/useTxBanksHistory";
 import type { TransactionBankReportType } from "../../../../types/transactionBankReportType";
 import type { ColumnsType } from "antd/es/table";
-import { Button, Card, Table, Tabs, Tag, type TabsProps } from "antd";
+import { Button, Card, DatePicker, Table, Tabs, Tag, type TabsProps } from "antd";
 import { ButtonReportIncomingTransactions } from "./ButtonReportIncomingTransactions";
 import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
 import { useState } from "react";
 import { useGetTransactionsByAgent } from "../../../../hooks/banking-gateway/useGetAllTransactionsByAgent";
 import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
 import { ButtonReportOutgoingTransactions } from "./ButtonReportOutgoingTransactions";
 import { RollbackOutlined } from "@ant-design/icons";
+
+const { RangePicker } = DatePicker;
 
 export default function DetailsTransactionsBank() {
     const navigate = useNavigate();
@@ -18,6 +21,31 @@ export default function DetailsTransactionsBank() {
     const { data: OutgoingTransactions, isLoading: isLoadingOutgoingTransactions, error: errorOutgoingTransactions } = useTxBanksHistory(bankCode);
     const { data: IncomingTransactions, isLoading: isLoadingIncomingTransactions, error: errorIncomingTransactions } = useGetTransactionsByAgent(bankCode, 0, 20, "creationDate", "DESC");
     const [activeTab, setActiveTab] = useState<string>("1");
+    const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
+
+    const filteredOutgoingTransactions = (OutgoingTransactions ?? []).filter((tx) => {
+        if (!dateRange || !dateRange[0] || !dateRange[1]) return true;
+        const [start, end] = dateRange;
+        if (!start || !end) return true;
+        const txDate = dayjs(tx.date);
+        if (!txDate.isValid()) return false;
+        return (
+            (txDate.isAfter(start, "day") || txDate.isSame(start, "day")) &&
+            (txDate.isBefore(end, "day") || txDate.isSame(end, "day"))
+        );
+    });
+
+    const filteredIncomingTransactions = (IncomingTransactions?.content ?? []).filter((tx) => {
+        if (!dateRange || !dateRange[0] || !dateRange[1]) return true;
+        const [start, end] = dateRange;
+        if (!start || !end) return true;
+        const txDate = dayjs(tx.creationDate);
+        if (!txDate.isValid()) return false;
+        return (
+            (txDate.isAfter(start, "day") || txDate.isSame(start, "day")) &&
+            (txDate.isBefore(end, "day") || txDate.isSame(end, "day"))
+        );
+    });
 
 
     const columns: ColumnsType<TransactionBankReportType> = [
@@ -141,14 +169,21 @@ export default function DetailsTransactionsBank() {
             label: "Исходящие транзакции",
             key: "1",
             children: <>
-                <ButtonReportOutgoingTransactions transactions={OutgoingTransactions ?? []} bankCode={code ?? ""} />
+                <RangePicker
+                    value={dateRange}
+                    onChange={(value) => setDateRange(value)}
+                    allowClear
+                    style={{ margin: "20px", color: "black",  cursor: "pointer" }}
+                    placeholder={["Дата начала", "Дата окончания"]}
+                />
+                <ButtonReportOutgoingTransactions transactions={filteredOutgoingTransactions} bankCode={code ?? ""} />
                 <Card title={`Исходящие транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
                     {errorOutgoingTransactions && <p style={{ color: "red" }}>Ошибка загрузки</p>}
                     <Table<TransactionBankReportType>
                         rowKey={(row) => row.paymentId}
                         columns={columns}
                         loading={isLoadingOutgoingTransactions}
-                        dataSource={OutgoingTransactions ?? []}
+                        dataSource={filteredOutgoingTransactions}
                         pagination={{ pageSize: 10 }}
                         // onRow={(record) => ({
                         //     onClick: () => navigate(`./${record.code}`),
@@ -164,14 +199,21 @@ export default function DetailsTransactionsBank() {
             label: "Входящие транзакции",
             key: "2",
             children: <>
-                <ButtonReportIncomingTransactions transactions={IncomingTransactions?.content ?? []} bankCode={code ?? ""} />
+                <RangePicker
+                    value={dateRange}
+                    onChange={(value) => setDateRange(value)}
+                    allowClear
+                    style={{ margin: "20px", color: "black", borderColor: "#13c2c2", cursor: "pointer" }}
+                    placeholder={["Дата начала", "Дата окончания"]}
+                />
+                <ButtonReportIncomingTransactions transactions={filteredIncomingTransactions} bankCode={code ?? ""} />
                 <Card title={`Входящие транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
                     {errorIncomingTransactions && <p style={{ color: "red" }}>Ошибка загрузки</p>}
                     <Table<IncomingTransactionType>
                         rowKey={(row) => row.id}
                         columns={columnsIncoming}
                         loading={isLoadingIncomingTransactions}
-                        dataSource={IncomingTransactions?.content ?? []}
+                        dataSource={filteredIncomingTransactions}
                         pagination={{ pageSize: 10 }}
                         // onRow={(record) => ({
                         //     onClick: () => navigate(`./${record.code}`),
@@ -186,9 +228,12 @@ export default function DetailsTransactionsBank() {
 
     return (
         <>
-            <Button style={{ marginBottom: 16 }} onClick={() => navigate(-1)}>
-                Назад <RollbackOutlined />
-            </Button>
+            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+                <Button onClick={() => navigate(-1)}>
+                    Назад <RollbackOutlined />
+                </Button>
+                
+            </div>
             <Tabs
                 activeKey={activeTab}
                 onChange={setActiveTab}

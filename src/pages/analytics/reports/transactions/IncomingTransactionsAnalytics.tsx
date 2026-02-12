@@ -110,7 +110,7 @@ const PieChart = ({ data, title }: { data: PieSlice[]; title: string }) => {
                             </span>
                             <span style={{ whiteSpace: "nowrap" }}>
                                 {percent.toFixed(1)}% /{" "}
-                                {slice.value.toLocaleString("ru-RU", { maximumFractionDigits: 2 })}
+                                {slice.value.toLocaleString("ru-RU", { maximumFractionDigits: 2 })} KGS
                             </span>
                         </li>
                     );
@@ -226,7 +226,7 @@ export const IncomingTransactionsAnalytics = () => {
                 <>
                     <Row gutter={24} style={{ marginBottom: 24 }}>
                         <Col xs={24} sm={12} md={8}>
-                            <Card bordered={false}>
+                            <Card>
                                 <Statistic
                                     title="Общее количество входящих транзакций"
                                     value={totalCount}
@@ -234,7 +234,7 @@ export const IncomingTransactionsAnalytics = () => {
                             </Card>
                         </Col>
                         <Col xs={24} sm={12} md={8}>
-                            <Card bordered={false}>
+                            <Card>
                                 <Statistic
                                     title="Общий объем входящих транзакций, KGS"
                                     value={totalAmount}
@@ -243,7 +243,7 @@ export const IncomingTransactionsAnalytics = () => {
                             </Card>
                         </Col>
                         <Col xs={24} sm={24} md={8}>
-                            <Card bordered={false}>
+                            <Card>
                                 <Statistic
                                     title="Количество агентов с активными транзакциями"
                                     value={agentRows.length}
@@ -254,7 +254,7 @@ export const IncomingTransactionsAnalytics = () => {
 
                     <Row gutter={24} style={{ marginBottom: 24 }}>
                         <Col xs={24} md={12}>
-                            <Card bordered={false} style={{ height: "100%" }}>
+                            <Card style={{ height: "100%" }}>
                                 <PieChart
                                     data={successPieData}
                                     title="Распределение по агентам (успешные транзакции)"
@@ -262,7 +262,7 @@ export const IncomingTransactionsAnalytics = () => {
                             </Card>
                         </Col>
                         <Col xs={24} md={12}>
-                            <Card bordered={false} style={{ height: "100%" }}>
+                            <Card style={{ height: "100%" }}>
                                 <PieChart
                                     data={failedPieData}
                                     title="Распределение по агентам (неуспешные транзакции)"

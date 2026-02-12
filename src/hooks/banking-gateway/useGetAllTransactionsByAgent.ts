@@ -18,5 +18,6 @@ export const useGetTransactionsByAgent = (agent: string, page: number, size: num
         },
         staleTime: 1000 * 30,
         enabled: !!agent,
+        refetchOnMount:'always',
     })
 }
