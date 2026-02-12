@@ -1,16 +1,18 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useTxBanksHistory } from "../../../../hooks/useTxBanksHistory";
 import type { TransactionBankReportType } from "../../../../types/transactionBankReportType";
 import type { ColumnsType } from "antd/es/table";
-import { Card, Table, Tabs, Tag, type TabsProps } from "antd";
+import { Button, Card, Table, Tabs, Tag, type TabsProps } from "antd";
 import { ButtonReportIncomingTransactions } from "./ButtonReportIncomingTransactions";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useGetTransactionsByAgent } from "../../../../hooks/banking-gateway/useGetAllTransactionsByAgent";
 import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
 import { ButtonReportOutgoingTransactions } from "./ButtonReportOutgoingTransactions";
+import { RollbackOutlined } from "@ant-design/icons";
 
 export default function DetailsTransactionsBank() {
+    const navigate = useNavigate();
     const { code } = useParams();
     const bankCode = code ?? "null";
     const { data: OutgoingTransactions, isLoading: isLoadingOutgoingTransactions, error: errorOutgoingTransactions } = useTxBanksHistory(bankCode);
@@ -184,6 +186,9 @@ export default function DetailsTransactionsBank() {
 
     return (
         <>
+            <Button style={{ marginBottom: 16 }} onClick={() => navigate(-1)}>
+                Назад <RollbackOutlined />
+            </Button>
             <Tabs
                 activeKey={activeTab}
                 onChange={setActiveTab}

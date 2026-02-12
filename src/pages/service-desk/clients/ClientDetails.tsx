@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import type { TabsProps } from 'antd';
-import {  Descriptions, Tabs, Tag } from 'antd';
+import {  Button, Descriptions, Tabs, Tag } from 'antd';
 import type { CustomerProfileType } from '../../../types/client/customerProfile';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useClientProfile } from '../../../hooks/client/useClientProfile';
 import { useClientDevices } from '../../../hooks/client/useClientDevices';
 import DeviceHistory from './DeviceHistory';
 import './style.css'
 import { useTheme } from '../../../hooks/useTheme';
+import { RollbackOutlined } from '@ant-design/icons';
 
 
 export default function ClientDetails() {
@@ -15,6 +16,7 @@ export default function ClientDetails() {
   const {data:client, isLoading, error} = useClientProfile(id)
   const [activeKey, setActiveKey] = useState('1');
   const { colors } = useTheme();
+  const navigate = useNavigate();
   
   if (isLoading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка загрузки клиента</p>;
@@ -89,6 +91,9 @@ export default function ClientDetails() {
 
   return (
     <div>
+      <Button style={{ marginBottom: 16 }} onClick={() => navigate(-1)}>
+        Назад <RollbackOutlined />
+      </Button>
       <Tabs
         activeKey={activeKey}
         onChange={setActiveKey}

@@ -44,14 +44,3 @@ export default function ProtectedRoute({ children }: Props) {
   console.log("🛡️ [ProtectedRoute] Rendering children - user is authenticated");
   return children;
 }
-
-
-// Если сессии нет — редиректим в Keycloak
-// if (!authenticated) {
-//   keycloak.login({
-//     redirectUri: window.location.href, // вернёт на ТЕКУЩУЮ страницу
-//   });
-//   return <Loader />;
-// }
-
-// Сессия есть — рендерим страницу

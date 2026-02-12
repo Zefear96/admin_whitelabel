@@ -69,31 +69,6 @@ export default function AppRoutes() {
     });
   }, []);
 
-  // // Редирект с /backoffice на /backoffice/ (если пользователь зашел без слеша)
-  // useEffect(() => {
-  //   const basePath = (import.meta.env.BASE_URL || '/backoffice').replace(/\/$/, '');
-  //   if (basePath !== '/' && location.pathname === basePath) {
-  //     // Используем window.location.replace для правильного редиректа
-  //     const newPath = basePath + '/';
-  //     if (window.location.pathname !== newPath) {
-  //       window.location.replace(newPath);
-  //     }
-  //   }
-  // }, [location.pathname]);
-
-  // useEffect(() => {
-  //   if(location.pathname === "/") {
-  //     setLoading(true);
-  //     const timer = setTimeout(() => {
-  //       setLoading(false);
-  //     }, 3000)
-      
-  //     return () => clearTimeout(timer);
-  //   } else {
-  //     setLoading(false)
-  //   }
-  // }, [location.pathname]);
-
   if(loading) {
     return <Loader/>;
   }
