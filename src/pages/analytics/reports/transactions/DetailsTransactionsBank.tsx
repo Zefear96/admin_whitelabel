@@ -22,6 +22,8 @@ export default function DetailsTransactionsBank() {
     const { data: IncomingTransactions, isLoading: isLoadingIncomingTransactions, error: errorIncomingTransactions } = useGetTransactionsByAgent(bankCode, 0, 20, "creationDate", "DESC");
     const [activeTab, setActiveTab] = useState<string>("1");
     const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
+    const fromDate = dateRange?.[0]?.toISOString();
+    const toDate = dateRange?.[1]?.toISOString();
 
     const filteredOutgoingTransactions = (OutgoingTransactions ?? []).filter((tx) => {
         if (!dateRange || !dateRange[0] || !dateRange[1]) return true;
@@ -176,7 +178,12 @@ export default function DetailsTransactionsBank() {
                     style={{ margin: "20px", color: "black",  cursor: "pointer" }}
                     placeholder={["Дата начала", "Дата окончания"]}
                 />
-                <ButtonReportOutgoingTransactions transactions={filteredOutgoingTransactions} bankCode={code ?? ""} />
+                <ButtonReportOutgoingTransactions
+                    transactions={filteredOutgoingTransactions}
+                    bankCode={code ?? ""}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
                 <Card title={`Исходящие транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
                     {errorOutgoingTransactions && <p style={{ color: "red" }}>Ошибка загрузки</p>}
                     <Table<TransactionBankReportType>
@@ -203,10 +210,15 @@ export default function DetailsTransactionsBank() {
                     value={dateRange}
                     onChange={(value) => setDateRange(value)}
                     allowClear
-                    style={{ margin: "20px", color: "black", borderColor: "#13c2c2", cursor: "pointer" }}
+                    style={{ margin: "20px", color: "black", cursor: "pointer" }}
                     placeholder={["Дата начала", "Дата окончания"]}
                 />
-                <ButtonReportIncomingTransactions transactions={filteredIncomingTransactions} bankCode={code ?? ""} />
+                <ButtonReportIncomingTransactions
+                    transactions={filteredIncomingTransactions}
+                    bankCode={code ?? ""}
+                    fromDate={fromDate}
+                    toDate={toDate}
+                />
                 <Card title={`Входящие транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
                     {errorIncomingTransactions && <p style={{ color: "red" }}>Ошибка загрузки</p>}
                     <Table<IncomingTransactionType>

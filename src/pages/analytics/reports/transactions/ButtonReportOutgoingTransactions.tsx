@@ -10,6 +10,8 @@ import { useState } from "react";
 interface ExportButtonProps {
   transactions: TransactionBankReportType[];
   bankCode: string;
+  fromDate?: string;
+  toDate?: string;
 }
 
 interface TableRow {
@@ -21,12 +23,15 @@ interface TableRow {
   amount: string;
 }
 
-export const ButtonReportOutgoingTransactions = ({ transactions, bankCode }: ExportButtonProps) => {
+export const ButtonReportOutgoingTransactions = ({ transactions, bankCode, fromDate, toDate }: ExportButtonProps) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const totalAmount = transactions.reduce((sum, tx) => {
     return sum + Number(tx.amount || 0);
   }, 0);
+  const dateRangeStr = fromDate && toDate
+    ? `c «${dayjs(fromDate).format("DD.MM.YYYY")}» по «${dayjs(toDate).format("DD.MM.YYYY")}»`
+    : "c «______» по «______»";
     console.log(totalAmount)
 
   const generatePdf = () => {
@@ -43,7 +48,7 @@ export const ButtonReportOutgoingTransactions = ({ transactions, bankCode }: Exp
     // Заголовок документа
     doc.text("Реестр исходящих платежей, проведенных с использованием", pageWidth / 2, 20, { align: "center" });
     doc.text(`Системы Агента «${bankCode.toUpperCase()}»`, pageWidth / 2, 28, { align: "center" });
-    doc.text("c «fromDate» по «toDate»", pageWidth / 2, 36, { align: "center" });
+    doc.text(dateRangeStr, pageWidth / 2, 36, { align: "center" });
 
     // Подготовка данных для autoTable
     const tableColumns: { header: string; dataKey: keyof TableRow }[] = [

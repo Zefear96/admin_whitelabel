@@ -33,7 +33,7 @@ export const ButtonReportIncomingTransactions = ({ transactions, bankCode, fromD
   const currency = transactions[0]?.currency?.toUpperCase() ?? "KGS";
   const dateRangeStr = fromDate && toDate
     ? `c «${dayjs(fromDate).format("DD.MM.YYYY")}» по «${dayjs(toDate).format("DD.MM.YYYY")}»`
-    : "c «fromDate» по «toDate»";
+    : "c «______» по «______»";
 
   const generatePdf = () => {
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
