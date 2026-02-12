@@ -3,11 +3,12 @@ import { useTxBanksHistory } from "../../../../hooks/useTxBanksHistory";
 import type { TransactionBankReportType } from "../../../../types/transactionBankReportType";
 import type { ColumnsType } from "antd/es/table";
 import { Card, Table, Tabs, Tag, type TabsProps } from "antd";
-import { ButtonReportsTxBanks } from "./ButtonReportsTxBanks";
+import { ButtonReportIncomingTransactions } from "./ButtonReportIncomingTransactions";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { useGetTransactionsByAgent } from "../../../../hooks/banking-gateway/useGetAllTransactionsByAgent";
 import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
+import { ButtonReportOutgoingTransactions } from "./ButtonReportOutgoingTransactions";
 
 export default function DetailsTransactionsBank() {
     const { code } = useParams();
@@ -138,7 +139,7 @@ export default function DetailsTransactionsBank() {
             label: "Исходящие транзакции",
             key: "1",
             children: <>
-                <ButtonReportsTxBanks transactions={OutgoingTransactions ?? []} bankCode={code ?? ""} />
+                <ButtonReportOutgoingTransactions transactions={OutgoingTransactions ?? []} bankCode={code ?? ""} />
                 <Card title={`Исходящие транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
                     {errorOutgoingTransactions && <p style={{ color: "red" }}>Ошибка загрузки</p>}
                     <Table<TransactionBankReportType>
@@ -161,7 +162,7 @@ export default function DetailsTransactionsBank() {
             label: "Входящие транзакции",
             key: "2",
             children: <>
-                {/* <ButtonReportsTxBanks transactions={IncomingTransactions?.content ?? []} bankCode={code ?? ""} /> */}
+                <ButtonReportIncomingTransactions transactions={IncomingTransactions?.content ?? []} bankCode={code ?? ""} />
                 <Card title={`Входящие транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
                     {errorIncomingTransactions && <p style={{ color: "red" }}>Ошибка загрузки</p>}
                     <Table<IncomingTransactionType>

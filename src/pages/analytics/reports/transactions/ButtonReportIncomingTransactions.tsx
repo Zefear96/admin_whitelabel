@@ -1,33 +1,39 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Button, Modal } from "antd";
-import type { TransactionBankReportType } from "../../../../types/transactionBankReportType";
 import { RobotoRegularBase64 } from '../../../../utils/Roboto-Regular-base64';
 import dayjs from "dayjs";
-import { DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
+import { PrinterOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
 
 interface ExportButtonProps {
-  transactions: TransactionBankReportType[];
+  transactions: IncomingTransactionType[];
   bankCode: string;
+  fromDate?: string;
+  toDate?: string;
 }
 
 interface TableRow {
   index: number;
-  date: string;
+  updateDate: string;
   paymentId: string;
   transactionType: string;
-  receiverAccount: string;
+  receiver: string;
+  status: string;
   amount: string;
 }
 
-export const ButtonReportsTxBanks = ({ transactions, bankCode }: ExportButtonProps) => {
+export const ButtonReportIncomingTransactions = ({ transactions, bankCode, fromDate, toDate }: ExportButtonProps) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const totalAmount = transactions.reduce((sum, tx) => {
     return sum + Number(tx.amount || 0);
   }, 0);
-    console.log(totalAmount)
+  const currency = transactions[0]?.currency?.toUpperCase() ?? "KGS";
+  const dateRangeStr = fromDate && toDate
+    ? `c «${dayjs(fromDate).format("DD.MM.YYYY")}» по «${dayjs(toDate).format("DD.MM.YYYY")}»`
+    : "c «fromDate» по «toDate»";
 
   const generatePdf = () => {
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
@@ -41,35 +47,36 @@ export const ButtonReportsTxBanks = ({ transactions, bankCode }: ExportButtonPro
     const pageWidth = doc.internal.pageSize.getWidth();
 
     // Заголовок документа
-    doc.text("Реестр платежей, проведенных с использованием", pageWidth / 2, 20, { align: "center" });
+    doc.text("Реестр входящих платежей, проведенных с использованием", pageWidth / 2, 20, { align: "center" });
     doc.text(`Системы Агента «${bankCode.toUpperCase()}»`, pageWidth / 2, 28, { align: "center" });
-    doc.text("c «fromDate» по «toDate»", pageWidth / 2, 36, { align: "center" });
+    doc.text(dateRangeStr, pageWidth / 2, 36, { align: "center" });
 
-    // Подготовка данных для autoTable
     const tableColumns: { header: string; dataKey: keyof TableRow }[] = [
       { header: "№", dataKey: "index" },
-      { header: "Дата и время", dataKey: "date" },
+      { header: "Дата и время", dataKey: "updateDate" },
       { header: "ID платежа", dataKey: "paymentId" },
       { header: "Наименование услуги", dataKey: "transactionType" },
-      { header: "Лицевой счет", dataKey: "receiverAccount" },
-      { header: "Сумма (KGS)", dataKey: "amount" },
+      { header: "Лицевой счет", dataKey: "receiver" },
+      { header: "Статус", dataKey: "status" },
+      { header: `Сумма ${currency}`, dataKey: "amount" },
     ];
 
-    const tableData = transactions.map((tx, index) => ({
+    const tableData: TableRow[] = transactions.map((tx, index) => ({
       index: index + 1,
-      date: dayjs(tx.date).format("DD.MM.YYYY HH:mm") || "-",
-      paymentId: tx.paymentId || "-",
+      updateDate: tx.updateDate ? dayjs(tx.updateDate).format("DD.MM.YYYY HH:mm") : "-",
+      paymentId: tx.externalId || tx.id || "-",
       transactionType: tx.transactionType || "-",
-      receiverAccount: tx.receiverAccount || "-",
-      amount: tx.amount?.toString() || "-",
+      receiver: tx.receiver || "-",
+      status: tx.status?.toUpperCase() || "-",
+      amount: tx.amount != null ? String(tx.amount) : "-",
     }));
 
     autoTable(doc, {
       startY: 44,
       head: [tableColumns.map(c => c.header)],
       body: tableData.map(row => tableColumns.map(c => row[c.dataKey])),
-      foot: [[ "", "Total amount", "", "", "", totalAmount.toFixed(2) ]],
-      theme: "grid",       // линии вокруг всех ячеек
+      foot: [["", "Итого:", "", "", "", "", totalAmount.toFixed(2)]],
+      theme: "grid",
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: 0,
@@ -81,14 +88,22 @@ export const ButtonReportsTxBanks = ({ transactions, bankCode }: ExportButtonPro
         font: "Roboto",
         fontStyle: "normal",
         fontSize: 10,
+        halign: "center",
+      },
+      footStyles: {
+        font: "Roboto",
+        fontStyle: "normal",
+        fontSize: 10,
+        halign: "right",
       },
       columnStyles: {
         0: { cellWidth: 10 },   // №
-        1: { cellWidth: 35 },   // Дата и время
-        2: { cellWidth: 70 },   // ID платежа
-        3: { cellWidth: 50 },   // Наименование услуги
+        1: { cellWidth: 30 },   // Дата и время
+        2: { cellWidth: 55 },   // ID платежа
+        3: { cellWidth: 40 },   // Наименование услуги
         4: { cellWidth: 50 },   // Лицевой счет
-        5: { cellWidth: 25 },   // Сумма
+        5: { cellWidth: 25 },   // Статус
+        6: { cellWidth: 25 },   // Сумма
       },
       styles: {
         overflow: 'linebreak',
