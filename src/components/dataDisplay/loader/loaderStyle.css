@@ -1,0 +1,23 @@
+#preloader {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#preloader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#preloader video {
+    width: 50vw;
+    /* четверть ширины экрана */
+    max-width: 620px;
+    height: auto;
+}

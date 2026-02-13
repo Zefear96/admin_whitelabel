@@ -1,0 +1,143 @@
+# EIB Admin Application Documentation
+
+## Project Overview
+React-based admin dashboard for EIB with:
+- Role-based access control
+- Theming system (light/dark modes)
+- Dynamic menu system
+- Authentication flow
+- Built with Vite, TypeScript, and Ant Design
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js v18+
+- npm v9+
+
+### Installation
+```bash
+git clone <repository-url>
+cd eib-admin-app
+npm install
+```
+
+### Development
+```bash
+npm run dev
+
+```
+
+### Production Build
+```bash
+npm run build
+```
+
+### Docker Build
+
+# Создайте .env файл в корне проекта:
+# VITE_APP_NAME=your-app-name
+# VITE_KEYCLOAK_URL=https://keycloak.example.com
+# VITE_BASE_URL=https://api.example.com
+# VITE_KEYCLOAK_REALM=your-realm
+# VITE_KEYCLOAK_CLIENT=your-client-id
+
+# Сборка образа с переменными окружения (через build args)
+docker build -t backoffice-react-app:latest \
+  --build-arg VITE_APP_NAME="your-app-name" \
+  --build-arg VITE_KEYCLOAK_URL="https://keycloak.example.com" \
+  --build-arg VITE_BASE_URL="https://api.example.com" \
+  --build-arg VITE_KEYCLOAK_REALM="your-realm" \
+  --build-arg VITE_KEYCLOAK_CLIENT="your-client-id" \
+  .
+
+# Запуск контейнера (порт 3000 внутри контейнера)
+docker run -p 8080:3000 backoffice-react-app:latest
+
+# Или используя docker-compose с .env файлом
+docker-compose build
+docker-compose up
+
+## Architecture
+
+### Core Technologies
+- React 19
+- TypeScript
+- Vite
+- React Router
+- React Query
+- Ant Design
+
+### File Structure
+```
+src/
+├── components/    # Reusable components
+├── features/      # Feature modules
+├── hooks/         # Custom hooks
+├── pages/         # Page components
+├── routes/        # Routing configuration
+├── services/      # API services
+├── store/         # State management
+├── theme/         # Theming system
+├── types/         # Type definitions
+└── utils/         # Utility functions
+```
+
+## Core Systems
+
+### Authentication
+- JWT-based authentication
+- Role-based access control
+- Token refresh handling
+- Protected routes
+
+### Theming
+- Light/dark mode toggle
+- Theme persistence
+- CSS variable integration
+
+### Menu System
+- Dynamic menu generation
+- Role-based visibility
+- Nested menu support
+- Mock data structure
+
+## API Reference
+
+### Auth Service
+- `login(username, password)`: Authenticate user
+- `logout()`: Clear session
+- `useAuth()`: Access auth context
+
+### Theme Service
+- `toggleTheme()`: Switch between light/dark
+- `useTheme()`: Access theme context
+
+### Menu Service
+- `fetchMenuSections()`: Get role-based menu
+- `mapSectionsToMenuItems()`: Convert to AntD format
+
+## Usage Examples
+
+### Using Auth
+```typescript
+const { login, logout, user } = useAuth();
+
+// Login
+await login('admin', 'password');
+
+// Logout
+logout();
+```
+
+### Using Theme
+```typescript
+const { themeMode, toggleTheme } = useTheme();
+
+// Toggle theme
+<Button onClick={toggleTheme}>
+  Switch to {themeMode === 'light' ? 'dark' : 'light'} mode
+</Button>
+```
+
+### Customizing Menu
+Edit `src/config/sections.ts` to modify menu structure and permissions.

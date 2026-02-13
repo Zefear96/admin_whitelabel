@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/roboto/Roboto-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 400 900;
+  font-style: normal;
+}
+
+/* Базовые значения CSS‑переменных на случай, если JS/ThemeProvider ещё не успел применить тему */
+:root {
+  --color-primary: #4a99b0;
+  --color-secondary: #f5f5f5;
+  --color-background: #ffffff;
+  --color-text: #212121;
+  --color-surface: #171717;
+  --typography-fontFamily: "Roboto", "Helvetica", "Arial", sans-serif;
+  --typography-fontSize: 16px;
+}
+
+
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: var(--typography-fontFamily);
+  font-size: var(--typography-fontSize);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.1;
+  color: var(--color-primary);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+button {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
