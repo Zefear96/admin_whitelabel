@@ -31,6 +31,12 @@ export const DictionaryServiceApi = {
             params.append("isActive", isActive);
         }
         return apiClient.get(`/admin-backend/dictionary-service/api/v1/dictionary/agent-operation/search?${params.toString()}`)
+    },
+    updateAgent(payload: unknown) {
+        return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/agents', payload)
+    },
+    updateAgentOperation() {
+        return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/agent-operation')
     }
 
 }

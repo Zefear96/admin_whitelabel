@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import AuthProvider from "./auth/AuthProvider";  // провайдер
 import AppRoutes from './routes/AppRoutes';
 import { ThemeProvider } from './theme/ThemeContext';
+import { NotificationProvider } from "./components/dataDisplay/NotificationProvider";
 
 // Базовый путь приложения (для работы в подпапке /backoffice)
 // Vite автоматически устанавливает import.meta.env.BASE_URL из vite.config.ts
@@ -14,7 +15,9 @@ function App() {
       <ThemeProvider>
           <AuthProvider>
             <BrowserRouter basename={BASE_PATH}>
-              <AppRoutes />
+              <NotificationProvider>
+                <AppRoutes />
+              </NotificationProvider>
             </BrowserRouter>
           </AuthProvider>
       </ThemeProvider>
