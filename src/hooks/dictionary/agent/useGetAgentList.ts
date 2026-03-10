@@ -6,6 +6,7 @@ export const useGetAgentList = () => {
         queryKey: ['dictionary', 'agent'],
         queryFn: () => {
             return DictionaryServiceApi.getBankAgents().then(response => response.data ?? [])
-        }
+        },
+        refetchOnMount: 'always',
     })
 }

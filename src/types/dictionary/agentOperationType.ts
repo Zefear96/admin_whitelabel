@@ -1,6 +1,7 @@
 export interface AgentOperationType {
     id: string
     agent: string
+    direction: "INCOMING" | "OUTGOING"
     transactionType: string
     serviceName: string
     isEnabled: boolean

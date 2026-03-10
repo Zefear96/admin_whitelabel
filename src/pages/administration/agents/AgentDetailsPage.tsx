@@ -7,12 +7,15 @@ import { EditOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import type { BankType } from "../../../types/dictionary/bankType";
 import { formatRuDate } from "../../../utils/dateFormatter";
+import ButtonBack from "../../../components/dataEntry/ButtonBack";
+import AgentEditModal from "./AgentEditModal";
 
 export default function AgentDetailsPage() {
     const { agent } = useParams<{ agent: string }>()
     const [activeKey, setActiveKey] = useState('1');
     const { data: agentsList, isLoading, error } = useGetAgentList()
     const { colors } = useTheme()
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Находим конкретного агента по code из URL параметра
     const agentData = agentsList?.find((agentItem: BankType) => agentItem.code === agent)
@@ -26,48 +29,47 @@ export default function AgentDetailsPage() {
             label: "Общая информация",
             key: "1",
             children: agent ? (
-                <Card>
-                    <Button color="cyan" variant="solid" style={{ margin: "10px auto" }}>
-                        Редактировать <EditOutlined />
-                    </Button>
-                    <Descriptions bordered column={1} size="middle" style={{ backgroundColor: colors.background, color: colors.text }}>
-                        <Descriptions.Item label="ID">
-                            {agentData.id ?? "—"}
-                        </Descriptions.Item>
+                <>
+                    <Card>
+                        <Descriptions bordered column={1} size="middle" style={{ backgroundColor: colors.background, color: colors.text }}>
+                            <Descriptions.Item label="ID">
+                                {agentData.id ?? "—"}
+                            </Descriptions.Item>
 
-                        <Descriptions.Item label="Logo">
-                            {agentData.logoUrl ?? "—"}
-                        </Descriptions.Item>
+                            <Descriptions.Item label="Logo">
+                                {agentData.logoUrl ?? "—"}
+                            </Descriptions.Item>
 
-                        <Descriptions.Item label="Agent">
-                            {agentData.agent ?? "—"}
-                        </Descriptions.Item>
+                            <Descriptions.Item label="Agent">
+                                {agentData.agent ?? "—"}
+                            </Descriptions.Item>
 
-                        <Descriptions.Item label="BIC">
-                            {agentData.bic ?? "—"}
-                        </Descriptions.Item>
+                            <Descriptions.Item label="BIC">
+                                {agentData.bic ?? "—"}
+                            </Descriptions.Item>
 
-                        <Descriptions.Item label="Account">
-                            {agentData.bankAccount ?? "—"}
-                        </Descriptions.Item>
+                            <Descriptions.Item label="Account">
+                                {agentData.bankAccount ?? "—"}
+                            </Descriptions.Item>
 
-                        <Descriptions.Item label="Status">
-                            {agentData.isActive ? (<Tag color="green">Active</Tag>) : (<Tag color="red">Inactive</Tag>)}
-                        </Descriptions.Item>
+                            <Descriptions.Item label="Status">
+                                {agentData.isActive ? (<Tag color="green">Active</Tag>) : (<Tag color="red">Inactive</Tag>)}
+                            </Descriptions.Item>
 
-                        <Descriptions.Item label="Bank code">
-                            {agentData.code ?? "—"}
-                        </Descriptions.Item>
+                            <Descriptions.Item label="Bank code">
+                                {agentData.code ?? "—"}
+                            </Descriptions.Item>
 
-                        <Descriptions.Item label="Updated by">
-                            {agentData.changedBy ?? "—"}
-                        </Descriptions.Item>
+                            <Descriptions.Item label="Updated by">
+                                {agentData.changedBy ?? "—"}
+                            </Descriptions.Item>
 
-                        <Descriptions.Item label="Change date">
-                            {formatRuDate(agentData.changeDate) ?? "—"}
-                        </Descriptions.Item>
-                    </Descriptions>
-                </Card>
+                            <Descriptions.Item label="Change date">
+                                {formatRuDate(agentData.changeDate) ?? "—"}
+                            </Descriptions.Item>
+                        </Descriptions>
+                    </Card>
+                </>
             ) : (
                 <h3>Данные агента отсутствуют</h3>
             ),
@@ -80,6 +82,12 @@ export default function AgentDetailsPage() {
     ];
     return (
         <>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <ButtonBack />
+                <Button color="cyan" variant="solid" onClick={() => setIsModalOpen(true)} >
+                    Редактировать <EditOutlined />
+                </Button>
+            </div>
             <Tabs
                 activeKey={activeKey}
                 onChange={setActiveKey}
@@ -87,6 +95,11 @@ export default function AgentDetailsPage() {
                 size="large"
                 items={items}
                 className="activeTab"
+            />
+            <AgentEditModal
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                agentData={agentData}
             />
         </>
     )
