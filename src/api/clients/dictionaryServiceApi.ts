@@ -1,3 +1,4 @@
+import type { AgentType } from "../../types/dictionary/agentType"
 import { apiClient } from "../axios/apiClient"
 
 export const DictionaryServiceApi = {
@@ -32,11 +33,14 @@ export const DictionaryServiceApi = {
         }
         return apiClient.get(`/admin-backend/dictionary-service/api/v1/dictionary/agent-operation/search?${params.toString()}`)
     },
-    updateAgent(payload: unknown) {
+    updateAgent(payload: AgentType) {
         return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/agents', payload)
     },
     updateAgentOperation() {
         return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/agent-operation')
+    },
+    createAgent(payload: AgentType){
+        return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/agents', payload)
     }
 
 }
