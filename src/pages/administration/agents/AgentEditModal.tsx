@@ -2,7 +2,7 @@ import { Form, Input, Modal, Switch, Tabs, type TabsProps, Button } from "antd";
 import { useEffect, useState } from "react";
 import AgentOperationsPage from "./AgentOperationsPage";
 import { useTheme } from "../../../hooks/useTheme";
-import type { BankType } from "../../../types/dictionary/bankType";
+import type { AgentType } from "../../../types/dictionary/agentType";
 import { useUpdateAgent } from "../../../hooks/dictionary/agent/useUpdateAgent";
 import { useAuth } from "../../../hooks/client/useAuth";
 import Popconfirm from "../../../components/dataDisplay/Popconfirm";
@@ -11,7 +11,7 @@ import { useNotificationMessage } from "../../../components/dataDisplay/Notifica
 interface AgentEditModalProps {
     isModalOpen: boolean;
     setIsModalOpen: (isOpen: boolean) => void;
-    agentData: BankType;
+    agentData: AgentType;
 }
 
 export default function AgentEditModal({ isModalOpen, setIsModalOpen, agentData }: AgentEditModalProps) {
@@ -42,7 +42,7 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, agentData 
         try {
             const values = await form.validateFields();
 
-            const payload: BankType = {
+            const payload: AgentType = {
                 ...agentData,
                 agent: values.agent,
                 bic: values.bic,

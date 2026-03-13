@@ -1,18 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { useGetAgentList } from "../../../hooks/dictionary/agent/useGetAgentList";
-import type { BankType } from "../../../types/dictionary/bankType";
+import type { AgentType } from "../../../types/dictionary/agentType";
 import type { ColumnsType } from "antd/es/table";
 import { Avatar, Button, Card, Descriptions, Modal, Table, Tag } from "antd";
-import { EditOutlined, EyeOutlined, EyeTwoTone } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined, EyeTwoTone, PlusCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import AgentCreateModal from "./AgentCreateModal";
 
 export default function AdministrationPageAgents() {
     const { data, isLoading, error } = useGetAgentList();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [selectedRow, setSelectedRow] = useState<BankType | null>(null)
+    const [selectedRow, setSelectedRow] = useState<AgentType | null>(null)
 
-    const columns: ColumnsType<BankType> = [
+    const columns: ColumnsType<AgentType> = [
         {
             title: "Logo",
             dataIndex: "logoUrl",
@@ -50,9 +51,14 @@ export default function AdministrationPageAgents() {
     ]
     return (
         <>
-            <Card title="Агенты" style={{ margin: 20 }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+            </div>
+            <Card title="Агенты" style={{ margin: 20 }} extra={<Button variant="solid" color="cyan" onClick={() => setIsModalOpen(true)}>Добавить агента <PlusCircleOutlined /></Button>
+            }>
                 {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
-                <Table<BankType>
+
+                <AgentCreateModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                <Table<AgentType>
                     rowClassName={() => "group"}
                     rowKey={(row) => row.id}
                     columns={columns}
@@ -61,7 +67,7 @@ export default function AdministrationPageAgents() {
                     pagination={false}
                     onRow={(record) => ({
                         // onClick: () => { setIsModalOpen(true); setSelectedRow(record) },
-                        onClick:() => navigate(`/administration/agents/${record?.code}`)
+                        onClick: () => navigate(`/administration/agents/${record?.code}`)
                     })}
                     style={{ cursor: "pointer" }}
                 />

@@ -5,7 +5,7 @@ import { useGetAgentList } from "../../../hooks/dictionary/agent/useGetAgentList
 import AgentOperationsPage from "./AgentOperationsPage";
 import { EditOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import type { BankType } from "../../../types/dictionary/bankType";
+import type { AgentType } from "../../../types/dictionary/agentType";
 import { formatRuDate } from "../../../utils/dateFormatter";
 import ButtonBack from "../../../components/dataEntry/ButtonBack";
 import AgentEditModal from "./AgentEditModal";
@@ -18,7 +18,7 @@ export default function AgentDetailsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Находим конкретного агента по code из URL параметра
-    const agentData = agentsList?.find((agentItem: BankType) => agentItem.code === agent)
+    const agentData = agentsList?.find((agentItem: AgentType) => agentItem.code === agent)
 
     if (isLoading) return <p>Загрузка...</p>;
     if (error) return <h3>Ошибка загрузки данных</h3>;
