@@ -11,24 +11,15 @@ interface AgentOperationsPageProps {
 export default function AgentOperationsPage({ agent }: AgentOperationsPageProps) {
     const { data, isLoading, error } = useGetAgentOperations(agent);
     const columns: ColumnsType<AgentOperationType> = [
+
         {
-            title: "ID",
-            dataIndex: "id",
-            render: (text: string) => <span>{text}</span>
-        },
-        {
-            title: "agent",
+            title: "Agent",
             dataIndex: "agent",
             render: (text: string) => <span>{text}</span>
         },
         {
-            title: "Type",
-            dataIndex: "type",
-            render: (text: string) => <span>{text}</span>
-        },
-        {
-            title: "ServiceName",
-            dataIndex: "serviceName",
+            title: "Direction",
+            dataIndex: "direction",
             render: (text: string) => <span>{text}</span>
         },
         {
@@ -72,7 +63,7 @@ export default function AgentOperationsPage({ agent }: AgentOperationsPageProps)
             render: (text: string) => <span>{text}</span>
         },
         {
-            title: "active",
+            title: "Status",
             dataIndex: "active",
             render: (status: boolean) => status ? (<Tag color="green">Active</Tag>) : (<Tag color="red">Inactive</Tag>)
         },
@@ -94,7 +85,7 @@ export default function AgentOperationsPage({ agent }: AgentOperationsPageProps)
             //     onClick: () => navigate(`./${record.code}`),
             // })}
             style={{ cursor: "pointer" }}
-            scroll={{x:'max-content'}}
+            scroll={{ x: 'max-content' }}
         />
     )
 }

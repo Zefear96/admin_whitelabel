@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { TabsProps } from 'antd';
-import {  Button, Descriptions, Tabs, Tag } from 'antd';
+import { Button, Descriptions, Tabs, Tag } from 'antd';
 import type { CustomerProfileType } from '../../../types/client/customerProfile';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useClientProfile } from '../../../hooks/client/useClientProfile';
@@ -9,15 +9,17 @@ import DeviceHistory from './DeviceHistory';
 import './style.css'
 import { useTheme } from '../../../hooks/useTheme';
 import { RollbackOutlined } from '@ant-design/icons';
+import ClientProductPage from './product/ClientProductPage';
+import ClientTransactionHistory from './ClientTransactionHistory';
 
 
 export default function ClientDetails() {
-  const {id} = useParams<{id: string}>();
-  const {data:client, isLoading, error} = useClientProfile(id)
+  const { id } = useParams<{ id: string }>();
+  const { data: client, isLoading, error } = useClientProfile(id)
   const [activeKey, setActiveKey] = useState('1');
   const { colors } = useTheme();
   const navigate = useNavigate();
-  
+
   if (isLoading) return <p>Загрузка...</p>;
   if (error) return <p>Ошибка загрузки клиента</p>;
   if (!client) return <p>Клиент не найден</p>;
@@ -76,7 +78,21 @@ export default function ClientDetails() {
     {
       label: "История входов",
       key: "2",
-      children: <DeviceHistory absId={client.absClientId}/>,
+      children: <DeviceHistory absId={client.absClientId} />,
+    },
+    {
+      label: "Продукты клиента",
+      key: "3",
+      children: (
+        <ClientProductPage keycloakClientId={client.keycloakClientId} />
+      ),
+    },
+    {
+      label: "История транзакций клиента", 
+      key: "4",
+      children: (
+        <ClientTransactionHistory keycloakClientId={client.keycloakClientId} />
+      ),
     },
     // {
     //   label: "Роли", // В дальнейших разработках

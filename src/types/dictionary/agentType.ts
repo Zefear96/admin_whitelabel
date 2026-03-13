@@ -1,4 +1,4 @@
-export interface BankType {
+export interface AgentType {
     id: string;
     code: string;
     agent: string;
