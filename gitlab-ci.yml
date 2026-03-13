@@ -1,0 +1,4 @@
+include:
+  - project: 'devops/ci-templates'
+    ref: master
+    file: '/harbor-docker/.gitlab-ci.yml'

@@ -8,5 +8,6 @@ export const useGetAgentOperations = (agent: string | undefined) => {
             return await DictionaryServiceApi.getAgentOperations(agent!).then(response => response.data ?? [])
         },
         enabled: !!agent,
+        refetchOnMount:'always',
     })
 }
