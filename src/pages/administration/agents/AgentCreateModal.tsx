@@ -106,7 +106,7 @@ export default function AgentCreateModal({ isModalOpen, setIsModalOpen }: AgentC
         <Form.Item
           label="Logo"
           name="logoUrl"
-          rules={[{ required: true, message: "Введите адрес ссылки логотипа" }]}
+          rules={[{ required: false, message: "Введите адрес ссылки логотипа" }]}
         >
           <Input />
         </Form.Item>
