@@ -91,7 +91,7 @@ export default function ClientDetails() {
       label: "История транзакций клиента", 
       key: "4",
       children: (
-        <ClientTransactionHistory/>
+        <ClientTransactionHistory keycloakClientId={client.keycloakClientId} />
       ),
     },
     // {

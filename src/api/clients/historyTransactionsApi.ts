@@ -9,9 +9,9 @@ export const HistoryTransactionsApi = {
             }
         });
     },
-    getClientHistory(clientId: string, fromDate: string, toDate: string) {
+    getClientHistory(keycloakClientId: string, fromDate: string, toDate: string) {
         const params = new URLSearchParams({
-            clientId,
+            userId:keycloakClientId,
             fromDate,
             toDate
         });
