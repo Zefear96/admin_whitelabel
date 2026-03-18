@@ -45,13 +45,13 @@ export default function ClientList(){
       ]
 
     // Отладочная информация
-    console.log('ClientList render:', {
-        isLoading: clientListLoading,
-        hasData: !!clientList,
-        clientsCount: clientList?.clients?.length || 0,
-        clients: clientList?.clients,
-        error: clientListError
-    });
+    // console.log('ClientList render:', {
+    //     isLoading: clientListLoading,
+    //     hasData: !!clientList,
+    //     clientsCount: clientList?.clients?.length || 0,
+    //     clients: clientList?.clients,
+    //     error: clientListError
+    // });
 
     return(
         <>

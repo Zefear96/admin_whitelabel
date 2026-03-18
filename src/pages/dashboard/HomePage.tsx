@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Card, Divider } from "antd";
 import React, { useEffect, useState } from 'react';
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
@@ -10,6 +10,7 @@ import { mapSectionsToRoutes } from "../../utils/mapSectionsToRoutes";
 import { fetchMenuSections } from "../../services/fetchMenuSections";
 import type { SectionMenuType } from "../../types/sections";
 import ContentEib from "./layout/ContentEib";
+import { ENV } from "../../config/env";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -35,6 +36,7 @@ export default function HomePage() {
   } = theme.useToken();
   const { colors } = useTheme();
   const [sections, setSection] = useState<SectionMenuType[]>([]);
+  const appVersion = import.meta.env.VITE_APP_VERSION;
 
   useEffect(() => {
     fetchMenuSections().then((data) => setSection(data));
@@ -64,10 +66,17 @@ export default function HomePage() {
         <Footer
           style={{
             textAlign: 'center',
+          }}>
+          <p style={{
             fontWeight: 600,
             color: colors.primary
-          }}>
-          ЭкоИсламикБанк ©{new Date().getFullYear()}
+          }}>ЭкоИсламикБанк ©{new Date().getFullYear()}
+          </p>
+          <p style={{
+            color: colors.text,
+            fontSize: "12px",
+            textAlign: "center"
+          }}>{ENV.APP_NAME} v{ENV.APP_VERSION === "dev" ? "dev" : `${ENV.APP_VERSION}`}</p>
         </Footer>
       </Layout>
     </Layout>

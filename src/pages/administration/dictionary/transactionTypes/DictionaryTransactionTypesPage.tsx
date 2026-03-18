@@ -1,11 +1,15 @@
-import { Card, Table } from "antd";
+import {  Card, Table } from "antd";
 import { useGetTransactionTypeList } from "../../../../hooks/dictionary/transaction/useGetTransactionTypeList"
 import type { ColumnsType } from "antd/es/table";
-import type { TransactionBankType } from "../../../../types/dictionary/transactionBankType";
+import type { TransactionType } from "../../../../types/dictionary/transactionType";
+import { useState } from "react";
+import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";
+import CreateModalTransactionType from "./CreateModalTransactionType";
 
 export default function DictionaryTransactionTypesPage() {
     const { data, isLoading, error } = useGetTransactionTypeList();
-    const columns: ColumnsType<TransactionBankType> = [
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const columns: ColumnsType<TransactionType> = [
         // {
         //     title: "ID",
         //     dataIndex: "id",
@@ -20,7 +24,10 @@ export default function DictionaryTransactionTypesPage() {
         },
     ]
     return (
-        <Card title="Типы транзакций">
+        <>
+        <Card title="Типы транзакций"
+        extra={<ButtonCreate title="Добавить тип" onClick={() => setIsModalOpen(true)} />}
+        >
             {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
             <Table
                 rowKey={(row) => row.id}
@@ -31,5 +38,7 @@ export default function DictionaryTransactionTypesPage() {
                 style={{ cursor: "pointer" }}
             />
         </Card>
+        <CreateModalTransactionType isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        </>
     )
 }

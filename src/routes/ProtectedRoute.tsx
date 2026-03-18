@@ -7,26 +7,26 @@ export default function ProtectedRoute({ children }: Props) {
   const { keycloak, initialized, authenticated, isLoading, login } = useAuth();
   const loginAttempted = useRef(false);
 
-  console.log("🛡️ [ProtectedRoute] Render:", {
-    initialized,
-    authenticated,
-    isLoading,
-    loginAttempted: loginAttempted.current,
-    hasKeycloak: !!keycloak,
-  });
+  // console.log("🛡️ [ProtectedRoute] Render:", {
+  //   initialized,
+  //   authenticated,
+  //   isLoading,
+  //   loginAttempted: loginAttempted.current,
+  //   hasKeycloak: !!keycloak,
+  // });
 
   // Если пользователь не аутентифицирован, редиректим на логин
   // Используем useRef, чтобы избежать множественных редиректов
   useEffect(() => {
-    console.log("🛡️ [ProtectedRoute] useEffect triggered:", {
-      authenticated,
-      initialized,
-      isLoading,
-      loginAttempted: loginAttempted.current,
-    });
+    // console.log("🛡️ [ProtectedRoute] useEffect triggered:", {
+    //   authenticated,
+    //   initialized,
+    //   isLoading,
+    //   loginAttempted: loginAttempted.current,
+    // });
 
     if (!authenticated && initialized && !isLoading && !loginAttempted.current) {
-      console.log("🔴 [ProtectedRoute] User not authenticated, redirecting to login");
+      // console.log("🔴 [ProtectedRoute] User not authenticated, redirecting to login");
       loginAttempted.current = true;
       // Используем метод login из контекста, который настроен с правильным redirectUri
       login();
@@ -37,10 +37,10 @@ export default function ProtectedRoute({ children }: Props) {
   // Пока initialized === false или isLoading === true или пользователь не аутентифицирован,
   // показываем лоадер и НЕ реагируем напрямую на authenticated === false.
   if (!initialized || isLoading || !authenticated) {
-    console.log("🛡️ [ProtectedRoute] Showing loader - waiting for initialization/auth check");
+    // console.log("🛡️ [ProtectedRoute] Showing loader - waiting for initialization/auth check");
     return <Loader />;
   }
 
-  console.log("🛡️ [ProtectedRoute] Rendering children - user is authenticated");
+  // console.log("🛡️ [ProtectedRoute] Rendering children - user is authenticated");
   return children;
 }

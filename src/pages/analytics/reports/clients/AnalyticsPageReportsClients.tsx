@@ -180,6 +180,7 @@ export default function AnalyticsPageReportsClients() {
                             pagination={false}
                             rowKey="key"
                             dataSource={statusSummaryData}
+                            scroll={{ x: 'max-content' }}
                             columns={[
                                 {
                                     title: "Статус",
