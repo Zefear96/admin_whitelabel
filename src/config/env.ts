@@ -21,6 +21,10 @@ export const ENV = {
     fromRuntime("VITE_APP_NAME") ?? fromVite("VITE_APP_NAME"),
     "VITE_APP_NAME"
   ),
+  APP_VERSION: fromRuntime("VITE_APP_VERSION")
+    ?? fromVite("VITE_APP_VERSION")
+    ?? (typeof __APP_VERSION__ === "string" ? __APP_VERSION__ : undefined)
+    ?? "dev",
   BASE_URL: required(
     fromRuntime("VITE_BASE_URL") ?? fromVite("VITE_BASE_URL"),
     "VITE_BASE_URL"
