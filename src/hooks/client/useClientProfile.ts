@@ -11,7 +11,7 @@ export const useClientProfile = (absId?: string) => {
     queryFn: async () => {
       if(!absId) return null;
       const { data } = await ClientProfileApi.getClientByAbs(absId);
-      console.log(`ClientProfileApi.getClientByAbs(absId): ${data}`)
+      // console.log(`ClientProfileApi.getClientByAbs(absId): ${data}`)
       return data;
     },
     enabled: !!absId,
@@ -20,7 +20,7 @@ export const useClientProfile = (absId?: string) => {
 
   useEffect(() => {
     if (query.error) {
-      console.error("Ошибка при загрузке клиента:", query.error);
+      // console.error("Ошибка при загрузке клиента:", query.error);
       const errorMessage = (query.error.response?.data as { message?: string })?.message 
         || "Ошибка при загрузке данных клиента";
       message.error(errorMessage);

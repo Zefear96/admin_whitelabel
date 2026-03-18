@@ -7,7 +7,6 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function Loader() {
     const { colors, mode } = useTheme();
-    console.log("Loader mounted")
 
     return (
         <div

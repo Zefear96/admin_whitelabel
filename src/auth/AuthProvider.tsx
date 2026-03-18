@@ -25,17 +25,17 @@ export default function AuthProvider({ children }: Props) {
 
   // ---------------- INIT ----------------
   useEffect(() => {
-    console.log("🔵 [AuthProvider] INIT START - useEffect triggered");
-    console.log("🔵 [AuthProvider] Initial state:", {
-      initialized,
-      authenticated,
-      isLoading,
-      hasUser: !!user,
-      userFromStorage: localStorage.getItem(USER_STORAGE_KEY) ? "exists" : "not found",
-    });
+    // console.log("🔵 [AuthProvider] INIT START - useEffect triggered");
+    // console.log("🔵 [AuthProvider] Initial state:", {
+    //   initialized,
+    //   authenticated,
+    //   isLoading,
+    //   hasUser: !!user,
+    //   userFromStorage: localStorage.getItem(USER_STORAGE_KEY) ? "exists" : "not found",
+    // });
 
     if (isRun.current) {
-      console.log("🔵 [AuthProvider] Already initialized, skipping");
+      // console.log("🔵 [AuthProvider] Already initialized, skipping");
       return;
     }
     isRun.current = true;
@@ -50,25 +50,25 @@ export default function AuthProvider({ children }: Props) {
     const silentCheckSsoUri =
       window.location.origin + basePath + "/silent-check-sso.html";
     
-    console.log("🔵 [AuthProvider] Keycloak config:", {
-      basePath,
-      silentCheckSsoUri,
-      keycloakUrl: keycloakInstance.authServerUrl,
-      realm: keycloakInstance.realm,
-      clientId: keycloakInstance.clientId,
-    });
+    // console.log("🔵 [AuthProvider] Keycloak config:", {
+    //   basePath,
+    //   silentCheckSsoUri,
+    //   keycloakUrl: keycloakInstance.authServerUrl,
+    //   realm: keycloakInstance.realm,
+    //   clientId: keycloakInstance.clientId,
+    // });
 
     // Обработчики событий Keycloak
     keycloakInstance.onAuthSuccess = () => {
-      console.log("🟢 [AuthProvider] onAuthSuccess triggered (event handler)");
-      console.log("🟢 [AuthProvider] Keycloak state in onAuthSuccess:", {
-        authenticated: keycloakInstance.authenticated,
-        hasToken: !!keycloakInstance.token,
-        hasTokenParsed: !!keycloakInstance.tokenParsed,
-        tokenLength: keycloakInstance.token?.length || 0,
-      });
+      // console.log("🟢 [AuthProvider] onAuthSuccess triggered (event handler)");
+      // console.log("🟢 [AuthProvider] Keycloak state in onAuthSuccess:", {
+      //   authenticated: keycloakInstance.authenticated,
+      //   hasToken: !!keycloakInstance.token,
+      //   hasTokenParsed: !!keycloakInstance.tokenParsed,
+      //   tokenLength: keycloakInstance.token?.length || 0,
+      // });
       if (keycloakInstance.authenticated && keycloakInstance.tokenParsed) {
-        console.log("🟢 [AuthProvider] onAuthSuccess: Setting authenticated = true");
+        // console.log("🟢 [AuthProvider] onAuthSuccess: Setting authenticated = true");
         setAuthenticated(true);
         const p: any = keycloakInstance.tokenParsed;
         const userData: UserKeycloakType = {
@@ -83,14 +83,14 @@ export default function AuthProvider({ children }: Props) {
           idToken: keycloakInstance.idToken || undefined,
           timeSkew: keycloakInstance.timeSkew ?? undefined,
         };
-        console.log("🟢 [AuthProvider] onAuthSuccess: Saving user to localStorage:", {
-          id: userData.id,
-          name: userData.name,
-          email: userData.email,
-        });
+        // console.log("🟢 [AuthProvider] onAuthSuccess: Saving user to localStorage:", {
+        //   id: userData.id,
+        //   name: userData.name,
+        //   email: userData.email,
+        // });
         setUser(userData);
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
-        console.log("🟢 [AuthProvider] onAuthSuccess: User saved successfully");
+        // console.log("🟢 [AuthProvider] onAuthSuccess: User saved successfully");
       } else {
         console.log("🟡 [AuthProvider] onAuthSuccess: Conditions not met for saving user");
       }
@@ -137,39 +137,39 @@ export default function AuthProvider({ children }: Props) {
       initOptions.timeSkew = user.timeSkew;
     }
 
-    console.log("🔵 [AuthProvider] Keycloak init options with persisted tokens:", {
-      hasUserInState: !!user,
-      hasToken: !!user?.token,
-      hasRefreshToken: !!user?.refreshToken,
-      hasIdToken: !!user?.idToken,
-      timeSkew: user?.timeSkew,
-    });
+    // console.log("🔵 [AuthProvider] Keycloak init options with persisted tokens:", {
+    //   hasUserInState: !!user,
+    //   hasToken: !!user?.token,
+    //   hasRefreshToken: !!user?.refreshToken,
+    //   hasIdToken: !!user?.idToken,
+    //   timeSkew: user?.timeSkew,
+    // });
 
     keycloakInstance
       .init(initOptions)
       .then(async (auth) => {
-        console.log("🟦 [AuthProvider] Keycloak init() completed");
-        console.log("🟦 [AuthProvider] Init result:", {
-          auth,
-          authenticated: keycloakInstance.authenticated,
-          hasToken: !!keycloakInstance.token,
-          tokenLength: keycloakInstance.token?.length || 0,
-          hasRefreshToken: !!keycloakInstance.refreshToken,
-          refreshTokenLength: keycloakInstance.refreshToken?.length || 0,
-          hasTokenParsed: !!keycloakInstance.tokenParsed,
-          tokenParsed: keycloakInstance.tokenParsed ? {
-            sub: keycloakInstance.tokenParsed.sub,
-            name: (keycloakInstance.tokenParsed as any).name,
-            email: (keycloakInstance.tokenParsed as any).email,
-          } : null,
-        });
+        // console.log("🟦 [AuthProvider] Keycloak init() completed");
+        // console.log("🟦 [AuthProvider] Init result:", {
+        //   auth,
+        //   authenticated: keycloakInstance.authenticated,
+        //   hasToken: !!keycloakInstance.token,
+        //   tokenLength: keycloakInstance.token?.length || 0,
+        //   hasRefreshToken: !!keycloakInstance.refreshToken,
+        //   refreshTokenLength: keycloakInstance.refreshToken?.length || 0,
+        //   hasTokenParsed: !!keycloakInstance.tokenParsed,
+        //   tokenParsed: keycloakInstance.tokenParsed ? {
+        //     sub: keycloakInstance.tokenParsed.sub,
+        //     name: (keycloakInstance.tokenParsed as any).name,
+        //     email: (keycloakInstance.tokenParsed as any).email,
+        //   } : null,
+        // });
 
         // Если есть токен, но auth === false, это может быть из-за асинхронности iframe
         // Проверяем наличие токена напрямую
         if (!auth && keycloakInstance.token && keycloakInstance.tokenParsed) {
-          console.log("🟨 [AuthProvider] Token exists but auth is false, treating as authenticated");
+          // console.log("🟨 [AuthProvider] Token exists but auth is false, treating as authenticated");
           const isActuallyAuthenticated = true;
-          console.log("🟨 [AuthProvider] Setting authenticated = true (token found)");
+          // console.log("🟨 [AuthProvider] Setting authenticated = true (token found)");
           setAuthenticated(isActuallyAuthenticated);
           
           const p: any = keycloakInstance.tokenParsed;
@@ -185,21 +185,21 @@ export default function AuthProvider({ children }: Props) {
             idToken: keycloakInstance.idToken || undefined,
             timeSkew: keycloakInstance.timeSkew ?? undefined,
           };
-          console.log("🟨 [AuthProvider] Saving user to localStorage:", userData);
+          // console.log("🟨 [AuthProvider] Saving user to localStorage:", userData);
           setUser(userData);
           localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
           
-          console.log("🟨 [AuthProvider] Setting initialized = true, isLoading = false");
+          // console.log("🟨 [AuthProvider] Setting initialized = true, isLoading = false");
           setInitialized(true);
           setIsLoading(false);
-          console.log("🟨 [AuthProvider] Early return - user authenticated via token");
+          // console.log("🟨 [AuthProvider] Early return - user authenticated via token");
           return;
         }
 
         // Если check-sso не нашел сессию, но есть refreshToken, попробуем обновить токен
         if (!auth && keycloakInstance.refreshToken) {
-          console.log("🟡 [AuthProvider] check-sso returned false, but refreshToken exists");
-          console.log("🟡 [AuthProvider] Attempting token refresh...");
+          // console.log("🟡 [AuthProvider] check-sso returned false, but refreshToken exists");
+          // console.log("🟡 [AuthProvider] Attempting token refresh...");
           try {
             const refreshed = await keycloakInstance.updateToken(30);
             console.log("Token refresh result:", {
@@ -210,8 +210,8 @@ export default function AuthProvider({ children }: Props) {
             
             if (refreshed && keycloakInstance.authenticated) {
               // Токен успешно обновлен, пользователь аутентифицирован
-              console.log("🟢 [AuthProvider] Token refreshed successfully!");
-              console.log("🟢 [AuthProvider] Setting authenticated = true");
+              // console.log("🟢 [AuthProvider] Token refreshed successfully!");
+              // console.log("🟢 [AuthProvider] Setting authenticated = true");
               setAuthenticated(true);
               
               if (keycloakInstance.tokenParsed) {
@@ -237,10 +237,10 @@ export default function AuthProvider({ children }: Props) {
                 );
               }
               
-              console.log("🟢 [AuthProvider] Setting initialized = true, isLoading = false");
+              // console.log("🟢 [AuthProvider] Setting initialized = true, isLoading = false");
               setInitialized(true);
               setIsLoading(false);
-              console.log("🟢 [AuthProvider] Early return - user authenticated via refresh");
+              // console.log("🟢 [AuthProvider] Early return - user authenticated via refresh");
               return;
             } else {
               console.log("🟡 [AuthProvider] Token refresh returned false or not authenticated");
@@ -248,7 +248,7 @@ export default function AuthProvider({ children }: Props) {
           } catch (error) {
             console.error("🔴 [AuthProvider] Token refresh failed, user needs to login:", error);
             // Очищаем устаревшие данные
-            console.log("🔴 [AuthProvider] Clearing localStorage and user state");
+            // console.log("🔴 [AuthProvider] Clearing localStorage and user state");
             localStorage.removeItem(USER_STORAGE_KEY);
             setUser(null);
           }
@@ -257,16 +257,16 @@ export default function AuthProvider({ children }: Props) {
         // Если auth === true, но authenticated может быть еще false из-за асинхронности
         // Проверяем актуальное состояние keycloakInstance
         const isActuallyAuthenticated = auth || keycloakInstance.authenticated;
-        console.log("🟦 [AuthProvider] Final authentication check:", {
-          auth,
-          keycloakAuthenticated: keycloakInstance.authenticated,
-          isActuallyAuthenticated,
-        });
-        console.log("🟦 [AuthProvider] Setting authenticated =", isActuallyAuthenticated);
+        // console.log("🟦 [AuthProvider] Final authentication check:", {
+        //   auth,
+        //   keycloakAuthenticated: keycloakInstance.authenticated,
+        //   isActuallyAuthenticated,
+        // });
+        // console.log("🟦 [AuthProvider] Setting authenticated =", isActuallyAuthenticated);
         setAuthenticated(isActuallyAuthenticated);
 
         if (isActuallyAuthenticated && keycloakInstance.tokenParsed) {
-          console.log("🟢 [AuthProvider] User is authenticated, saving user data");
+          // console.log("🟢 [AuthProvider] User is authenticated, saving user data");
           const p: any = keycloakInstance.tokenParsed;
 
           const userData: UserKeycloakType = {
@@ -282,7 +282,7 @@ export default function AuthProvider({ children }: Props) {
             timeSkew: keycloakInstance.timeSkew ?? undefined,
           };
 
-          console.log("🟢 [AuthProvider] User data:", userData);
+          // console.log("🟢 [AuthProvider] User data:", userData);
           setUser(userData);
           localStorage.setItem(
             USER_STORAGE_KEY,
@@ -339,15 +339,15 @@ export default function AuthProvider({ children }: Props) {
           }
         }
 
-        console.log("🟦 [AuthProvider] Setting initialized = true, isLoading = false");
+        // console.log("🟦 [AuthProvider] Setting initialized = true, isLoading = false");
         setInitialized(true);
         setIsLoading(false);
-        console.log("🟦 [AuthProvider] INIT COMPLETE - Final state:", {
-          initialized: true,
-          authenticated: isActuallyAuthenticated,
-          isLoading: false,
-          hasUser: !!user,
-        });
+        // console.log("🟦 [AuthProvider] INIT COMPLETE - Final state:", {
+        //   initialized: true,
+        //   authenticated: isActuallyAuthenticated,
+        //   isLoading: false,
+        //   hasUser: !!user,
+        // });
       })
       .catch((err) => {
         console.error("🔴 [AuthProvider] Keycloak init error:", err);
@@ -359,7 +359,7 @@ export default function AuthProvider({ children }: Props) {
 
   // ---------------- LOGIN ----------------
   const login = useCallback(() => {
-    console.log("🔵 [AuthProvider] login() called");
+    // console.log("🔵 [AuthProvider] login() called");
     const rawBasePath = import.meta.env.BASE_URL || "/backoffice/";
     const basePath =
       (rawBasePath.startsWith("/") ? rawBasePath : `/${rawBasePath}`).replace(
@@ -367,7 +367,7 @@ export default function AuthProvider({ children }: Props) {
         ""
       );
     const redirectUri = window.location.origin + basePath;
-    console.log("🔵 [AuthProvider] Redirecting to Keycloak login:", redirectUri);
+    // console.log("🔵 [AuthProvider] Redirecting to Keycloak login:", redirectUri);
     keycloakInstance.login({
       redirectUri: redirectUri,
     });
@@ -386,7 +386,7 @@ export default function AuthProvider({ children }: Props) {
     localStorage.removeItem(USER_STORAGE_KEY);
     setUser(null);
 
-    console.log(window.location.origin + basePath + '/logout')
+    // console.log(window.location.origin + basePath + '/logout')
     // полный SSO logout
     keycloakInstance.logout({
       redirectUri: window.location.origin + basePath + '/logout',
@@ -394,15 +394,15 @@ export default function AuthProvider({ children }: Props) {
   }, []);
 
   // Отслеживание изменений состояний
-  useEffect(() => {
-    console.log("🔄 [AuthProvider] State changed:", {
-      initialized,
-      authenticated,
-      isLoading,
-      hasUser: !!user,
-      userId: user?.id,
-    });
-  }, [initialized, authenticated, isLoading, user]);
+  // useEffect(() => {
+  //   console.log("🔄 [AuthProvider] State changed:", {
+  //     initialized,
+  //     authenticated,
+  //     isLoading,
+  //     hasUser: !!user,
+  //     userId: user?.id,
+  //   });
+  // }, [initialized, authenticated, isLoading, user]);
 
   const value: AuthContextType = {
     keycloak: keycloakInstance,
@@ -414,12 +414,12 @@ export default function AuthProvider({ children }: Props) {
     logout,
   };
 
-  console.log("📦 [AuthProvider] Providing context value:", {
-    initialized: value.initialized,
-    authenticated: value.authenticated,
-    isLoading: value.isLoading,
-    hasUser: !!value.user,
-  });
+  // console.log("📦 [AuthProvider] Providing context value:", {
+  //   initialized: value.initialized,
+  //   authenticated: value.authenticated,
+  //   isLoading: value.isLoading,
+  //   hasUser: !!value.user,
+  // });
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -24,7 +24,7 @@ export default function DrawerEib() {
     const user = auth?.user;
     const { logout } = useAuth();
     const { colors } = useTheme();
-    console.log(user?.roles)
+    // console.log(user?.roles)
 
     const [open, setOpen] = useState(false);
 

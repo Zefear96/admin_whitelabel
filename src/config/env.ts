@@ -40,5 +40,5 @@ export const ENV = {
 };
 
 
-console.log("Base URL:", ENV.BASE_URL);
+// console.log("Base URL:", ENV.BASE_URL);
   

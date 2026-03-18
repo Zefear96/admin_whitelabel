@@ -1,37 +1,28 @@
 import { Form, Input, Modal, Switch, Tabs, type TabsProps, Button } from "antd";
 import { useEffect, useState } from "react";
 import AgentOperationsPage from "./AgentOperationsPage";
-import { useTheme } from "../../../hooks/useTheme";
 import type { AgentType } from "../../../types/dictionary/agentType";
 import { useUpdateAgent } from "../../../hooks/dictionary/agent/useUpdateAgent";
-import { useAuth } from "../../../hooks/client/useAuth";
 import Popconfirm from "../../../components/dataDisplay/Popconfirm";
 import { useNotificationMessage } from "../../../components/dataDisplay/NotificationMessage";
+import type { ModalPropsType } from "../../../types/components/modalPropsType";
 
-interface AgentEditModalProps {
-    isModalOpen: boolean;
-    setIsModalOpen: (isOpen: boolean) => void;
-    agentData: AgentType;
-}
-
-export default function AgentEditModal({ isModalOpen, setIsModalOpen, agentData }: AgentEditModalProps) {
+export default function AgentEditModal({ isModalOpen, setIsModalOpen, data }: ModalPropsType<AgentType>) {
     const [form] = Form.useForm();
     const [activeKey, setActiveKey] = useState("1");
-    const { colors } = useTheme();
-    const { user } = useAuth();
     const { mutateAsync, isPending } = useUpdateAgent();
     const { notify } = useNotificationMessage();
 
     useEffect(() => {
-        if (isModalOpen && agentData) {
+        if (isModalOpen && data) {
             form.setFieldsValue({
-                agent: agentData.agent,
-                bic: agentData.bic,
-                bankAccount: agentData.bankAccount,
-                isActive: agentData.isActive,
+                agent: data.agent,
+                bic: data.bic,
+                bankAccount: data.bankAccount,
+                isActive: data.isActive,
             });
         }
-    }, [isModalOpen, agentData, form]);
+    }, [isModalOpen, data, form]);
 
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -43,7 +34,7 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, agentData 
             const values = await form.validateFields();
 
             const payload: AgentType = {
-                ...agentData,
+                ...data as AgentType,
                 agent: values.agent,
                 bic: values.bic,
                 bankAccount: values.bankAccount,
@@ -60,7 +51,7 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, agentData 
             });
             handleCancel();
         } catch (error: any) {
-            console.log("error", error);
+            // console.log("error", error);
             notify({
                 type: "error",
                 title: "Ошибка",
@@ -93,7 +84,7 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, agentData 
         {
             label: "Операции агента",
             key: "2",
-            children: <AgentOperationsPage agent={agentData.code} />,
+            children: <AgentOperationsPage agent={data?.code ?? "" as string} />,
         },
     ];
 

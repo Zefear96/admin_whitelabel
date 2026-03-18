@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { notification } from "antd";
-import type { NotificationType } from "../../types/components/NotificationType";
+import type { NotificationType } from "../../types/components/notificationType";
 import type { PropsWithChildren, ReactNode } from "react";
 
 type ShowNotificationFn = (payload: NotificationType) => void;

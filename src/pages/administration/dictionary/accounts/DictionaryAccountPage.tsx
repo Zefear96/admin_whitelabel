@@ -4,13 +4,18 @@ import type { AccountEibType } from "../../../../types/dictionary/accountType";
 import type { ColumnsType } from "antd/es/table";
 import TableSkeleton from "./TableSkeleton";
 import { useState } from "react";
+import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";
+import AccountCreateModal from "./AccountCreateModal";
+import AccountEditModal from "./AccountEditModal";
 import { EditOutlined } from "@ant-design/icons";
 
 export default function DictionaryAccountPage() {
     const { data, isLoading, error } = useGetAccountList();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<AccountEibType | null>(null);
-
+    
     const columns: ColumnsType<AccountEibType> = [
         // {
         //     title: "ID",
@@ -56,7 +61,8 @@ export default function DictionaryAccountPage() {
     }
     return (
         <>
-            <Card title="Справочник счетов EIB">
+            <Card title="Справочник счетов EIB" 
+            extra={<ButtonCreate title="Добавить счет" onClick={() => setIsCreateModalOpen(true)} />}>
                 {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
                 <Table
                     rowKey="id"
@@ -65,22 +71,46 @@ export default function DictionaryAccountPage() {
                     loading={isLoading}
                     pagination={false}
                     onRow={(record) => ({
-                        onClick: () => { setIsModalOpen(true); setSelectedRow(record) },
+                        onClick: () => {
+                            setSelectedRow(record);
+                            setIsDetailsModalOpen(true);
+                        },
                     })}
                     style={{ cursor: "pointer" }}
+                    scroll={{ x: 'max-content' }}
                 />
             </Card>
-
+            <AccountCreateModal
+                isModalOpen={isCreateModalOpen}
+                setIsModalOpen={setIsCreateModalOpen}
+            />
+            <AccountEditModal
+                isModalOpen={isEditModalOpen}
+                setIsModalOpen={setIsEditModalOpen}
+                data={selectedRow}
+            />
             <Modal
                 title="Детали счета"
-                open={isModalOpen}
-                onCancel={() => setIsModalOpen(false)}
+                open={isDetailsModalOpen}
+                onCancel={() => setIsDetailsModalOpen(false)}
                 style={{ minWidth: "60%" }}
-                footer={false}
+                footer={(
+                    <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+                        <Button onClick={() => setIsDetailsModalOpen(false)}>Закрыть</Button>
+                        <Button
+                            type="primary"
+                            icon={<EditOutlined />}
+                            onClick={() => {
+                                setIsDetailsModalOpen(false);
+                                setIsEditModalOpen(true);
+                            }}
+                            disabled={!selectedRow}
+                        >
+                            Редактировать
+                        </Button>
+                    </div>
+                )}
             >
-                <Button color="cyan" variant="solid" style={{margin: "10px auto"}}>
-                    Редактировать <EditOutlined />
-                </Button>
                 {selectedRow && (
                     <Descriptions bordered column={1} size="small">
                         <Descriptions.Item label="Тип транзакции">
