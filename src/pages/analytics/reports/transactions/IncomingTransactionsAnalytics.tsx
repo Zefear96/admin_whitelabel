@@ -121,7 +121,7 @@ const PieChart = ({ data, title }: { data: PieSlice[]; title: string }) => {
 };
 
 export const IncomingTransactionsAnalytics = () => {
-    const { data, isLoading, error } = useGetAllTransactions(0, 200, "creationDate", "DESC");
+    const { data, isLoading, error } = useGetAllTransactions(0, 20, "creationDate", "DESC");
 
     const transactions: IncomingTransactionType[] = data?.content ?? [];
 
@@ -274,7 +274,6 @@ export const IncomingTransactionsAnalytics = () => {
                     <Card
                         type="inner"
                         title="Топ агентов по объему входящих транзакций"
-                        bodyStyle={{ paddingTop: 0 }}
                     >
                         <Table<AgentAnalyticsRow>
                             rowKey={(row) => row.agent}

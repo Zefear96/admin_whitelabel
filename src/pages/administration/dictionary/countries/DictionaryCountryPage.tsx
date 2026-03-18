@@ -36,6 +36,7 @@ export default function DictionaryCountryPage() {
                 loading={isLoading}
                 dataSource={data ?? []}
                 pagination={false}
+                scroll={{ x: 'max-content' }}
             />
         </Card>
     )

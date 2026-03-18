@@ -8,15 +8,15 @@ export const useGetClientList = (page?: number, size?: number, sort?: string) =>
         queryKey: ['client-profile', 'list', page, size, sort],
         queryFn: async() => {
             const { data } = await ClientProfileApi.getClientList(page ?? 0, size ?? 20, sort ?? "createdDate,ASC");
-            console.log('ClientProfileApi.getClientList response:', {
-                clients: data.clients,
-                clientsCount: data.clients?.length || 0,
-                page: data.page,
-                size: data.size,
-                totalElements: data.totalElements,
-                totalPages: data.totalPages,
-                fullData: data
-            });
+            // console.log('ClientProfileApi.getClientList response:', {
+            //     clients: data.clients,
+            //     clientsCount: data.clients?.length || 0,
+            //     page: data.page,
+            //     size: data.size,
+            //     totalElements: data.totalElements,
+            //     totalPages: data.totalPages,
+            //     fullData: data
+            // });
             return data
         },
     })

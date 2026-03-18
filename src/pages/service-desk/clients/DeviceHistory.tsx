@@ -62,6 +62,7 @@ export default function DeviceHistory({ absId }: { absId: string }) {
         columns={columns}
         dataSource={data?.content || []}
         loading={isLoading}
+        scroll={{ x: 'max-content' }}
         pagination={{
           total: data?.total || 0,
           current: page + 1,

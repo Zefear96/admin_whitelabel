@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { useTxBanksHistory } from "../../../../hooks/useTxBanksHistory";
+import { useRegistryAgent } from "../../../../hooks/agent-transfers/useRegistryAgent";
 import type { TransactionBankReportType } from "../../../../types/transactionBankReportType";
 import type { ColumnsType } from "antd/es/table";
 import { Button, Card, DatePicker, Table, Tabs, Tag, type TabsProps } from "antd";
@@ -18,24 +18,35 @@ export default function DetailsTransactionsBank() {
     const navigate = useNavigate();
     const { code } = useParams();
     const bankCode = code ?? "null";
-    const { data: OutgoingTransactions, isLoading: isLoadingOutgoingTransactions, error: errorOutgoingTransactions } = useTxBanksHistory(bankCode);
-    const { data: IncomingTransactions, isLoading: isLoadingIncomingTransactions, error: errorIncomingTransactions } = useGetTransactionsByAgent(bankCode, 0, 20, "creationDate", "DESC");
+
     const [activeTab, setActiveTab] = useState<string>("1");
-    const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
+
+    const today = dayjs();
+    const initialFrom = today.subtract(7, "day");
+
+    const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null] | null>([initialFrom, today]);
+
+    const apiFromDate = (dateRange?.[0] ?? initialFrom).format("YYYY-MM-DD");
+    const apiToDate = (dateRange?.[1] ?? today).format("YYYY-MM-DD");
+
     const fromDate = dateRange?.[0]?.toISOString();
     const toDate = dateRange?.[1]?.toISOString();
 
-    const filteredOutgoingTransactions = (OutgoingTransactions ?? []).filter((tx) => {
-        if (!dateRange || !dateRange[0] || !dateRange[1]) return true;
-        const [start, end] = dateRange;
-        if (!start || !end) return true;
-        const txDate = dayjs(tx.date);
-        if (!txDate.isValid()) return false;
-        return (
-            (txDate.isAfter(start, "day") || txDate.isSame(start, "day")) &&
-            (txDate.isBefore(end, "day") || txDate.isSame(end, "day"))
-        );
-    });
+    const {
+        data: OutgoingTransactions,
+        isLoading: isLoadingOutgoingTransactions,
+        error: errorOutgoingTransactions,
+    } = useRegistryAgent(bankCode, apiFromDate, apiToDate);
+
+    const outgoingTransactionsArray: TransactionBankReportType[] = Array.isArray(OutgoingTransactions)
+        ? OutgoingTransactions
+        : (OutgoingTransactions?.content ?? []);
+
+    const {
+        data: IncomingTransactions,
+        isLoading: isLoadingIncomingTransactions,
+        error: errorIncomingTransactions,
+    } = useGetTransactionsByAgent(bankCode, 0, 20, "creationDate", "DESC");
 
     const filteredIncomingTransactions = (IncomingTransactions?.content ?? []).filter((tx) => {
         if (!dateRange || !dateRange[0] || !dateRange[1]) return true;
@@ -179,7 +190,7 @@ export default function DetailsTransactionsBank() {
                     placeholder={["Дата начала", "Дата окончания"]}
                 />
                 <ButtonReportOutgoingTransactions
-                    transactions={filteredOutgoingTransactions}
+                    transactions={outgoingTransactionsArray}
                     bankCode={code ?? ""}
                     fromDate={fromDate}
                     toDate={toDate}
@@ -190,7 +201,7 @@ export default function DetailsTransactionsBank() {
                         rowKey={(row) => row.paymentId}
                         columns={columns}
                         loading={isLoadingOutgoingTransactions}
-                        dataSource={filteredOutgoingTransactions}
+                        dataSource={OutgoingTransactions ?? []}
                         pagination={{ pageSize: 10 }}
                         // onRow={(record) => ({
                         //     onClick: () => navigate(`./${record.code}`),

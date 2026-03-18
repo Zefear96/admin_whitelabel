@@ -7,7 +7,7 @@ export async function fetchMenuSections(): Promise<SectionMenuType[]> {
         // const response = await axios.get('/api/sections');
         // return response.data;
         const response = sections2;
-        console.log(response)
+        // console.log(response)
         return response
     } catch (error) {
         console.log('Failed to load sections menu:', error);

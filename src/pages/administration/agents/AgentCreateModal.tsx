@@ -4,13 +4,9 @@ import { useCreateAgent } from "../../../hooks/dictionary/agent/useCreateAgent";
 import { useAuth } from "../../../hooks/client/useAuth";
 import Popconfirm from "../../../components/dataDisplay/Popconfirm";
 import { useNotificationMessage } from "../../../components/dataDisplay/NotificationMessage";
+import type { ModalPropsType } from "../../../types/components/modalPropsType";
 
-interface AgentCreateModalProps {
-  isModalOpen: boolean;
-  setIsModalOpen: (isOpen: boolean) => void;
-}
-
-export default function AgentCreateModal({ isModalOpen, setIsModalOpen }: AgentCreateModalProps) {
+export default function AgentCreateModal({ isModalOpen, setIsModalOpen }: ModalPropsType<AgentType>) {
   const [form] = Form.useForm();
   const { mutateAsync, isPending } = useCreateAgent();
   const { user } = useAuth();
