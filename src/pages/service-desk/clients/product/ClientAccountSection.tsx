@@ -94,6 +94,7 @@ export function ClientAccountSection({
         dataSource={list}
         columns={columns}
         pagination={list.length > 10 ? { pageSize: 10 } : false}
+        scroll={{ x: 'max-content' }}
         onRow={(record) => ({
           onClick: () => {
             setSelectedAccount(record);

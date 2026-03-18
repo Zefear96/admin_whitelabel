@@ -1,4 +1,4 @@
-import type { NotificationType } from "../../types/components/NotificationType";
+import type { NotificationType } from "../../types/components/notificationType";
 import { useNotification } from "./NotificationProvider";
 
 export const useNotificationMessage = () => {

@@ -1,4 +1,8 @@
+import type { AccountEibType } from "../../types/dictionary/accountType"
 import type { AgentType } from "../../types/dictionary/agentType"
+import type { CurrencyType } from "../../types/dictionary/currencyType"
+import type { SwiftType } from "../../types/dictionary/swiftType"
+import type { TransactionType } from "../../types/dictionary/transactionType"
 import { apiClient } from "../axios/apiClient"
 
 export const DictionaryServiceApi = {
@@ -41,6 +45,24 @@ export const DictionaryServiceApi = {
     },
     createAgent(payload: AgentType){
         return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/agents', payload)
+    },
+    createEibAccount(payload: AccountEibType) {
+        return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/eib_account', payload)
+    },
+    updateEibAccount(payload: AccountEibType) {
+        return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/eib_account', payload)
+    },
+    updateSwift(payload: SwiftType) {
+        return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/swift', payload)
+    },
+    createSwift(payload: SwiftType) {
+        return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/swift', payload)
+    },
+    createCurrency(payload: CurrencyType) {
+        return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/currency', payload)
+    },
+    createTransactionType(payload: TransactionType) {
+        return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/transaction_type', payload)
     }
 
 }

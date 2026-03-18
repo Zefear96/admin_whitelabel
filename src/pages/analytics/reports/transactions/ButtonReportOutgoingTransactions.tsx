@@ -32,7 +32,7 @@ export const ButtonReportOutgoingTransactions = ({ transactions, bankCode, fromD
   const dateRangeStr = fromDate && toDate
     ? `c «${dayjs(fromDate).format("DD.MM.YYYY")}» по «${dayjs(toDate).format("DD.MM.YYYY")}»`
     : "c «______» по «______»";
-    console.log(totalAmount)
+    // console.log(totalAmount)
 
   const generatePdf = () => {
     const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
@@ -133,7 +133,7 @@ export const ButtonReportOutgoingTransactions = ({ transactions, bankCode, fromD
 
       <Modal
         title="Предпросмотр PDF"
-        visible={modalVisible}
+        open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
         width="80%"

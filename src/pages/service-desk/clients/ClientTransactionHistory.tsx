@@ -1,4 +1,4 @@
-import type { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 import { Card, DatePicker, Empty, Spin, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -9,7 +9,7 @@ import { ProductDetailsModal } from "./product/ProductDetailsModal";
 
 const { RangePicker } = DatePicker;
 
-const formatDate = (date: Date) => date.toISOString().split("T")[0];
+const formatDate = (date: Dayjs) => date.format("YYYY-MM-DD");
 
 interface ClientTransactionHistoryProps {
   keycloakClientId: string;
@@ -17,8 +17,8 @@ interface ClientTransactionHistoryProps {
 
 export default function ClientTransactionHistory({ keycloakClientId }: ClientTransactionHistoryProps) {
   const [selectedTx, setSelectedTx] = useState<ResponseTransactionType | null>(null);
-  const today = new Date();
-  const [dates, setDates] = useState<[Date, Date]>([today, today]);
+  const today = dayjs();
+  const [dates, setDates] = useState<[Dayjs, Dayjs]>([today, today]);
 
   const fromDate = formatDate(dates[0]);
   const toDate = formatDate(dates[1]);
@@ -101,12 +101,12 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
 
   const handleDateChange: Parameters<typeof RangePicker>[0]["onChange"] = (values) => {
     if (!values || !values[0] || !values[1]) {
-      const now = new Date();
+      const now = dayjs();
       setDates([now, now]);
       return;
     }
 
-    setDates([values[0].toDate(), values[1].toDate()]);
+    setDates([values[0], values[1]] as [Dayjs, Dayjs]);
   };
 
   if (isLoading) {
@@ -137,7 +137,7 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
           <Typography.Title level={5} style={{ margin: 0 }}>
             История транзакций клиента
           </Typography.Title>
-          <RangePicker onChange={handleDateChange} />
+          <RangePicker value={dates} onChange={handleDateChange} />
         </div>
         <Empty description="Нет данных" image={Empty.PRESENTED_IMAGE_SIMPLE} />
         <ProductDetailsModal
@@ -156,13 +156,14 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
         <Typography.Title level={5} style={{ margin: 0 }}>
           История транзакций клиента
         </Typography.Title>
-        <RangePicker onChange={handleDateChange} />
+        <RangePicker value={dates} onChange={handleDateChange} />
       </div>
       <Table<ResponseTransactionType>
         size="small"
         rowKey={(row) => row.transactionId}
         dataSource={list}
         columns={columns}
+        scroll={{ x: 'max-content' }}
         pagination={list.length > 20 ? { pageSize: 20 } : false}
         onRow={(record) => ({
           onClick: () => setSelectedTx(record),

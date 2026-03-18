@@ -94,6 +94,7 @@ export function ClientMurabahaSection({
         dataSource={list}
         columns={columns}
         pagination={list.length > 5 ? { pageSize: 5 } : false}
+        scroll={{ x: 'max-content' }}
         onRow={(record) => ({
           onClick: () => {
             setSelectedMurabaha(record);

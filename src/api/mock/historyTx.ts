@@ -1,5 +1,3 @@
-import type { TransactionBankType } from "../../types/dictionary/transactionBankType";
-
 export const historyTx = [
 
             {

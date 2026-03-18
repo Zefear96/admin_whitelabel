@@ -6,6 +6,7 @@ export const useGetSwiftList = () => {
         queryKey: ['dictionary', 'swift'],
         queryFn: () => {
             return DictionaryServiceApi.getSwiftCodesList().then(res => res.data ?? [])
-        }
+        },
+        refetchOnMount: 'always',
     })
 }

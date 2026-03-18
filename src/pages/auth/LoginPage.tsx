@@ -18,10 +18,10 @@ export default function LoginPage() {
 
     if (initialized) {
       if (authenticated) {
-        console.log('User already authenticated, redirecting to home...');
+        // console.log('User already authenticated, redirecting to home...');
         navigate('/', { replace: true });
       } else if (!hasTriedLogin) {
-        console.log('User not authenticated, initiating login...');
+        // console.log('User not authenticated, initiating login...');
         setHasTriedLogin(true);
 
         // Небольшая задержка чтобы избежать проблем с навигацией
