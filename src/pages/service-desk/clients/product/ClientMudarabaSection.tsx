@@ -65,6 +65,11 @@ export function ClientMudarabaSection({
   ];
 
   const list = (data as ResponseMudarabaType[] | undefined) ?? [];
+  const mudarabaExtraData = balanceMudaraba
+    ? (Object.fromEntries(
+        Object.entries(balanceMudaraba as unknown as Record<string, unknown>).filter(([key]) => key !== "mudarabahId"),
+      ) as Record<string, unknown>)
+    : null;
 
   if (isLoading) {
     return (
@@ -111,8 +116,8 @@ export function ClientMudarabaSection({
             setSelectedMudaraba(record);
             onRowClick?.(record);
           },
-          style: onRowClick ? { cursor: "pointer" } : undefined,
         })}
+        style={{ cursor: "pointer" }}
       />
 
       <ProductDetailsModal
@@ -120,7 +125,7 @@ export function ClientMudarabaSection({
         open={!!selectedMudaraba}
         onClose={() => setSelectedMudaraba(null)}
         data={selectedMudaraba as unknown as Record<string, unknown>}
-        extraData={balanceMudaraba as unknown as Record<string, unknown>}
+        extraData={mudarabaExtraData}
       />
     </Card>
   );

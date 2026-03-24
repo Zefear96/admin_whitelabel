@@ -54,6 +54,11 @@ export function ClientMurabahaSection({
   ];
 
   const list = (data as ResponseMurabahaType[] | undefined) ?? [];
+  const murabahaExtraData = balanceMurabaha
+    ? (Object.fromEntries(
+        Object.entries(balanceMurabaha as unknown as Record<string, unknown>).filter(([key]) => key !== "murabahaId"),
+      ) as Record<string, unknown>)
+    : null;
 
   if (isLoading) {
     return (
@@ -100,8 +105,8 @@ export function ClientMurabahaSection({
             setSelectedMurabaha(record);
             onRowClick?.(record);
           },
-          style: onRowClick ? { cursor: "pointer" } : undefined,
         })}
+        style={{ cursor: "pointer" }}
       />
 
       <ProductDetailsModal
@@ -109,7 +114,7 @@ export function ClientMurabahaSection({
         open={!!selectedMurabaha}
         onClose={() => setSelectedMurabaha(null)}
         data={selectedMurabaha as unknown as Record<string, unknown>}
-        extraData={balanceMurabaha as unknown as Record<string, unknown>}
+        extraData={murabahaExtraData}
       />
     </Card>
   );
