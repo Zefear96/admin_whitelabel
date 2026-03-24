@@ -99,15 +99,15 @@ export function ClientCardSection({
             setSelectedCard(record);
             onRowClick?.(record);
           },
-          style: { cursor: "pointer" },
         })}
+        style={{ cursor: "pointer" }}
       />
 
       <ProductDetailsModal
         title="Информация о карте"
         open={!!selectedCard}
         onClose={() => setSelectedCard(null)}
-        data={selectedCard as unknown as Record<string, unknown>}
+        // data={selectedCard as unknown as Record<string, unknown>}
         extraData={balanceCard as unknown as Record<string, unknown>}
       />
     </Card>

@@ -11,6 +11,7 @@ import { useTheme } from '../../../hooks/useTheme';
 import { RollbackOutlined } from '@ant-design/icons';
 import ClientProductPage from './product/ClientProductPage';
 import ClientTransactionHistory from './ClientTransactionHistory';
+import Title from 'antd/es/typography/Title';
 
 
 export default function ClientDetails() {
@@ -88,7 +89,7 @@ export default function ClientDetails() {
       ),
     },
     {
-      label: "История транзакций клиента", 
+      label: "История транзакций клиента",
       key: "4",
       children: (
         <ClientTransactionHistory keycloakClientId={client.keycloakClientId} />
@@ -107,9 +108,12 @@ export default function ClientDetails() {
 
   return (
     <div>
-      <Button style={{ marginBottom: 16 }} onClick={() => navigate(-1)}>
-        Назад <RollbackOutlined />
-      </Button>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent:"space-between" }}>
+        <Button style={{ marginBottom: 16 }} onClick={() => navigate(-1)}>
+          Назад <RollbackOutlined />
+        </Button>
+        <Title level={3}> {client.firstName} {client.lastName} </Title>
+      </div>
       <Tabs
         activeKey={activeKey}
         onChange={setActiveKey}

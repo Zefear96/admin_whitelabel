@@ -25,6 +25,7 @@ const PRODUCT_LABEL_MAP: Record<string, string> = {
 
   // Баланс карты
   cardExpiry: "Срок действия (баланс)",
+  cardId: "ID карты",
   initialAmount: "Исходная сумма",
   bonusAmount: "Бонусная сумма",
   creditLimit: "Кредитный лимит",
