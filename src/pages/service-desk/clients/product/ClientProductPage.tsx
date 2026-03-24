@@ -14,10 +14,10 @@ export default function ClientProductPage({ keycloakClientId }: ClientProductPag
     <div style={{ padding: "8px 0" }}>
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12} xl={24}>
-          <ClientAccountSection keycloakClientId={keycloakClientId} />
+          <ClientCardSection keycloakClientId={keycloakClientId} />
         </Col>
         <Col xs={24} lg={12} xl={24}>
-          <ClientCardSection keycloakClientId={keycloakClientId} />
+          <ClientAccountSection keycloakClientId={keycloakClientId} />
         </Col>
         <Col xs={24} lg={12} xl={24}>
           <ClientMudarabaSection keycloakClientId={keycloakClientId} />
