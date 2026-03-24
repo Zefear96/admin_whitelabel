@@ -73,9 +73,9 @@ export default function HomePage() {
           }}>ЭкоИсламикБанк ©{new Date().getFullYear()}
           </p>
           <p style={{
-            color: colors.text,
+            color: colors.primary,
             fontSize: "12px",
-            textAlign: "center"
+            textAlign: "center",
           }}>{ENV.APP_NAME} v{ENV.APP_VERSION === "dev" ? "dev" : `${ENV.APP_VERSION}`}</p>
         </Footer>
       </Layout>
