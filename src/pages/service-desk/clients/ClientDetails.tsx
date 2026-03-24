@@ -31,10 +31,10 @@ export default function ClientDetails() {
       key: "1",
       children: client ? (
         <Descriptions bordered column={1} size="middle" style={{ backgroundColor: colors.background, color: colors.text }}>
+          <Descriptions.Item label="ID">{client.id}</Descriptions.Item>
           <Descriptions.Item label="Имя">{client.firstName}</Descriptions.Item>
           <Descriptions.Item label="Фамилия">{client.lastName}</Descriptions.Item>
           <Descriptions.Item label="ИНН">{client.inn}</Descriptions.Item>
-          <Descriptions.Item label="ID">{client.id}</Descriptions.Item>
           <Descriptions.Item label="ABS ID">{client.absClientId}</Descriptions.Item>
           <Descriptions.Item label="MPC ID">{client.mpcClientId || "-"}</Descriptions.Item>
           <Descriptions.Item label="Keycloak ID">{client.keycloakClientId}</Descriptions.Item>
