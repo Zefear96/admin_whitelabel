@@ -99,7 +99,7 @@ export default function AgentDetailsPage() {
             <AgentEditModal
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
-                agentData={agentData}
+                data={agentData}
             />
         </>
     )
