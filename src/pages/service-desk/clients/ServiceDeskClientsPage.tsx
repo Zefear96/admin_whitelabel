@@ -1,31 +1,42 @@
-import { Input, Space, Card, Descriptions, Skeleton, Table } from 'antd';
-import { AudioOutlined } from '@ant-design/icons';
-import type { GetProps } from 'antd';
+import { Input, Space, Card, Descriptions, Skeleton } from 'antd';
 import { useClientProfile } from '../../../hooks/client/useClientProfile';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ClientDetails from './ClientDetails';
-import { useGetClientList } from '../../../hooks/client/useGetClientList';
-import type { ColumnsType } from 'antd/es/table';
-import type { CustomerProfileType } from '../../../types/client/customerProfile';
 import ClientList from './ClientList';
+import useNotificationMessage from '../../../components/dataDisplay/NotificationMessage';
 
-type SearchProps = GetProps<typeof Input.Search>;
 const { Search } = Input;
-
-const suffix = <AudioOutlined style={{ fontSize: 16, color: '#1677ff' }} />;
 
 export default function ServiceDeskClientsPage() {
   const [absId, setAbsId] = useState<string>("")
   const { data: client, isLoading, error } = useClientProfile(absId);
   const navigate = useNavigate();
+  const { notify } = useNotificationMessage();
 
+
+  const isNotFound = error?.response?.status === 404;
+  const hasRequestError = !!error && !isNotFound;
+
+  useEffect(() => {
+    if (isNotFound && absId) {
+      notify({
+        type: "info",
+        title: "Поиск клиента",
+        message: `Клиент с ABS ${absId} не найден`,
+      });
+    }
+    if (hasRequestError) {
+      notify({
+        type: "error",
+        title: "Ошибка загрузки",
+        message: error?.message || "Не удалось загрузить данные клиента",
+      });
+    }
+  }, [isNotFound, absId, notify]);
 
   if (isLoading) return <Skeleton/>;
-  if (error) return <p>Ошибка загрузки</p>;
 
-
-
+  
   return (
     <>
       <Space direction="vertical" style={{ width: '100%' }}>
@@ -35,10 +46,8 @@ export default function ServiceDeskClientsPage() {
           size="large"
           enterButton
         // loading={loading}
-        />
-        {error && <p>Ошибка загрузки</p>}
-
-        {client && (
+        />        
+        {client && !error && (
           <Card onClick={() => navigate(`/service-desk/clients/details/${client.absClientId}`)} title={`${client.firstName} ${client.lastName}`} style={{ marginTop: 16, cursor: 'pointer',  }} hoverable={true}>
             <Descriptions bordered column={1} style={{}}>
               <Descriptions.Item label="ABS number">{client.absClientId}</Descriptions.Item>
