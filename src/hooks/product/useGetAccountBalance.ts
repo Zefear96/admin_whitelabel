@@ -10,6 +10,7 @@ export const useGetAccountBalance = (accountNumber: string | undefined) => {
       return await ProductServiceApi.getAccountBalance(accountNumber!).then(response => response.data)
   },
   refetchOnMount: 'always',
+  enabled: !!accountNumber,
 })
 };
 
