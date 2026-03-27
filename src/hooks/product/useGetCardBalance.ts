@@ -10,6 +10,7 @@ export const useGetCardBalance = (cardId: string | undefined) => {
       return await ProductServiceApi.getCardBalance(cardId!).then(response => response.data)
   },
   refetchOnMount: 'always',
+  enabled: !!cardId,
 })
 };
 

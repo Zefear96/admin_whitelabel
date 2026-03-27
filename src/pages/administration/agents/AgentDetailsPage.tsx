@@ -9,6 +9,7 @@ import type { AgentType } from "../../../types/dictionary/agentType";
 import { formatRuDate } from "../../../utils/dateFormatter";
 import ButtonBack from "../../../components/dataEntry/ButtonBack";
 import AgentEditModal from "./AgentEditModal";
+import Title from "antd/es/typography/Title";
 
 export default function AgentDetailsPage() {
     const { agent } = useParams<{ agent: string }>()
@@ -68,6 +69,11 @@ export default function AgentDetailsPage() {
                                 {formatRuDate(agentData.changeDate) ?? "—"}
                             </Descriptions.Item>
                         </Descriptions>
+                        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16, gap: 8 }}>
+                            <Button color="cyan" variant="solid" onClick={() => setIsModalOpen(true)} >
+                                Редактировать <EditOutlined />
+                            </Button>
+                        </div>
                     </Card>
                 </>
             ) : (
@@ -82,11 +88,9 @@ export default function AgentDetailsPage() {
     ];
     return (
         <>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent:"space-between" }}>
                 <ButtonBack />
-                <Button color="cyan" variant="solid" onClick={() => setIsModalOpen(true)} >
-                    Редактировать <EditOutlined />
-                </Button>
+                <Title level={3}> {agentData.agent} </Title>
             </div>
             <Tabs
                 activeKey={activeKey}

@@ -10,6 +10,7 @@ export const useGetMudarabaBalance = (mudarabaNumber: string | undefined) => {
       return await ProductServiceApi.getMudarabaBalance(mudarabaNumber!).then(response => response.data)
   },
   refetchOnMount: 'always',
+  enabled: !!mudarabaNumber,
 })
 };
 
