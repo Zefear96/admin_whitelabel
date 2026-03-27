@@ -10,6 +10,7 @@ export const useGetMurabahaBalance = (murabahaId: string | undefined) => {
       return await ProductServiceApi.getMurabahaBalance(murabahaId!).then(response => response.data)
   },
   refetchOnMount: 'always',
+  enabled: !!murabahaId,
 })
 };
 
