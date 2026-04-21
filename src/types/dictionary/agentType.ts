@@ -7,5 +7,5 @@ export interface AgentType {
     bankAccount: string;
     isActive: boolean;
     changeDate: string;
-    logoUrl: null;
+    logoUrl: string | null;
 }
