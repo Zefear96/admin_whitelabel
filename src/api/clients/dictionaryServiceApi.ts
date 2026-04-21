@@ -1,4 +1,5 @@
 import type { AccountEibType } from "../../types/dictionary/accountType"
+import type { AgentOperationUpsertPayload } from "../../types/dictionary/agentOperationType"
 import type { AgentType } from "../../types/dictionary/agentType"
 import type { CurrencyType } from "../../types/dictionary/currencyType"
 import type { SwiftType } from "../../types/dictionary/swiftType"
@@ -40,8 +41,11 @@ export const DictionaryServiceApi = {
     updateAgent(payload: AgentType) {
         return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/agents', payload)
     },
-    updateAgentOperation() {
-        return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/agent-operation')
+    updateAgentOperation(payload: AgentOperationUpsertPayload) {
+        return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/agent-operation', payload)
+    },
+    createAgentOperation(payload: AgentOperationUpsertPayload) {
+        return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/agent-operation', payload)
     },
     createAgent(payload: AgentType){
         return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/agents', payload)
