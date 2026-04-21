@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Modal } from "antd";
 import { AuthContext } from "./AuthContext";
 import keycloakInstance from "./keycloak";
+import { keycloakService } from "./keycloakService";
 import type { UserKeycloakType } from "../types/keycloak/userKeycloakType";
 import type { Props } from "../types/propsType";
 import type { AuthContextType } from "../types/keycloak/authContextType";
@@ -9,10 +11,13 @@ const USER_STORAGE_KEY = "kc_user";
 
 export default function AuthProvider({ children }: Props) {
   const isRun = useRef(false);
+  const logoutRef = useRef<() => void>(() => {});
+  const sessionModalResolverRef = useRef<((result: boolean) => void) | null>(null);
 
   const [initialized, setInitialized] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
 
   const [user, setUser] = useState<UserKeycloakType | null>(() => {
     try {
@@ -22,6 +27,52 @@ export default function AuthProvider({ children }: Props) {
       return null;
     }
   });
+
+  const saveUserFromToken = useCallback(() => {
+    if (!keycloakInstance.tokenParsed || !keycloakInstance.token) return;
+
+    const p: any = keycloakInstance.tokenParsed;
+    const userData: UserKeycloakType = {
+      id: p.sub,
+      name: p.name,
+      email: p.email,
+      firstName: p.given_name,
+      secondName: p.family_name,
+      roles: p.roles || [],
+      token: keycloakInstance.token,
+      refreshToken: keycloakInstance.refreshToken || undefined,
+      idToken: keycloakInstance.idToken || undefined,
+      timeSkew: keycloakInstance.timeSkew ?? undefined,
+    };
+
+    setAuthenticated(true);
+    setUser(userData);
+    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
+  }, []);
+
+  const requestSessionContinuation = useCallback(async (): Promise<boolean> => {
+    if (sessionModalResolverRef.current) {
+      return new Promise<boolean>((resolve) => {
+        const prevResolver = sessionModalResolverRef.current;
+        sessionModalResolverRef.current = (result) => {
+          prevResolver?.(result);
+          resolve(result);
+        };
+      });
+    }
+
+    setIsSessionModalOpen(true);
+    return new Promise<boolean>((resolve) => {
+      sessionModalResolverRef.current = resolve;
+    });
+  }, []);
+
+  const closeSessionModal = useCallback((result: boolean) => {
+    setIsSessionModalOpen(false);
+    const resolver = sessionModalResolverRef.current;
+    sessionModalResolverRef.current = null;
+    resolver?.(result);
+  }, []);
 
   // ---------------- INIT ----------------
   useEffect(() => {
@@ -105,12 +156,17 @@ export default function AuthProvider({ children }: Props) {
     };
 
     keycloakInstance.onTokenExpired = () => {
-      console.log("🟡 [AuthProvider] onTokenExpired triggered, attempting refresh");
-      keycloakInstance.updateToken(30).catch((err) => {
-        console.error("🔴 [AuthProvider] Failed to refresh expired token:", err);
+      console.log("🟡 [AuthProvider] onTokenExpired triggered");
+      keycloakService.refreshAccessToken(true).then((token) => {
+        if (token) {
+          saveUserFromToken();
+          return;
+        }
+
         setAuthenticated(false);
         localStorage.removeItem(USER_STORAGE_KEY);
         setUser(null);
+        logoutRef.current();
       });
     };
 
@@ -393,6 +449,17 @@ export default function AuthProvider({ children }: Props) {
     });    
   }, []);
 
+  useEffect(() => {
+    logoutRef.current = logout;
+  }, [logout]);
+
+  useEffect(() => {
+    keycloakService.setSessionContinuationHandler(requestSessionContinuation);
+    return () => {
+      keycloakService.setSessionContinuationHandler(null);
+    };
+  }, [requestSessionContinuation]);
+
   // Отслеживание изменений состояний
   // useEffect(() => {
   //   console.log("🔄 [AuthProvider] State changed:", {
@@ -421,5 +488,21 @@ export default function AuthProvider({ children }: Props) {
   //   hasUser: !!value.user,
   // });
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      <Modal
+        open={isSessionModalOpen}
+        title="Сессия истекла"
+        closable={false}
+        maskClosable={false}
+        onCancel={() => closeSessionModal(false)}
+        okText="Продолжить работу"
+        cancelText="Выйти"
+        onOk={() => closeSessionModal(true)}
+      >
+        Время сессии истекло. Продолжить работу и обновить токен?
+      </Modal>
+    </AuthContext.Provider>
+  );
 }

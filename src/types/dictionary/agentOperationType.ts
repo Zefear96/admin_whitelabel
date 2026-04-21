@@ -1,8 +1,8 @@
 export interface AgentOperationType {
     id: string
     agent: string
-    direction: "INCOMING" | "OUTGOING"
-    transactionType: "CARD_CREDIT" | "CARD_DEBIT" | "ACCOUNT_CREDIT" | "ACCOUNT_DEBET" | "LOAN_PAYMENT" | "DEPOSIT_CREDIT"
+    direction: AgentOperationDirection
+    transactionType: AgentOperationTransactionType
     serviceName: string
     isEnabled: boolean
     changeDate: string
@@ -14,3 +14,14 @@ export interface AgentOperationType {
     isArchived: string
     active: boolean
 }
+
+export type AgentOperationDirection = "INCOMING" | "OUTGOING"
+export type AgentOperationTransactionType =
+    | "CARD_CREDIT"
+    | "CARD_DEBIT"
+    | "ACCOUNT_CREDIT"
+    | "ACCOUNT_DEBET"
+    | "LOAN_PAYMENT"
+    | "DEPOSIT_CREDIT"
+
+export type AgentOperationUpsertPayload = Omit<AgentOperationType, "id"> & { id?: string }
