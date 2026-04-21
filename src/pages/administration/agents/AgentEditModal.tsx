@@ -20,6 +20,7 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, data }: Mo
                 bic: data.bic,
                 bankAccount: data.bankAccount,
                 isActive: data.isActive,
+                logoUrl: data.logoUrl,
             });
         }
     }, [isModalOpen, data, form]);
@@ -39,6 +40,7 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, data }: Mo
                 bic: values.bic,
                 bankAccount: values.bankAccount,
                 isActive: values.isActive,
+                logoUrl: values.logoUrl,
                 // changedBy: user?.name ?? agentData.changedBy,
                 // changeDate: new Date().toISOString(),
             };
@@ -69,11 +71,14 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, data }: Mo
                     <Form.Item label="Имя агента" name="agent" rules={[{ required: true, message: "Введите наименование агента" }]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item label="БИК" name="bic" rules={[{ required: true, message: "Введите BIC" }]}>
+                    <Form.Item label="БИК" name="bic" rules={[{ required: false, message: "Введите BIC" }]}>
                         <Input />
                     </Form.Item>
                     <Form.Item label="Счет" name="bankAccount" rules={[{ required: true, message: "Введите счёт" }]}>
                         <Input />
+                    </Form.Item>
+                    <Form.Item label="Иконка" name="logoUrl" rules={[{ required: false, message: "Введите ссылку на иконку" }]}>
+                        <Input placeholder="https://example.com/icon.png" />
                     </Form.Item>
                     <Form.Item label="Активен" name="isActive" valuePropName="checked">
                         <Switch checkedChildren="Да" unCheckedChildren="Нет" />
