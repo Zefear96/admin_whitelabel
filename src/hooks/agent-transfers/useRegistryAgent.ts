@@ -1,27 +1,23 @@
 import { useQuery } from "@tanstack/react-query"
-import { registryAiylServiceApi } from "../../api/clients/registryAiylServiceApi"
+import { registryAgentServiceApi } from "../../api/clients/registryAgentServiceApi"
 import dayjs from "dayjs";
 
 const today = dayjs();
-const DEFAULT_FROM = today.format("YYYY-MM-DD");
-const DEFAULT_TO = today.subtract(7, "day").format("YYYY-MM-DD");
+const DEFAULT_FROM = today.subtract(1, "day").format("YYYY-MM-DD");
+const DEFAULT_TO = today.subtract(2, "day").format("YYYY-MM-DD");
 
 export const useRegistryAgent = (
     bankCode?: string,
-    from?: string,
-    to?: string,
-    page = 0,
-    size = 20,
+    dateFrom?: string,
+    dateTo?: string,
 ) => {
     return useQuery({
-        queryKey: ['registry-agent', bankCode, from, to, page, size],
+        queryKey: ['registry-agent', bankCode, dateFrom, dateTo],
         queryFn: async () => {
-            const { data } = await registryAiylServiceApi.getOutgoingTransactionsAyil(
+            const { data } = await registryAgentServiceApi.createOutgoingTransactionsRegistry(
                 bankCode!,
-                from ?? DEFAULT_FROM,
-                to ?? DEFAULT_TO,
-                page,
-                size,
+                dateFrom ?? DEFAULT_FROM,
+                dateTo ?? DEFAULT_TO,
             )
             return data;
         },

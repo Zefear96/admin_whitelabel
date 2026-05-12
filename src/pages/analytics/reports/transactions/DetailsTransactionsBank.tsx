@@ -1,18 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { useRegistryAgent } from "../../../../hooks/agent-transfers/useRegistryAgent";
-import type { TransactionBankReportType } from "../../../../types/transactionBankReportType";
-import type { ColumnsType } from "antd/es/table";
-import { Button, Card, DatePicker, Table, Tabs, Tag, type TabsProps } from "antd";
-import { ButtonReportIncomingTransactions } from "./ButtonReportIncomingTransactions";
+import { Button, Tabs, type TabsProps } from "antd";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { useState } from "react";
 import { useGetTransactionsByAgent } from "../../../../hooks/banking-gateway/useGetAllTransactionsByAgent";
 import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
-import { ButtonReportOutgoingTransactions } from "./ButtonReportOutgoingTransactions";
 import { RollbackOutlined } from "@ant-design/icons";
-
-const { RangePicker } = DatePicker;
+import IncomingTransactionsTab from "./IncomingTransactionsTab";
+import OutgoingTransactionsTab from "./OutgoingTransactionsTab";
 
 export default function DetailsTransactionsBank() {
     const navigate = useNavigate();
@@ -33,219 +28,39 @@ export default function DetailsTransactionsBank() {
     const toDate = dateRange?.[1]?.toISOString();
 
     const {
-        data: OutgoingTransactions,
-        isLoading: isLoadingOutgoingTransactions,
-        error: errorOutgoingTransactions,
-    } = useRegistryAgent(bankCode, apiFromDate, apiToDate);
-
-    const outgoingTransactionsArray: TransactionBankReportType[] = Array.isArray(OutgoingTransactions)
-        ? OutgoingTransactions
-        : (OutgoingTransactions?.content ?? []);
-
-    const {
         data: IncomingTransactions,
         isLoading: isLoadingIncomingTransactions,
         error: errorIncomingTransactions,
     } = useGetTransactionsByAgent(bankCode, 0, 20, "creationDate", "DESC");
-
-    const filteredIncomingTransactions = (IncomingTransactions?.content ?? []).filter((tx) => {
-        if (!dateRange || !dateRange[0] || !dateRange[1]) return true;
-        const [start, end] = dateRange;
-        if (!start || !end) return true;
-        const txDate = dayjs(tx.creationDate);
-        if (!txDate.isValid()) return false;
-        return (
-            (txDate.isAfter(start, "day") || txDate.isSame(start, "day")) &&
-            (txDate.isBefore(end, "day") || txDate.isSame(end, "day"))
-        );
-    });
-
-
-    const columns: ColumnsType<TransactionBankReportType> = [
-
-        {
-            title: "ID",
-            dataIndex: "paymentId",
-            width: 300,
-            render: (paymentID: string, row) => <div>{paymentID}</div>
-        },
-        {
-            title: "Type",
-            dataIndex: "transactionType",
-            width: 80,
-            render: (txType: string) => <div>{txType}</div>
-        },
-        {
-            title: "Amount",
-            dataIndex: "amount",
-            width: 50,
-            render: (text: string) => <div>{text}</div>
-        },
-        {
-            title: "Currency",
-            dataIndex: "currency",
-            width: 30,
-            render: (text: string) => <div>{text}</div>
-        },
-        {
-            title: "Date",
-            dataIndex: "date",
-            width: 150,
-            render: (date: string, row) => dayjs(date).format("DD.MM.YYYY HH:mm")
-        },
-        {
-            title: "Receiver",
-            dataIndex: "receiverAccount",
-            width: 60,
-            render: (text: string) => <div>{text}</div>
-        },
-        {
-            title: "Status",
-            dataIndex: "status",
-            width: 80,
-            render: (status: boolean) => status ? (<Tag color="green">SUCCESS</Tag>) : (<Tag color="red">FAILED</Tag>)
-        },
-    ]
-
-    const columnsIncoming: ColumnsType<IncomingTransactionType> = [
-
-        {
-            title: "ID",
-            dataIndex: "id",
-            width: 50,
-            render: (id: string, row) => <div>{id}</div>
-        },
-        {
-            title: "Type",
-            dataIndex: "transactionType",
-            width: 80,
-            render: (txType: string) => <div>{txType}</div>
-        },
-        {
-            title: "Amount",
-            dataIndex: "amount",
-            width: 50,
-            render: (amount: number, row) => <div>{amount} {row.currency}</div>
-        },
-        {
-            title: "Receiver",
-            dataIndex: "receiver",
-            width: 60,
-            render: (receiver: string) => <div>{receiver}</div>
-        },
-        {
-            title: "Agent",
-            dataIndex: "agent",
-            width: 60,
-            render: (agent: string) => <div>{agent}</div>
-        },
-        {
-            title: "Date Created",
-            dataIndex: "creationDate",
-            width: 150,
-            render: (creationDate: string, row) => dayjs(creationDate).format("DD.MM.YYYY HH:mm")
-        },
-        {
-            title: "Date Updated",
-            dataIndex: "updateDate",
-            width: 150,
-            render: (updateDate: string, row) => dayjs(updateDate).format("DD.MM.YYYY HH:mm")
-        },
-        {
-            title: "Status",
-            dataIndex: "status",
-            width: 80,
-            render: (status: string) => status === "SUCCESS" ? (<Tag color="green">SUCCESS</Tag>) : (<Tag color="red">FAILED</Tag>)
-        },
-        {
-            title: "External ID",
-            dataIndex: "externalId",
-            width: 80,
-            render: (externalId: string) => <div>{externalId}</div>
-        },
-        {
-            title: "Bill",
-            dataIndex: "bill",
-            width: 80,
-            render: (bill: string) => <div>{bill}</div>
-        },
-        {
-            title: "Error Message",
-            dataIndex: "error",
-            width: 80,
-            render: (error: any) => <div>{error}</div>
-        },
-    ]
+    const incomingTransactionsArray: IncomingTransactionType[] = (IncomingTransactions?.content ?? []) as IncomingTransactionType[];
 
     const items: TabsProps["items"] = [
         {
             label: "Исходящие транзакции",
             key: "1",
-            children: <>
-                <RangePicker
-                    value={dateRange}
-                    onChange={(value) => setDateRange(value)}
-                    allowClear
-                    style={{ margin: "20px", color: "black",  cursor: "pointer" }}
-                    placeholder={["Дата начала", "Дата окончания"]}
+            children: (
+                <OutgoingTransactionsTab
+                    bankCode={bankCode}
+                    dateRange={dateRange}
+                    setDateRange={setDateRange}
                 />
-                <ButtonReportOutgoingTransactions
-                    transactions={outgoingTransactionsArray}
-                    bankCode={code ?? ""}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                />
-                <Card title={`Исходящие транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
-                    {errorOutgoingTransactions && <p style={{ color: "red" }}>Ошибка загрузки</p>}
-                    <Table<TransactionBankReportType>
-                        rowKey={(row) => row.paymentId}
-                        columns={columns}
-                        loading={isLoadingOutgoingTransactions}
-                        dataSource={OutgoingTransactions ?? []}
-                        pagination={{ pageSize: 10 }}
-                        // onRow={(record) => ({
-                        //     onClick: () => navigate(`./${record.code}`),
-                        // })}
-                        style={{ cursor: "pointer" }}
-                        scroll={{ x: 'max-content' }}
-                    />
-                </Card>
-            </>
-
+            ),
         },
         {
             label: "Входящие транзакции",
             key: "2",
-            children: <>
-                <RangePicker
-                    value={dateRange}
-                    onChange={(value) => setDateRange(value)}
-                    allowClear
-                    style={{ margin: "20px", color: "black", cursor: "pointer" }}
-                    placeholder={["Дата начала", "Дата окончания"]}
+            children: (
+                <IncomingTransactionsTab
+                    bankCode={bankCode}
+                    dateRange={dateRange}
+                    setDateRange={setDateRange}
+                    incomingTransactions={incomingTransactionsArray}
+                    isLoadingIncomingTransactions={isLoadingIncomingTransactions}
+                    errorIncomingTransactions={errorIncomingTransactions}
+                    fromDate={fromDate ?? ""}
+                    toDate={toDate ?? ""}
                 />
-                <ButtonReportIncomingTransactions
-                    transactions={filteredIncomingTransactions}
-                    bankCode={code ?? ""}
-                    fromDate={fromDate}
-                    toDate={toDate}
-                />
-                <Card title={`Входящие транзакции агента ${code?.toUpperCase()}`} style={{ margin: 20 }}>
-                    {errorIncomingTransactions && <p style={{ color: "red" }}>Ошибка загрузки</p>}
-                    <Table<IncomingTransactionType>
-                        rowKey={(row) => row.id}
-                        columns={columnsIncoming}
-                        loading={isLoadingIncomingTransactions}
-                        dataSource={filteredIncomingTransactions}
-                        pagination={{ pageSize: 10 }}
-                        // onRow={(record) => ({
-                        //     onClick: () => navigate(`./${record.code}`),
-                        // })}
-                        style={{ cursor: "pointer" }}
-                        scroll={{ x: 'max-content' }}
-                    />
-                </Card>
-            </>
+            ),
         },
     ]
 
