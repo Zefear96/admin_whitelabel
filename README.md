@@ -141,3 +141,47 @@ const { themeMode, toggleTheme } = useTheme();
 
 ### Customizing Menu
 Edit `src/config/sections.ts` to modify menu structure and permissions.
+
+
+---
+
+## Дополнительная информация (для аудита и сопровождения)
+
+_Эта секция автоматически синхронизируется с актуальным состоянием платформы. Источник истины: `mbp/knowledge/` и Jira-проект MBP._
+
+### Архитектура и связи с другими сервисами
+
+React + Ant Design SPA для администраторов банка. Обращается к `admin-backend` за всеми данными, аутентификация через Keycloak (SSO).
+
+**Этот сервис ходит к:**
+- `admin-backend`
+- `Keycloak`
+
+### Безопасность и контроль доступа
+
+- **Хранение токенов:** httpOnly + Secure + SameSite=Strict cookies; in-memory access-token; silent refresh через `/api/auth/whoami`.
+- **CSP:** строгая Content-Security-Policy, исключающая `unsafe-inline`/`unsafe-eval`.
+- **SSO:** Keycloak через Authorization Code + PKCE.
+
+### Аудит-замечания и связанные задачи Jira
+
+- MBP-542 — §5.1 закоммичены сертификаты в certs/*.pem
+- MBP-548 — §5.3 JWT в localStorage (kc_user) + отсутствие CSP
+
+### Локальный запуск — краткая шпаргалка
+
+- Stack: **React** (TypeScript).
+- Установка: `npm install` (или `pnpm install`).
+- Запуск: `npm run dev` (Vite) или `npm start` (CRA).
+- **WebStorm / IntelliJ Ultimate**: Run Configuration **npm** → script `dev`.
+
+### Перекрёстные ссылки
+
+- Архитектура межсервисной коммуникации: `mbp/knowledge/EIB-Service-Communication-Architecture.pdf`
+- Аудит безопасности (issues): `mbp/knowledge/EIB-Audit-Findings.pdf`
+- Рекомендуемые решения по 17 категориям: `mbp/knowledge/EIB-Audit-Solutions.pdf`
+- Pen-test моб-приложения: `mbp/knowledge/Ecoislamic_mob_report.docx`
+- Security guide / playbook: `mbp/knowledge/SECURITY-GUIDE-RU 2.md`, `OPERATIONS-PLAYBOOK-RU 2.md`
+- CI/CD-шаблоны: `devops/ci-templates` (общий `.gitlab-ci.yml` через `include:`)
+- Jira-проект: [MBP](https://jira.eib.kg/projects/MBP)
+
