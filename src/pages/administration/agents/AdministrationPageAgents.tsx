@@ -57,7 +57,7 @@ export default function AdministrationPageAgents() {
             }>
                 {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
 
-                <AgentCreateModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                <AgentCreateModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={null} />
                 <Table<AgentType>
                     rowClassName={() => "group"}
                     rowKey={(row) => row.id}
@@ -72,7 +72,6 @@ export default function AdministrationPageAgents() {
                     style={{ cursor: "pointer" }}
                 />
             </Card>
-
         </>
     )
 }

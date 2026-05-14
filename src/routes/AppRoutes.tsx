@@ -34,7 +34,7 @@ import AdministrationPageProductsCards from "../pages/administration/products/Ad
 import AdministrationPageProductsMudaraba from "../pages/administration/products/AdministrationPageProductsMudaraba";
 import AdministrationPageProductsMurabaha from "../pages/administration/products/AdministrationPageProductsMurabaha";
 import AdministrationPageProductsSafe from "../pages/administration/products/AdministrationPageProductsSafe";
-import AdministrationPageNotifications from "../pages/administration/AdministrationPageNotifications";
+import AdministrationPageNotifications from "../pages/administration/notifications/AdministrationPageNotifications";
 import AdministrationPageServices from "../pages/administration/AdministrationPageServices";
 import AdministrationPageTariffs from "../pages/administration/AdministrationPageTariffs";
 import AdministrationPageLimitsCorporate from "../pages/administration/limits/AdministrationPageLimitsCorporate";
