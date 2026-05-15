@@ -16,7 +16,7 @@ interface ExportButtonProps {
 
 interface TableRow {
   index: number;
-  updateDate: string;
+  creationDate: string;
   paymentId: string;
   transactionType: string;
   receiver: string;
@@ -53,7 +53,7 @@ export const ButtonReportIncomingTransactions = ({ transactions, bankCode, fromD
 
     const tableColumns: { header: string; dataKey: keyof TableRow }[] = [
       { header: "№", dataKey: "index" },
-      { header: "Дата и время", dataKey: "updateDate" },
+      { header: "Дата и время", dataKey: "creationDate" },
       { header: "ID платежа", dataKey: "paymentId" },
       { header: "Наименование услуги", dataKey: "transactionType" },
       { header: "Лицевой счет", dataKey: "receiver" },
@@ -63,8 +63,8 @@ export const ButtonReportIncomingTransactions = ({ transactions, bankCode, fromD
 
     const tableData: TableRow[] = transactions.map((tx, index) => ({
       index: index + 1,
-      updateDate: tx.updateDate ? dayjs(tx.updateDate).format("DD.MM.YYYY HH:mm") : "-",
-      paymentId: tx.externalId || tx.id || "-",
+      creationDate: tx.creationDate ? dayjs(tx.creationDate).format("DD.MM.YYYY HH:mm:ss") : "-",
+      paymentId: tx.id || "-",
       transactionType: tx.transactionType || "-",
       receiver: tx.receiver || "-",
       status: tx.status?.toUpperCase() || "-",
