@@ -9,7 +9,6 @@ export default function ContentEib() {
             style={{
                 margin: '24px 16px 0',
                 overflow: 'initial',
-                height: "100vh",
                 background: colors.background,
                 color: colors.text,
             }}>

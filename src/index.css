@@ -28,9 +28,23 @@
   font-size: var(--typography-fontSize);
 }
 
+/* Высота на всю страницу: проценты опираются на html; dvh — актуальная высота окна (моб. браузеры) */
+html {
+  height: 100%;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-text);
+  min-height: 100%;
+  min-height: 100dvh;
+}
+
+#root {
+  min-height: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1,
