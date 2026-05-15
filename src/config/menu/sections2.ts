@@ -407,19 +407,9 @@ export const sections2: SectionMenuType[] = [
                         "parentId": "ba730078-c1ae-42b7-9a24-616c77f3b2ab",
                         "children": [
                             {
-                                "id": "d06c3018-f39f-4143-8ac6-76ff1e3cf276",
-                                "name": "Юр.лица",
-                                "link": "/administration/limits/corporate",
-                                "icon": null,
-                                "isEnabled": true,
-                                "iconPosition": "left",
-                                "parentId": "ac26c329-ff93-4e26-b43a-557a1aa0ca85",
-                                "children": []
-                            },
-                            {
-                                "id": "a3362bb8-11f7-42e8-81e5-877516880d56",
-                                "name": "ИП",
-                                "link": "/administration/limits/pe",
+                                "id": "c6e1dcb5-5b47-4b90-a665-c6f1b84f1ca1",
+                                "name": "Онлайн",
+                                "link": "/administration/limits/online",
                                 "icon": null,
                                 "isEnabled": true,
                                 "iconPosition": "left",
@@ -437,15 +427,35 @@ export const sections2: SectionMenuType[] = [
                                 "children": []
                             },
                             {
-                                "id": "c6e1dcb5-5b47-4b90-a665-c6f1b84f1ca1",
-                                "name": "Онлайн",
-                                "link": "/administration/limits/online",
+                                "id": "a3362bb8-11f7-42e8-81e5-877516880d56",
+                                "name": "ИП",
+                                "link": "/administration/limits/pe",
                                 "icon": null,
                                 "isEnabled": true,
                                 "iconPosition": "left",
                                 "parentId": "ac26c329-ff93-4e26-b43a-557a1aa0ca85",
                                 "children": []
-                            }
+                            },
+                            {
+                                "id": "d06c3018-f39f-4143-8ac6-76ff1e3cf276",
+                                "name": "Юр.лица",
+                                "link": "/administration/limits/corporate",
+                                "icon": null,
+                                "isEnabled": true,
+                                "iconPosition": "left",
+                                "parentId": "ac26c329-ff93-4e26-b43a-557a1aa0ca85",
+                                "children": []
+                            },
+                            {
+                                "id": "d06c3018-f39f-4143-8ac6-76ff1e3cf277",
+                                "name": "Агенты",
+                                "link": "/administration/limits/agents",
+                                "icon": null,
+                                "isEnabled": true,
+                                "iconPosition": "left",
+                                "parentId": "ac26c329-ff93-4e26-b43a-557a1aa0ca85",
+                                "children": []
+                            },
                         ]
                     },]
             },

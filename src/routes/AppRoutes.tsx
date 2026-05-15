@@ -54,6 +54,7 @@ import DictionaryTransactionTypesPage from "../pages/administration/dictionary/t
 import AdministrationPageAgents from "../pages/administration/agents/AdministrationPageAgents";
 import AgentDetailsPage from "../pages/administration/agents/AgentDetailsPage";
 import LogoutPage from "../pages/logout/LogoutPage";
+import AdministrationPageLimitsAgent from "../pages/administration/limits/AdministrationPageLimitsAgent";
 
 export default function AppRoutes() {
   const [sections, setSections] = useState<SectionMenuType[]>([]);
@@ -119,6 +120,7 @@ export default function AppRoutes() {
         <Route path="/administration/notifications" element={<AdministrationPageNotifications/>}/>
         <Route path="/administration/services" element={<AdministrationPageServices/>}/>
         <Route path="/administration/tariffs" element={<AdministrationPageTariffs/>}/>
+        <Route path="/administration/limits/agents" element={<AdministrationPageLimitsAgent/>}/>
         <Route path="/administration/limits/corporate" element={<AdministrationPageLimitsCorporate/>}/>
         <Route path="/administration/limits/pe" element={<AdministrationPageLimitsPe/>}/>
         <Route path="/administration/limits/retail" element={<AdministrationPageLimitsRetail/>}/>
