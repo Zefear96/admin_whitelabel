@@ -1,7 +1,32 @@
 import { Card, Row, Col, Statistic, Progress, Table, Empty, Skeleton, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { useMemo } from "react";
 import { useGetAllTransactions } from "../../../../hooks/banking-gateway/useGetAllTransactions";
+import { useGetAgentList } from "../../../../hooks/dictionary/agent/useGetAgentList";
 import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
+import type { AgentType } from "../../../../types/dictionary/agentType";
+
+const ANALYTICS_PAGE_SIZE = 500;
+
+const normalizeAgentKey = (value: string) => value.trim().toUpperCase();
+
+const resolveAgentKey = (txAgent: string, agents: AgentType[]) => {
+    const normalized = normalizeAgentKey(txAgent);
+    const matched = agents.find(
+        (a) =>
+            normalizeAgentKey(a.code) === normalized ||
+            normalizeAgentKey(a.agent) === normalized,
+    );
+    return matched ? normalizeAgentKey(matched.code) : normalized;
+};
+
+interface AgentStats {
+    label: string;
+    count: number;
+    totalAmount: number;
+    successAmount: number;
+    failedAmount: number;
+}
 
 interface AgentAnalyticsRow {
     agent: string;
@@ -37,7 +62,8 @@ const PieChart = ({ data, title }: { data: PieSlice[]; title: string }) => {
         );
     }
 
-    const total = data.reduce((sum, d) => sum + d.value, 0);
+    const chartData = data.filter((d) => d.value > 0);
+    const chartTotal = chartData.reduce((sum, d) => sum + d.value, 0);
     const size = 200;
     const radius = 70;
     const circumference = 2 * Math.PI * radius;
@@ -45,14 +71,18 @@ const PieChart = ({ data, title }: { data: PieSlice[]; title: string }) => {
     const slices: { slice: PieSlice; dash: number; offset: number; color: string }[] = [];
     let cumulative = 0;
 
-    data.forEach((slice, index) => {
-        const fraction = slice.value / total;
+    const colorByLabel = new Map<string, string>();
+
+    chartData.forEach((slice, index) => {
+        const fraction = chartTotal > 0 ? slice.value / chartTotal : 0;
         const dash = fraction * circumference;
+        const color = PIE_COLORS[index % PIE_COLORS.length];
+        colorByLabel.set(slice.label, color);
         slices.push({
             slice,
             dash,
             offset: cumulative,
-            color: PIE_COLORS[index % PIE_COLORS.length],
+            color,
         });
         cumulative += dash;
     });
@@ -82,9 +112,10 @@ const PieChart = ({ data, title }: { data: PieSlice[]; title: string }) => {
                     ))}
                 </g>
             </svg>
-            <ul style={{ listStyle: "none", padding: 0, margin: "8px 0 0", width: "100%", maxWidth: 260 }}>
-                {slices.map(({ slice, color }) => {
-                    const percent = (slice.value / total) * 100;
+            <ul style={{ listStyle: "none", padding: 0, margin: "8px 0 0", width: "100%", maxWidth: 320 }}>
+                {data.map((slice) => {
+                    const color = colorByLabel.get(slice.label) ?? "#d9d9d9";
+                    const percent = chartTotal > 0 ? (slice.value / chartTotal) * 100 : 0;
                     return (
                         <li
                             key={slice.label}
@@ -121,36 +152,66 @@ const PieChart = ({ data, title }: { data: PieSlice[]; title: string }) => {
 };
 
 export const IncomingTransactionsAnalytics = () => {
-    const { data, isLoading, error } = useGetAllTransactions(0, 20, "creationDate", "DESC");
-
-    const transactions: IncomingTransactionType[] = data?.content ?? [];
-
-    const totalAmount = transactions.reduce((sum, tx) => sum + (tx.amount ?? 0), 0);
-    const totalCount = transactions.length;
-
-    const byAgentMap = transactions.reduce<
-        Record<string, { count: number; totalAmount: number; successAmount: number; failedAmount: number }>
-    >(
-        (acc, tx) => {
-            const key = tx.agent || "UNKNOWN";
-            if (!acc[key]) {
-                acc[key] = { count: 0, totalAmount: 0, successAmount: 0, failedAmount: 0 };
-            }
-            acc[key].count += 1;
-            acc[key].totalAmount += tx.amount ?? 0;
-            if (tx.status === "SUCCESS") {
-                acc[key].successAmount += tx.amount ?? 0;
-            } else {
-                acc[key].failedAmount += tx.amount ?? 0;
-            }
-            return acc;
-        },
-        {}
+    const { data: agents, isLoading: isAgentsLoading } = useGetAgentList();
+    const { data, isLoading: isTxLoading, error } = useGetAllTransactions(
+        0,
+        ANALYTICS_PAGE_SIZE,
+        "creationDate",
+        "DESC",
     );
 
-    const agentRows: AgentAnalyticsRow[] = Object.entries(byAgentMap)
-        .map(([agent, value]) => ({
-            agent,
+    const isLoading = isAgentsLoading || isTxLoading;
+
+    const activeAgents = useMemo(
+        () => (agents ?? []).filter((agent: AgentType) => agent.isActive),
+        [agents],
+    );
+
+    const transactions: IncomingTransactionType[] = data?.content ?? [];
+    const totalFromApi = data?.total ?? transactions.length;
+
+    const byAgentMap = useMemo(() => {
+        const map: Record<string, AgentStats> = {};
+
+        for (const agent of activeAgents) {
+            const key = normalizeAgentKey(agent.code);
+            map[key] = {
+                label: agent.agent || agent.code,
+                count: 0,
+                totalAmount: 0,
+                successAmount: 0,
+                failedAmount: 0,
+            };
+        }
+
+        for (const tx of transactions) {
+            const key = resolveAgentKey(tx.agent || "UNKNOWN", activeAgents);
+            if (!map[key]) {
+                map[key] = {
+                    label: tx.agent || key,
+                    count: 0,
+                    totalAmount: 0,
+                    successAmount: 0,
+                    failedAmount: 0,
+                };
+            }
+            map[key].count += 1;
+            map[key].totalAmount += tx.amount ?? 0;
+            if (tx.status === "SUCCESS") {
+                map[key].successAmount += tx.amount ?? 0;
+            } else {
+                map[key].failedAmount += tx.amount ?? 0;
+            }
+        }
+
+        return map;
+    }, [activeAgents, transactions]);
+
+    const totalAmount = transactions.reduce((sum, tx) => sum + (tx.amount ?? 0), 0);
+
+    const agentRows: AgentAnalyticsRow[] = Object.values(byAgentMap)
+        .map((value) => ({
+            agent: value.label,
             transactionsCount: value.count,
             totalAmount: value.totalAmount,
             averageAmount: value.count ? value.totalAmount / value.count : 0,
@@ -158,19 +219,15 @@ export const IncomingTransactionsAnalytics = () => {
         }))
         .sort((a, b) => b.totalAmount - a.totalAmount);
 
-    const successPieData: PieSlice[] = Object.entries(byAgentMap)
-        .filter(([, value]) => value.successAmount > 0)
-        .map(([agent, value]) => ({
-            label: agent,
-            value: value.successAmount,
-        }));
+    const successPieData: PieSlice[] = Object.values(byAgentMap).map((value) => ({
+        label: value.label,
+        value: value.successAmount,
+    }));
 
-    const failedPieData: PieSlice[] = Object.entries(byAgentMap)
-        .filter(([, value]) => value.failedAmount > 0)
-        .map(([agent, value]) => ({
-            label: agent,
-            value: value.failedAmount,
-        }));
+    const failedPieData: PieSlice[] = Object.values(byAgentMap).map((value) => ({
+        label: value.label,
+        value: value.failedAmount,
+    }));
 
     const columns: ColumnsType<AgentAnalyticsRow> = [
         {
@@ -220,7 +277,7 @@ export const IncomingTransactionsAnalytics = () => {
             {error && <p style={{ color: "red" }}>Ошибка загрузки аналитики по транзакциям</p>}
             {isLoading ? (
                 <Skeleton active paragraph={{ rows: 6 }} />
-            ) : !transactions.length ? (
+            ) : !activeAgents.length && !transactions.length ? (
                 <Empty description="Нет данных по входящим транзакциям" />
             ) : (
                 <>
@@ -229,8 +286,13 @@ export const IncomingTransactionsAnalytics = () => {
                             <Card>
                                 <Statistic
                                     title="Общее количество входящих транзакций"
-                                    value={totalCount}
+                                    value={totalFromApi}
                                 />
+                                {totalFromApi > transactions.length && (
+                                    <span style={{ fontSize: 12, color: "#888" }}>
+                                        В выборке: {transactions.length}
+                                    </span>
+                                )}
                             </Card>
                         </Col>
                         <Col xs={24} sm={12} md={8}>
@@ -245,8 +307,8 @@ export const IncomingTransactionsAnalytics = () => {
                         <Col xs={24} sm={24} md={8}>
                             <Card>
                                 <Statistic
-                                    title="Количество агентов с активными транзакциями"
-                                    value={agentRows.length}
+                                    title="Активных агентов / с транзакциями"
+                                    value={`${activeAgents.length} / ${agentRows.filter((r) => r.transactionsCount > 0).length}`}
                                 />
                             </Card>
                         </Col>

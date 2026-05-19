@@ -5,7 +5,7 @@ import type { IncomingTransactionListType, IncomingTransactionType } from "../..
 
 export const useGetAllTransactions = (page: number, size: number, sort: string, direction: string) => {
     return useQuery<IncomingTransactionListType, AxiosError>({
-        queryKey: ['banking-gateway', 'transaction'],
+        queryKey: ['banking-gateway', 'transaction', page, size, sort, direction],
         queryFn: async () => {
             const response = await BankingGatewayApi.getAllIncomingTransactions(
                 page,
