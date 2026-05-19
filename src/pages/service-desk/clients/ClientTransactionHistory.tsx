@@ -2,8 +2,8 @@ import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
 import { Card, DatePicker, Empty, Spin, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { useGetClientHistory } from "../../../hooks/history/useGetClientHistory";
-import type { ResponseTransactionType } from "../../../types/history/responseTransactionType";
+import { useGetClientHistory } from "../../../hooks/transaction-history/useGetClientHistory";
+import type { TransactionHistoryDataType, TransactionHistoryItemType } from "../../../types/history/responseTransactionType";
 import { formatAmount } from "../../../utils/amountFormatter";
 import { ProductDetailsModal } from "./product/ProductDetailsModal";
 
@@ -16,7 +16,7 @@ interface ClientTransactionHistoryProps {
 }
 
 export default function ClientTransactionHistory({ keycloakClientId }: ClientTransactionHistoryProps) {
-  const [selectedTx, setSelectedTx] = useState<ResponseTransactionType | null>(null);
+  const [selectedTx, setSelectedTx] = useState<TransactionHistoryItemType | null>(null);
   const today = dayjs();
   const [dates, setDates] = useState<[Dayjs, Dayjs]>([today, today]);
 
@@ -25,7 +25,7 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
 
   const { data, isLoading, error } = useGetClientHistory(keycloakClientId, fromDate, toDate);
 
-  const columns: ColumnsType<ResponseTransactionType> = [
+  const columns: ColumnsType<TransactionHistoryItemType> = [
     {
       title: "Дата операции",
       dataIndex: "createdAt",
@@ -97,7 +97,7 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
     },
   ];
 
-  const list = (data as ResponseTransactionType[] | undefined) ?? [];
+  const list = (data as TransactionHistoryItemType[] | undefined) ?? [];
 
   const handleDateChange: Parameters<typeof RangePicker>[0]["onChange"] = (values) => {
     if (!values || !values[0] || !values[1]) {
@@ -158,7 +158,7 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
         </Typography.Title>
         <RangePicker value={dates} onChange={handleDateChange} />
       </div>
-      <Table<ResponseTransactionType>
+      <Table<TransactionHistoryItemType>
         size="small"
         rowKey={(row) => row.transactionId}
         dataSource={list}
