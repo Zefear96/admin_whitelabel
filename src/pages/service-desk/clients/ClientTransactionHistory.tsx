@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, DatePicker, Empty, Spin, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useGetClientHistory } from "../../../hooks/transaction-history/useGetClientHistory";
-import type { TransactionHistoryDataType, TransactionHistoryItemType } from "../../../types/history/responseTransactionType";
+import type { TransactionHistoryItemType } from "../../../types/transaction-history/transactionHistoryDataType";
 import { formatAmount } from "../../../utils/amountFormatter";
 import { ProductDetailsModal } from "./product/ProductDetailsModal";
 
@@ -97,7 +97,7 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
     },
   ];
 
-  const list = (data as TransactionHistoryItemType[] | undefined) ?? [];
+  const list = data?.content ?? [];
 
   const handleDateChange: Parameters<typeof RangePicker>[0]["onChange"] = (values) => {
     if (!values || !values[0] || !values[1]) {
@@ -164,7 +164,15 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
         dataSource={list}
         columns={columns}
         scroll={{ x: 'max-content' }}
-        pagination={list.length > 20 ? { pageSize: 20 } : false}
+        pagination={
+          data && data.totalElements > 20
+            ? {
+                current: (data.number ?? 0) + 1,
+                pageSize: data.size ?? 20,
+                total: data.totalElements,
+              }
+            : false
+        }
         onRow={(record) => ({
           onClick: () => setSelectedTx(record),
           style: { cursor: "pointer" },

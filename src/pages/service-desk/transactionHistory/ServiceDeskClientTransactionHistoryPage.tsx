@@ -1,9 +1,9 @@
 import dayjs, { Dayjs } from "dayjs";
-import { useState } from "react";
-import { Table, Tag, Card, DatePicker, Typography, Empty, Spin } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { useHistoryTransactions } from "../../../hooks/transaction-history/useHistoryTransactions";
-import type { TransactionHistoryItemType } from "../../../types/history/responseTransactionType";
+import { useEffect, useState } from "react";
+import { Table, Tag, Card, DatePicker, Typography, Empty, Spin, Input, Space } from "antd";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import { useGetClientHistory } from "../../../hooks/transaction-history/useGetClientHistory";
+import type { TransactionHistoryItemType } from "../../../types/transaction-history/transactionHistoryDataType";
 import { formatAmount } from "../../../utils/amountFormatter";
 import { ProductDetailsModal } from "../clients/product/ProductDetailsModal";
 
@@ -11,16 +11,31 @@ const { RangePicker } = DatePicker;
 
 const formatDate = (date: Dayjs) => date.format("YYYY-MM-DD");
 
-export default function ServiceDeskTransactionsPage() {
+export default function ServiceDeskClientTransactionHistoryPage() {
     const today = dayjs();
     const [dates, setDates] = useState<[Dayjs, Dayjs]>([today, today]);
+    const [userId, setUserId] = useState("");
+    const [submittedUserId, setSubmittedUserId] = useState("");
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(20);
     const [selectedTransaction, setSelectedTransaction] = useState<TransactionHistoryItemType | null>(null);
 
     const fromDate = formatDate(dates[0]);
     const toDate = formatDate(dates[1]);
 
-    const { data, isLoading, error } = useHistoryTransactions(fromDate, toDate);
+    const { data, isLoading, error, isFetching } = useGetClientHistory(
+        submittedUserId || undefined,
+        fromDate,
+        toDate,
+        page,
+        pageSize,
+    );
+
     const list = data?.content ?? [];
+
+    useEffect(() => {
+        setPage(0);
+    }, [submittedUserId, fromDate, toDate]);
 
     const columns: ColumnsType<TransactionHistoryItemType> = [
         {
@@ -29,7 +44,6 @@ export default function ServiceDeskTransactionsPage() {
             key: "createdAt",
             width: 180,
             render: (value: string) => dayjs(value).format("DD.MM.YYYY HH:mm"),
-            sorter: (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
         },
         {
             title: "Тип операции",
@@ -111,44 +125,64 @@ export default function ServiceDeskTransactionsPage() {
         setDates([values[0], values[1]] as [Dayjs, Dayjs]);
     };
 
-    if (isLoading) {
-        return (
-            <Card title="История транзакций" style={{ margin: 20 }}>
+    const handleTableChange = (pagination: TablePaginationConfig) => {
+        setPage((pagination.current ?? 1) - 1);
+        setPageSize(pagination.pageSize ?? 20);
+    };
+
+    const handleSearch = (value: string) => {
+        const trimmed = value.trim();
+        setUserId(trimmed);
+        setSubmittedUserId(trimmed);
+    };
+
+    return (
+        <Card title="История транзакций клиента" style={{ margin: 20 }}>
+            <Space direction="vertical" size={16} style={{ width: "100%", marginBottom: 16 }}>
+                <Input.Search
+                    placeholder="Keycloak ID клиента (userId)"
+                    value={userId}
+                    onChange={(e) => setUserId(e.target.value)}
+                    onSearch={handleSearch}
+                    enterButton="Найти"
+                    allowClear
+                    onClear={() => {
+                        setUserId("");
+                        setSubmittedUserId("");
+                    }}
+                />
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <RangePicker value={dates} onChange={handleDateChange} />
+                </div>
+            </Space>
+
+            {!submittedUserId ? (
+                <Empty description="Введите Keycloak ID клиента для поиска" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            ) : error ? (
+                <Typography.Text type="danger">
+                    {error instanceof Error ? error.message : "Ошибка загрузки"}
+                </Typography.Text>
+            ) : isLoading ? (
                 <div style={{ textAlign: "center", padding: 24 }}>
                     <Spin />
                 </div>
-            </Card>
-        );
-    }
-
-    if (error) {
-        const message = error instanceof Error ? error.message : "Ошибка загрузки";
-        return (
-            <Card title="История транзакций" style={{ margin: 20 }}>
-                <Typography.Text type="danger">{message}</Typography.Text>
-            </Card>
-        );
-    }
-
-    return (
-        <Card title="История транзакций" style={{ margin: 20 }}>
-            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
-                <RangePicker value={dates} onChange={handleDateChange} />
-            </div>
-
-            {!list.length ? (
+            ) : !list.length ? (
                 <Empty description="Нет данных" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             ) : (
                 <Table<TransactionHistoryItemType>
                     rowKey="transactionId"
                     columns={columns}
                     dataSource={list}
+                    loading={isFetching}
                     scroll={{ x: "max-content" }}
-                    pagination={
-                        data && data.totalElements > 10
-                            ? { pageSize: data.size || 10, total: data.totalElements }
-                            : { pageSize: 10 }
-                    }
+                    pagination={{
+                        current: page + 1,
+                        pageSize,
+                        total: data?.totalElements ?? 0,
+                        showSizeChanger: true,
+                        pageSizeOptions: ["10", "20", "50"],
+                    }}
+                    onChange={handleTableChange}
                     onRow={(record) => ({
                         onClick: () => setSelectedTransaction(record),
                         style: { cursor: "pointer" },
