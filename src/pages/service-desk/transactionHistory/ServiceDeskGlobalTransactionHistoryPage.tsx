@@ -1,5 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Table, Tag, Card, DatePicker, Typography, Empty, Spin, Input, Space } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { useGetClientHistory } from "../../../hooks/transaction-history/useGetClientHistory";
@@ -11,13 +11,13 @@ const { RangePicker } = DatePicker;
 
 const formatDate = (date: Dayjs) => date.format("YYYY-MM-DD");
 
-export default function ServiceDeskClientTransactionHistoryPage() {
+export default function ServiceDeskGlobalTransactionHistoryPage() {
     const today = dayjs();
     const [dates, setDates] = useState<[Dayjs, Dayjs]>([today, today]);
     const [userId, setUserId] = useState("");
     const [submittedUserId, setSubmittedUserId] = useState("");
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(20);
+    const [pageSize, setPageSize] = useState(30);
     const [selectedTransaction, setSelectedTransaction] = useState<TransactionHistoryItemType | null>(null);
 
     const fromDate = formatDate(dates[0]);
@@ -32,10 +32,7 @@ export default function ServiceDeskClientTransactionHistoryPage() {
     );
 
     const list = data?.content ?? [];
-
-    useEffect(() => {
-        setPage(0);
-    }, [submittedUserId, fromDate, toDate]);
+    const isInitialLoading = isLoading && !data;
 
     const columns: ColumnsType<TransactionHistoryItemType> = [
         {
@@ -120,20 +117,35 @@ export default function ServiceDeskClientTransactionHistoryPage() {
         if (!values || !values[0] || !values[1]) {
             const now = dayjs();
             setDates([now, now]);
+            setPage(0);
             return;
         }
+        const nextFrom = formatDate(values[0]);
+        const nextTo = formatDate(values[1]);
         setDates([values[0], values[1]] as [Dayjs, Dayjs]);
+        if (nextFrom !== fromDate || nextTo !== toDate) {
+            setPage(0);
+        }
     };
 
     const handleTableChange = (pagination: TablePaginationConfig) => {
-        setPage((pagination.current ?? 1) - 1);
-        setPageSize(pagination.pageSize ?? 20);
+        const nextPage = Math.max((pagination.current ?? 1) - 1, 0);
+        const nextSize = Number(pagination.pageSize ?? pageSize);
+
+        if (nextSize !== pageSize) {
+            setPageSize(nextSize);
+            setPage(0);
+            return;
+        }
+
+        setPage(nextPage);
     };
 
     const handleSearch = (value: string) => {
         const trimmed = value.trim();
         setUserId(trimmed);
         setSubmittedUserId(trimmed);
+        setPage(0);
     };
 
     return (
@@ -149,6 +161,7 @@ export default function ServiceDeskClientTransactionHistoryPage() {
                     onClear={() => {
                         setUserId("");
                         setSubmittedUserId("");
+                        setPage(0);
                     }}
                 />
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -162,25 +175,26 @@ export default function ServiceDeskClientTransactionHistoryPage() {
                 <Typography.Text type="danger">
                     {error instanceof Error ? error.message : "Ошибка загрузки"}
                 </Typography.Text>
-            ) : isLoading ? (
+            ) : isInitialLoading ? (
                 <div style={{ textAlign: "center", padding: 24 }}>
                     <Spin />
                 </div>
-            ) : !list.length ? (
-                <Empty description="Нет данных" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             ) : (
                 <Table<TransactionHistoryItemType>
+                    key={`${submittedUserId}-${fromDate}-${toDate}`}
                     rowKey="transactionId"
                     columns={columns}
                     dataSource={list}
                     loading={isFetching}
                     scroll={{ x: "max-content" }}
+                    locale={{ emptyText: "Нет данных" }}
                     pagination={{
                         current: page + 1,
                         pageSize,
                         total: data?.totalElements ?? 0,
                         showSizeChanger: true,
-                        pageSizeOptions: ["10", "20", "50"],
+                        pageSizeOptions: [20, 30, 50],
+                        showTotal: (total) => `Всего ${total}`,
                     }}
                     onChange={handleTableChange}
                     onRow={(record) => ({

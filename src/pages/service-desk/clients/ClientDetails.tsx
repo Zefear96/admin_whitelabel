@@ -10,7 +10,7 @@ import './style.css'
 import { useTheme } from '../../../hooks/useTheme';
 import { RollbackOutlined } from '@ant-design/icons';
 import ClientProductPage from './product/ClientProductPage';
-import ClientTransactionHistory from './ClientTransactionHistory';
+import ClientTransactionHistory from './transaction-history/ClientTransactionHistory';
 import Title from 'antd/es/typography/Title';
 
 

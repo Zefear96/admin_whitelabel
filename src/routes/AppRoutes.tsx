@@ -10,7 +10,7 @@ import { mapSectionsToRoutes } from "../utils/mapSectionsToRoutes";
 import Loader from "../components/dataDisplay/loader/Loader";
 import ServiceDeskClientsPage from "../pages/service-desk/clients/ServiceDeskClientsPage";
 import ServiceDeskRequestsPage from "../pages/service-desk/ServiceDeskRequestsPage";
-import ServiceDeskClientTransactionHistoryPage from "../pages/service-desk/transactionHistory/ServiceDeskClientTransactionHistoryPage";
+import ServiceDeskGlobalTransactionHistoryPage from "../pages/service-desk/transactionHistory/ServiceDeskGlobalTransactionHistoryPage";
 import ServiceDeskDisputesPage from "../pages/service-desk/ServiceDeskDisputesPage";
 import ClientDetails from "../pages/service-desk/clients/ClientDetails";
 // Access Control
@@ -107,7 +107,7 @@ export default function AppRoutes() {
         {/* Service Desk */}
         <Route path="/service-desk/clients" element={<ServiceDeskClientsPage/>}/>
         <Route path="/service-desk/requests" element={<ServiceDeskRequestsPage/>}/>
-        <Route path="/service-desk/transactions" element={<ServiceDeskClientTransactionHistoryPage />}/>
+        <Route path="/service-desk/transactions" element={<ServiceDeskGlobalTransactionHistoryPage />}/>
         <Route path="/service-desk/disputes" element={<ServiceDeskDisputesPage/>}/>
         <Route path="/service-desk/clients/details/:id" element={<ClientDetails/>} />
         
