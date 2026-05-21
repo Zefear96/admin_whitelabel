@@ -11,13 +11,14 @@ export const HistoryTransactionsApi = {
     },
     getClientHistory(keycloakClientId: string, fromDate: string, toDate: string, page: number, size: number) {
         const params = new URLSearchParams({
-            userId:keycloakClientId,
             fromDate,
             toDate,
+            userId: keycloakClientId,
             sort: "createdAt,DESC",
             page: page.toString(),
-            size: size.toString()
-        }).toString()
-        return apiClient.get(`/admin-backend/transaction-history-service/api/history?${params}`)
+            size: size.toString(),
+        });
+
+        return apiClient.get(`/admin-backend/transaction-history-service/api/history?${params.toString()}`)
     },
 };

@@ -17,14 +17,32 @@ export default function NotificationTemplateTab() {
         {
             title: "Категория",
             dataIndex: "category",
-        },
-        {
-            title: "Код",
-            dataIndex: "code",
+            sorter: (a, b) =>
+                String(a.category ?? "").localeCompare(String(b.category ?? ""), undefined, {
+                    sensitivity: "base",
+                }),
+            defaultSortOrder: "ascend",
+            sortDirections: ["ascend", "descend"],
         },
         {
             title: "Сервис",
             dataIndex: "serviceName",
+            sorter: (a, b) =>
+                String(a.serviceName ?? "").localeCompare(String(b.serviceName ?? ""), undefined, {
+                    sensitivity: "base",
+                }),
+            defaultSortOrder: "ascend",
+            sortDirections: ["ascend", "descend"],
+        },
+        {
+            title: "Код",
+            dataIndex: "code",
+            sorter: (a, b) =>
+                String(a.code ?? "").localeCompare(String(b.code ?? ""), undefined, {
+                    sensitivity: "base",
+                }),
+            defaultSortOrder: "ascend",
+            sortDirections: ["ascend", "descend"],
         },
         {
             title: "Заголовок (RU)",

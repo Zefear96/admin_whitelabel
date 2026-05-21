@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { SafetyCertificateOutlined } from "@ant-design/icons";
-import { Card, Empty, Spin, Table, Typography } from "antd";
+import { Card, Empty, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { ResponseSafeType } from "../../../../types/product/responseSafeType";
 import { useGetSafe } from "../../../../hooks/product/useGetSafe";
 import { ProductDetailsModal } from "./ProductDetailsModal";
+import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
 
 interface ClientSafeSectionProps {
   keycloakClientId: string;
@@ -58,14 +59,7 @@ export function ClientSafeSection({
   const list = (data as ResponseSafeType[] | undefined) ?? [];
 
   if (isLoading) {
-    return (
-      <Card>
-        <SectionHeader title="Сейфовые ячейки" icon={icon} />
-        <div style={{ textAlign: "center", padding: 24 }}>
-          <Spin />
-        </div>
-      </Card>
-    );
+    return <ClientProductSectionSkeleton header={<SectionHeader title="Сейфовые ячейки" icon={icon} />} />;
   }
 
   if (error) {

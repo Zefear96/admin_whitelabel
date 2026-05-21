@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { Table, Tag, Card, DatePicker, Typography, Empty, Spin, Input, Space } from "antd";
-import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import type { ColumnsType } from "antd/es/table";
 import { useGetClientHistory } from "../../../hooks/transaction-history/useGetClientHistory";
 import type { TransactionHistoryItemType } from "../../../types/transaction-history/transactionHistoryDataType";
 import { formatAmount } from "../../../utils/amountFormatter";
@@ -11,13 +11,13 @@ const { RangePicker } = DatePicker;
 
 const formatDate = (date: Dayjs) => date.format("YYYY-MM-DD");
 
-export default function ServiceDeskClientTransactionHistoryPage() {
+export default function ServiceDeskGlobalTransactionHistoryPage() {
     const today = dayjs();
     const [dates, setDates] = useState<[Dayjs, Dayjs]>([today, today]);
     const [userId, setUserId] = useState("");
     const [submittedUserId, setSubmittedUserId] = useState("");
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(20);
+    const [pageSize, setPageSize] = useState(30);
     const [selectedTransaction, setSelectedTransaction] = useState<TransactionHistoryItemType | null>(null);
 
     const fromDate = formatDate(dates[0]);
@@ -32,6 +32,7 @@ export default function ServiceDeskClientTransactionHistoryPage() {
     );
 
     const list = data?.content ?? [];
+    const isInitialLoading = isLoading && !data;
 
     useEffect(() => {
         setPage(0);
@@ -125,9 +126,14 @@ export default function ServiceDeskClientTransactionHistoryPage() {
         setDates([values[0], values[1]] as [Dayjs, Dayjs]);
     };
 
-    const handleTableChange = (pagination: TablePaginationConfig) => {
-        setPage((pagination.current ?? 1) - 1);
-        setPageSize(pagination.pageSize ?? 20);
+    const handlePaginationChange = (nextPage: number, nextPageSize?: number) => {
+        const nextSize = Number(nextPageSize ?? pageSize);
+        if (nextSize !== pageSize) {
+            setPageSize(nextSize);
+            setPage(0);
+            return;
+        }
+        setPage(Math.max(nextPage - 1, 0));
     };
 
     const handleSearch = (value: string) => {
@@ -162,12 +168,10 @@ export default function ServiceDeskClientTransactionHistoryPage() {
                 <Typography.Text type="danger">
                     {error instanceof Error ? error.message : "Ошибка загрузки"}
                 </Typography.Text>
-            ) : isLoading ? (
+            ) : isInitialLoading ? (
                 <div style={{ textAlign: "center", padding: 24 }}>
                     <Spin />
                 </div>
-            ) : !list.length ? (
-                <Empty description="Нет данных" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             ) : (
                 <Table<TransactionHistoryItemType>
                     rowKey="transactionId"
@@ -175,14 +179,15 @@ export default function ServiceDeskClientTransactionHistoryPage() {
                     dataSource={list}
                     loading={isFetching}
                     scroll={{ x: "max-content" }}
+                    locale={{ emptyText: "Нет данных" }}
                     pagination={{
                         current: page + 1,
                         pageSize,
                         total: data?.totalElements ?? 0,
                         showSizeChanger: true,
-                        pageSizeOptions: ["10", "20", "50"],
+                        pageSizeOptions: [10, 20, 30, 50],
+                        onChange: handlePaginationChange,
                     }}
-                    onChange={handleTableChange}
                     onRow={(record) => ({
                         onClick: () => setSelectedTransaction(record),
                         style: { cursor: "pointer" },

@@ -96,21 +96,21 @@ export default function NotificationTemplateModalCreate({
         <Form.Item
           label="Заголовок (RU)"
           name="titleRu"
-          rules={[{ required: true, message: "Введите заголовок на русском" }]}
+          rules={[{ required: false, message: "Введите заголовок на русском" }]}
         >
           <TextArea />
         </Form.Item>
         <Form.Item
           label="Заголовок (KY)"
           name="titleKy"
-          rules={[{ required: true, message: "Введите заголовок на кыргызском" }]}
+          rules={[{ required: false, message: "Введите заголовок на кыргызском" }]}
         >
           <TextArea />
         </Form.Item>
         <Form.Item
           label="Заголовок (EN)"
           name="titleEn"
-          rules={[{ required: true, message: "Введите заголовок на английском" }]}
+          rules={[{ required: false, message: "Введите заголовок на английском" }]}
         >
           <TextArea />
         </Form.Item>
