@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Tag, Card, DatePicker, Typography, Empty, Spin, Input, Space } from "antd";
-import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import type { ColumnsType } from "antd/es/table";
 import { useGetClientHistory } from "../../../hooks/transaction-history/useGetClientHistory";
 import type { TransactionHistoryItemType } from "../../../types/transaction-history/transactionHistoryDataType";
 import { formatAmount } from "../../../utils/amountFormatter";
@@ -33,6 +33,10 @@ export default function ServiceDeskGlobalTransactionHistoryPage() {
 
     const list = data?.content ?? [];
     const isInitialLoading = isLoading && !data;
+
+    useEffect(() => {
+        setPage(0);
+    }, [submittedUserId, fromDate, toDate]);
 
     const columns: ColumnsType<TransactionHistoryItemType> = [
         {
@@ -117,35 +121,25 @@ export default function ServiceDeskGlobalTransactionHistoryPage() {
         if (!values || !values[0] || !values[1]) {
             const now = dayjs();
             setDates([now, now]);
-            setPage(0);
             return;
         }
-        const nextFrom = formatDate(values[0]);
-        const nextTo = formatDate(values[1]);
         setDates([values[0], values[1]] as [Dayjs, Dayjs]);
-        if (nextFrom !== fromDate || nextTo !== toDate) {
-            setPage(0);
-        }
     };
 
-    const handleTableChange = (pagination: TablePaginationConfig) => {
-        const nextPage = Math.max((pagination.current ?? 1) - 1, 0);
-        const nextSize = Number(pagination.pageSize ?? pageSize);
-
+    const handlePaginationChange = (nextPage: number, nextPageSize?: number) => {
+        const nextSize = Number(nextPageSize ?? pageSize);
         if (nextSize !== pageSize) {
             setPageSize(nextSize);
             setPage(0);
             return;
         }
-
-        setPage(nextPage);
+        setPage(Math.max(nextPage - 1, 0));
     };
 
     const handleSearch = (value: string) => {
         const trimmed = value.trim();
         setUserId(trimmed);
         setSubmittedUserId(trimmed);
-        setPage(0);
     };
 
     return (
@@ -161,7 +155,6 @@ export default function ServiceDeskGlobalTransactionHistoryPage() {
                     onClear={() => {
                         setUserId("");
                         setSubmittedUserId("");
-                        setPage(0);
                     }}
                 />
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -181,7 +174,6 @@ export default function ServiceDeskGlobalTransactionHistoryPage() {
                 </div>
             ) : (
                 <Table<TransactionHistoryItemType>
-                    key={`${submittedUserId}-${fromDate}-${toDate}`}
                     rowKey="transactionId"
                     columns={columns}
                     dataSource={list}
@@ -193,10 +185,9 @@ export default function ServiceDeskGlobalTransactionHistoryPage() {
                         pageSize,
                         total: data?.totalElements ?? 0,
                         showSizeChanger: true,
-                        pageSizeOptions: [20, 30, 50],
-                        showTotal: (total) => `Всего ${total}`,
+                        pageSizeOptions: [10, 20, 30, 50],
+                        onChange: handlePaginationChange,
                     }}
-                    onChange={handleTableChange}
                     onRow={(record) => ({
                         onClick: () => setSelectedTransaction(record),
                         style: { cursor: "pointer" },

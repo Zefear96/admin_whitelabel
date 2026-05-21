@@ -5,7 +5,7 @@ import type { CustomerProfileType } from '../../../types/client/customerProfile'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useClientProfile } from '../../../hooks/client/useClientProfile';
 import { useClientDevices } from '../../../hooks/client/useClientDevices';
-import DeviceHistory from './DeviceHistory';
+import DeviceHistory from './device-history/DeviceHistory';
 import './style.css'
 import { useTheme } from '../../../hooks/useTheme';
 import { RollbackOutlined } from '@ant-design/icons';
