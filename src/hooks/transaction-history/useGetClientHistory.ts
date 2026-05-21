@@ -10,7 +10,7 @@ export const useGetClientHistory = (
   fromDate: string | undefined,
   toDate: string | undefined,
   page = 0,
-  size = 20,
+  size = 30,
 ) => {
   const today = formatDate(new Date());
   const safeToDate = toDate ?? today;

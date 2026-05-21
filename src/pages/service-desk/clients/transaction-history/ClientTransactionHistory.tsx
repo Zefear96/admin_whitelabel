@@ -1,11 +1,12 @@
 import dayjs, { Dayjs } from "dayjs";
 import { useState } from "react";
-import { Card, DatePicker, Empty, Spin, Table, Tag, Typography } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { useGetClientHistory } from "../../../hooks/transaction-history/useGetClientHistory";
-import type { TransactionHistoryItemType } from "../../../types/transaction-history/transactionHistoryDataType";
-import { formatAmount } from "../../../utils/amountFormatter";
-import { ProductDetailsModal } from "./product/ProductDetailsModal";
+import { Card, DatePicker, Empty, Table, Tag, Typography } from "antd";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import { useGetClientHistory } from "../../../../hooks/transaction-history/useGetClientHistory";
+import type { TransactionHistoryItemType } from "../../../../types/transaction-history/transactionHistoryDataType";
+import { formatAmount } from "../../../../utils/amountFormatter";
+import { ProductDetailsModal } from "../product/ProductDetailsModal";
+import { ClientTransactionHistorySkeleton } from "./ClientTransactionHistorySkeleton";
 
 const { RangePicker } = DatePicker;
 
@@ -19,11 +20,13 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
   const [selectedTx, setSelectedTx] = useState<TransactionHistoryItemType | null>(null);
   const today = dayjs();
   const [dates, setDates] = useState<[Dayjs, Dayjs]>([today, today]);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
 
   const fromDate = formatDate(dates[0]);
   const toDate = formatDate(dates[1]);
 
-  const { data, isLoading, error } = useGetClientHistory(keycloakClientId, fromDate, toDate);
+  const { data, isLoading, error, isFetching } = useGetClientHistory(keycloakClientId, fromDate, toDate, page, pageSize);
 
   const columns: ColumnsType<TransactionHistoryItemType> = [
     {
@@ -103,21 +106,33 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
     if (!values || !values[0] || !values[1]) {
       const now = dayjs();
       setDates([now, now]);
+      setPage(0);
       return;
     }
 
+    const nextFromDate = formatDate(values[0]);
+    const nextToDate = formatDate(values[1]);
     setDates([values[0], values[1]] as [Dayjs, Dayjs]);
+    if (nextFromDate !== fromDate || nextToDate !== toDate) {
+      setPage(0);
+    }
+  };
+
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    const nextPage = Math.max((pagination.current ?? 1) - 1, 0);
+    const nextPageSize = Number(pagination.pageSize ?? pageSize);
+
+    if (nextPageSize !== pageSize) {
+      setPageSize(nextPageSize);
+      setPage(0);
+      return;
+    }
+
+    setPage(nextPage);
   };
 
   if (isLoading) {
-    return (
-      <Card>
-        <Typography.Title level={5}>История транзакций клиента</Typography.Title>
-        <div style={{ textAlign: "center", padding: 24 }}>
-          <Spin />
-        </div>
-      </Card>
-    );
+    return <ClientTransactionHistorySkeleton />;
   }
 
   if (error) {
@@ -163,16 +178,21 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
         rowKey={(row) => row.transactionId}
         dataSource={list}
         columns={columns}
-        scroll={{ x: 'max-content' }}
+        loading={isFetching}
+        scroll={{ x: "max-content" }}
         pagination={
-          data && data.totalElements > 20
+          data && data.totalElements > 0
             ? {
-                current: (data.number ?? 0) + 1,
-                pageSize: data.size ?? 20,
+                current: page + 1,
+                pageSize,
                 total: data.totalElements,
+                showSizeChanger: true,
+                pageSizeOptions: [20, 30, 50],
+                showTotal: (total) => `Всего ${total}`,
               }
             : false
         }
+        onChange={handleTableChange}
         onRow={(record) => ({
           onClick: () => setSelectedTx(record),
           style: { cursor: "pointer" },

@@ -1,7 +1,10 @@
 export interface DeviceHistoryType {
     content: Content[];
     pageable: Pageable;
-    total: number;
+    total?: number;
+    totalElements?: number;
+    size?: number;
+    number?: number;
 }
 
 export interface Content {

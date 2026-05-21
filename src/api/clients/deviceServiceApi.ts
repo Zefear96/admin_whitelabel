@@ -1,12 +1,11 @@
 import { apiClient } from "../axios/apiClient"
 
 export const DeviceServiceApi = {
-    getClientDevices(absId: string, page:string, size:string, sortDirection:string) {
+    getClientDevices(absId: string, page: number, size: number, sort: string) {
         const params = new URLSearchParams({
-            page,
-            size,
-            sort: "lastSeenAt",
-            direction: sortDirection,
+            page: page.toString(),
+            size: size.toString(),
+            sort,
         }).toString()
 
         return apiClient.get(`/admin-backend/device/api/v1/dfp/${absId}/devices/last?${params}`)
