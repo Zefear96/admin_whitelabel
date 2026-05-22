@@ -22,7 +22,7 @@ export const useClientDevices = (
           absId,
           page,
           size,
-          sort
+          sortDirection,
         );
   
         return data;
@@ -32,4 +32,3 @@ export const useClientDevices = (
       retry: 1,
     });
   };
-  

@@ -1,13 +1,15 @@
-import { apiClient } from "../axios/apiClient"
+import { apiClient } from "../axios/apiClient";
+
+const buildDeviceSort = (direction: "ASC" | "DESC") => `lastSeenAt,${direction}`;
 
 export const DeviceServiceApi = {
-    getClientDevices(absId: string, page: number, size: number, sort: string) {
-        const params = new URLSearchParams({
-            page: page.toString(),
-            size: size.toString(),
-            sort,
-        }).toString()
-
-        return apiClient.get(`/admin-backend/device/api/v1/dfp/${absId}/devices/last?${params}`)
-    }
-}
+    getClientDevices(absId: string, page: number, size: number, direction: "ASC" | "DESC" = "DESC") {
+        return apiClient.get(`/admin-backend/device/api/v1/dfp/${absId}/devices/last`, {
+            params: {
+                page,
+                size,
+                sort: buildDeviceSort(direction),
+            },
+        });
+    },
+};
