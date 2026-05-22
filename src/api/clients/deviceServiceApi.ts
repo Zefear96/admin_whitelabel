@@ -11,7 +11,6 @@ export const DeviceServiceApi = {
         const params = new URLSearchParams({
             page: String(page),
             size: String(size),
-            sort: buildDeviceSort(direction),
         });
 
         return apiClient.get(
