@@ -9,7 +9,7 @@ export const useClientDevices = (
     size: number, 
     sortDirection: "ASC" | "DESC" = "DESC"
   ) => {
-    const sort = `lastSeenAt,${sortDirection}`;
+    const sort = sortDirection === "ASC" ? "lastSeenAt,ASC" : "lastSeenAt,DESC";
 
     return useQuery<DeviceHistoryType, AxiosError>({
       queryKey: ["deviceClient", absId, page, size, sort],
@@ -22,7 +22,7 @@ export const useClientDevices = (
           absId,
           page,
           size,
-          sort
+          sortDirection,
         );
   
         return data;
@@ -32,4 +32,3 @@ export const useClientDevices = (
       retry: 1,
     });
   };
-  
