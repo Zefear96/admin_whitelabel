@@ -12,6 +12,7 @@ import { RollbackOutlined } from '@ant-design/icons';
 import ClientProductPage from './product/ClientProductPage';
 import ClientTransactionHistory from './transaction-history/ClientTransactionHistory';
 import Title from 'antd/es/typography/Title';
+import { ClientDetailsSkeleton } from './ClientDetailsSkeleton';
 
 
 export default function ClientDetails() {
@@ -21,7 +22,7 @@ export default function ClientDetails() {
   const { colors } = useTheme();
   const navigate = useNavigate();
 
-  if (isLoading) return <p>Загрузка...</p>;
+  if (isLoading) return <ClientDetailsSkeleton />;
   if (error) return <p>Ошибка загрузки клиента</p>;
   if (!client) return <p>Клиент не найден</p>;
 

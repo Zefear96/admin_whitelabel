@@ -2,7 +2,7 @@ import { Button, Card, Descriptions, Tabs, Tag, type TabsProps } from "antd";
 import { useState } from "react";
 import { useTheme } from "../../../hooks/useTheme";
 import { useGetAgentList } from "../../../hooks/dictionary/agent/useGetAgentList";
-import AgentOperationsPage from "./AgentOperationsPage";
+import AgentOperationsPage from "./operations/AgentOperationsPage";
 import { EditOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import type { AgentType } from "../../../types/dictionary/agentType";
