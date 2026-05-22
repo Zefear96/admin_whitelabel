@@ -1,6 +1,6 @@
 import { Form, Input, Modal, Switch, Tabs, type TabsProps, Button } from "antd";
 import { useEffect, useState } from "react";
-import AgentOperationsPage from "./AgentOperationsPage";
+import AgentOperationsPage from "./operations/AgentOperationsPage";
 import type { AgentType } from "../../../types/dictionary/agentType";
 import { useUpdateAgent } from "../../../hooks/dictionary/agent/useUpdateAgent";
 import Popconfirm from "../../../components/dataDisplay/Popconfirm";

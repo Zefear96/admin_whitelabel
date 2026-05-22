@@ -4,6 +4,7 @@ import type { CustomerProfileType } from "../../../types/client/customerProfile"
 import { useGetClientList } from "../../../hooks/client/useGetClientList";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ClientListSkeleton } from "./ClientListSkeleton";
 
 export default function ClientList(){
     const [page, setPage] = useState(0);
@@ -53,6 +54,10 @@ export default function ClientList(){
     //     error: clientListError
     // });
 
+    if (clientListLoading) {
+        return <ClientListSkeleton />;
+    }
+
     return(
         <>
             {clientListError && (
@@ -68,7 +73,6 @@ export default function ClientList(){
                 })}
                 dataSource={clientList?.clients || []}
                 columns={columns}
-                loading={clientListLoading}
                 style={{ marginTop: 16 , cursor: 'pointer'}}
                 bordered
                 size="small"
