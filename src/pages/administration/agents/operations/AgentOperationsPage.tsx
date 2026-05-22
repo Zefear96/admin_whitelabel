@@ -1,12 +1,13 @@
 import { Table, Tag, Alert, Button } from "antd";
-import { useGetAgentOperations } from "../../../hooks/dictionary/agent/useGetAgentOperations";
+import { useGetAgentOperations } from "../../../../hooks/dictionary/agent/useGetAgentOperations";
 import type { ColumnsType } from "antd/es/table";
-import type { AgentOperationType } from "../../../types/dictionary/agentOperationType";
-import { formatRuDate } from "../../../utils/dateFormatter";
+import type { AgentOperationType } from "../../../../types/dictionary/agentOperationType";
+import { formatRuDate } from "../../../../utils/dateFormatter";
 import { useState } from "react";
 import AgentOperationModal from "./AgentOperationModal";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import AgentOperationCreateModal from "./AgentOperationCreateModal";
+import { AgentOperationsSkeleton } from "./AgentOperationsSkeleton";
 
 interface AgentOperationsPageProps {
     agent?: string;
@@ -92,12 +93,15 @@ export default function AgentOperationsPage({ agent }: AgentOperationsPageProps)
         return <Alert message="Ошибка загрузки данных" description={errorMessage} type="error" showIcon />;
     }
 
+    if (isLoading) {
+        return <AgentOperationsSkeleton />;
+    }
+
     return (
         <>
             <Table
                 rowKey={(row) => row.id}
                 columns={columns}
-                loading={isLoading}
                 dataSource={data ?? []}
                 pagination={false}
                 onRow={(record) => ({

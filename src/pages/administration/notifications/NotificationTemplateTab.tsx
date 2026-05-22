@@ -6,6 +6,7 @@ import ButtonCreate from "../../../components/dataEntry/ButtonCreate";
 import { useState } from "react";
 import NotificationTemplateModal from "./NotificationTemplateModal";
 import NotificationTemplateModalCreate from "./NotificationTemplateModalCreate";
+import { NotificationTemplateSkeleton } from "./NotificationTemplateSkeleton";
 
 export default function NotificationTemplateTab() {
     const { data, isLoading, error } = useGetNotificationTemplates();
@@ -56,6 +57,10 @@ export default function NotificationTemplateTab() {
         },
     ];
 
+    if (isLoading) {
+        return <NotificationTemplateSkeleton />;
+    }
+
     return (
         <Card
             title="Список шаблонов уведомлений"
@@ -75,7 +80,6 @@ export default function NotificationTemplateTab() {
             <Table
                 rowKey={(row) => row.code}
                 columns={columns}
-                loading={isLoading}
                 dataSource={data ?? []}
                 pagination={{ pageSize: 20 }}
                 onRow={(record) => ({
