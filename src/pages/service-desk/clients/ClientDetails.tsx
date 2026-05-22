@@ -5,13 +5,14 @@ import type { CustomerProfileType } from '../../../types/client/customerProfile'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useClientProfile } from '../../../hooks/client/useClientProfile';
 import { useClientDevices } from '../../../hooks/client/useClientDevices';
-import DeviceHistory from './DeviceHistory';
+import DeviceHistory from './device-history/DeviceHistory';
 import './style.css'
 import { useTheme } from '../../../hooks/useTheme';
 import { RollbackOutlined } from '@ant-design/icons';
 import ClientProductPage from './product/ClientProductPage';
-import ClientTransactionHistory from './ClientTransactionHistory';
+import ClientTransactionHistory from './transaction-history/ClientTransactionHistory';
 import Title from 'antd/es/typography/Title';
+import { ClientDetailsSkeleton } from './ClientDetailsSkeleton';
 
 
 export default function ClientDetails() {
@@ -21,7 +22,7 @@ export default function ClientDetails() {
   const { colors } = useTheme();
   const navigate = useNavigate();
 
-  if (isLoading) return <p>Загрузка...</p>;
+  if (isLoading) return <ClientDetailsSkeleton />;
   if (error) return <p>Ошибка загрузки клиента</p>;
   if (!client) return <p>Клиент не найден</p>;
 

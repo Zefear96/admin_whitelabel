@@ -1,21 +1,22 @@
-import { Table, Card, Modal, Button, Descriptions, Skeleton } from "antd";
+import { Descriptions, Modal, Table } from "antd";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import type { SorterResult } from "antd/es/table/interface";
 import { useState } from "react";
 import dayjs from "dayjs";
-import { useClientDevices } from "../../../hooks/client/useClientDevices";
-import type { DeviceHistoryItem } from "../../../types/client/deviceType";
-import type { DeviceHistoryType } from "../../../types/client/deviceType";
-import DescriptionsItem from "antd/es/descriptions/Item";
+import { useClientDevices } from "../../../../hooks/client/useClientDevices";
+import type { DeviceHistoryItem } from "../../../../types/client/deviceType";
+import { DeviceHistorySkeleton } from "./DeviceHistorySkeleton";
 
 export default function DeviceHistory({ absId }: { absId: string }) {
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [size, setSize] = useState(20);
   const [sortDirection, setSortDirection] = useState<"ASC" | "DESC">("DESC");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [selectedDevice, setSelectedDevice] = useState<DeviceHistoryItem | null>(null);
-  const { data, isLoading } = useClientDevices(absId, page, size, sortDirection);
+  const { data, isLoading, isFetching } = useClientDevices(absId, page, size, sortDirection);
 
-  const columns = [
+  const columns: ColumnsType<DeviceHistoryItem> = [
     {
       title: "Устройство",
       key: "deviceName",
@@ -55,28 +56,48 @@ export default function DeviceHistory({ absId }: { absId: string }) {
     setIsModalOpen(true);
   };
 
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    _: Record<string, unknown>,
+    sorter: SorterResult<DeviceHistoryItem> | SorterResult<DeviceHistoryItem>[],
+  ) => {
+    const nextSize = Number(pagination.pageSize ?? size);
+    setSize(nextSize);
+    setPage(nextSize !== size ? 0 : Math.max((pagination.current ?? 1) - 1, 0));
+
+    const lastSeenSorter = Array.isArray(sorter) ? sorter.find((item) => item.field === "lastSeenAt") : sorter;
+    if (lastSeenSorter?.order === "ascend") {
+      setSortDirection("ASC");
+      setPage(0);
+      return;
+    }
+    if (lastSeenSorter?.order === "descend") {
+      setSortDirection("DESC");
+      setPage(0);
+    }
+  };
+
+  if (isLoading) {
+    return <DeviceHistorySkeleton />;
+  }
+
   return (
     <>
       <Table<DeviceHistoryItem>
-        rowKey={(row) => row.lastSeenAt} // используем lastSeenAt как уникальный ключ
+        rowKey={(row) => `${row.deviceFingerprint.deviceId}-${row.lastSeenAt}`}
         columns={columns}
         dataSource={data?.content || []}
-        loading={isLoading}
-        scroll={{ x: 'max-content' }}
+        loading={isFetching}
+        scroll={{ x: "max-content" }}
         pagination={{
-          total: data?.total || 0,
+          total: data?.totalElements ?? data?.total ?? 0,
           current: page + 1,
           pageSize: size,
           showSizeChanger: true,
-          onChange: (p, s) => {
-            setPage(p - 1);
-            setSize(s);
-          },
+          pageSizeOptions: [20, 30, 50],
+          showTotal: (total) => `Всего ${total}`,
         }}
-        onChange={(pagination, filters, sorter: any) => {
-          if (sorter.order === "ascend") setSortDirection("ASC");
-          else if (sorter.order === "descend") setSortDirection("DESC");
-        }}
+        onChange={handleTableChange}
         onRow={(record) => ({
           onClick: () => handleRowClick(record),
         })}

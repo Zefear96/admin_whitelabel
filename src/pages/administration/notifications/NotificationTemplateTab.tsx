@@ -6,6 +6,7 @@ import ButtonCreate from "../../../components/dataEntry/ButtonCreate";
 import { useState } from "react";
 import NotificationTemplateModal from "./NotificationTemplateModal";
 import NotificationTemplateModalCreate from "./NotificationTemplateModalCreate";
+import { NotificationTemplateSkeleton } from "./NotificationTemplateSkeleton";
 
 export default function NotificationTemplateTab() {
     const { data, isLoading, error } = useGetNotificationTemplates();
@@ -17,14 +18,32 @@ export default function NotificationTemplateTab() {
         {
             title: "Категория",
             dataIndex: "category",
-        },
-        {
-            title: "Код",
-            dataIndex: "code",
+            sorter: (a, b) =>
+                String(a.category ?? "").localeCompare(String(b.category ?? ""), undefined, {
+                    sensitivity: "base",
+                }),
+            defaultSortOrder: "ascend",
+            sortDirections: ["ascend", "descend"],
         },
         {
             title: "Сервис",
             dataIndex: "serviceName",
+            sorter: (a, b) =>
+                String(a.serviceName ?? "").localeCompare(String(b.serviceName ?? ""), undefined, {
+                    sensitivity: "base",
+                }),
+            defaultSortOrder: "ascend",
+            sortDirections: ["ascend", "descend"],
+        },
+        {
+            title: "Код",
+            dataIndex: "code",
+            sorter: (a, b) =>
+                String(a.code ?? "").localeCompare(String(b.code ?? ""), undefined, {
+                    sensitivity: "base",
+                }),
+            defaultSortOrder: "ascend",
+            sortDirections: ["ascend", "descend"],
         },
         {
             title: "Заголовок (RU)",
@@ -37,6 +56,10 @@ export default function NotificationTemplateTab() {
             ellipsis: true,
         },
     ];
+
+    if (isLoading) {
+        return <NotificationTemplateSkeleton />;
+    }
 
     return (
         <Card
@@ -57,7 +80,6 @@ export default function NotificationTemplateTab() {
             <Table
                 rowKey={(row) => row.code}
                 columns={columns}
-                loading={isLoading}
                 dataSource={data ?? []}
                 pagination={{ pageSize: 20 }}
                 onRow={(record) => ({
