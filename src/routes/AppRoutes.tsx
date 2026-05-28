@@ -37,10 +37,10 @@ import AdministrationPageProductsSafe from "../pages/administration/products/Adm
 import AdministrationPageNotifications from "../pages/administration/notifications/AdministrationPageNotifications";
 import AdministrationPageServices from "../pages/administration/AdministrationPageServices";
 import AdministrationPageTariffs from "../pages/administration/AdministrationPageTariffs";
-import AdministrationPageLimitsCorporate from "../pages/administration/limits/AdministrationPageLimitsCorporate";
-import AdministrationPageLimitsPe from "../pages/administration/limits/AdministrationPageLimitsPe";
-import AdministrationPageLimitsRetail from "../pages/administration/limits/AdministrationPageLimitsRetail";
-import AdministrationPageLimitsOnline from "../pages/administration/limits/AdministrationPageLimitsOnline";
+import AdministrationPageLimitsCorporate from "../pages/administration/limits/corporate/AdministrationPageLimitsCorporate";
+import AdministrationPageLimitsPe from "../pages/administration/limits/pe/AdministrationPageLimitsPe";
+import AdministrationPageLimitsRetail from "../pages/administration/limits/retail/AdministrationPageLimitsRetail";
+import AdministrationPageLimitsOnline from "../pages/administration/limits/online/AdministrationPageLimitsOnline";
 // Marketing
 import MarketingPagePromotions from "../pages/marketing/MarketingPagePromotions";
 import MarketingPageBanners from "../pages/marketing/MarketingPageBanners";
@@ -54,7 +54,7 @@ import DictionaryTransactionTypesPage from "../pages/administration/dictionary/t
 import AdministrationPageAgents from "../pages/administration/agents/AdministrationPageAgents";
 import AgentDetailsPage from "../pages/administration/agents/AgentDetailsPage";
 import LogoutPage from "../pages/logout/LogoutPage";
-import AdministrationPageLimitsAgent from "../pages/administration/limits/AdministrationPageLimitsAgent";
+import AdministrationPageLimitsAgent from "../pages/administration/limits/agent/AdministrationPageLimitsAgent";
 
 export default function AppRoutes() {
   const [sections, setSections] = useState<SectionMenuType[]>([]);
