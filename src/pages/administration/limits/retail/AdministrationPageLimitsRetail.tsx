@@ -1,12 +1,13 @@
 import { Alert, Button, Card, Form, Input, InputNumber, Modal, Select, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useMemo, useState } from "react";
-import ButtonCreate from "../../../components/dataEntry/ButtonCreate";
-import { useNotificationMessage } from "../../../components/dataDisplay/NotificationMessage";
-import { useGetLimits } from "../../../hooks/limits/useGetLimits";
-import { useCreateLimit } from "../../../hooks/limits/useCreateLimit";
-import { useUpdateLimit } from "../../../hooks/limits/useUpdateLimit";
-import type {  LimitType } from "../../../types/limit/limitType";
+import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";
+import { useNotificationMessage } from "../../../../components/dataDisplay/NotificationMessage";
+import { useGetLimits } from "../../../../hooks/limits/useGetLimits";
+import { useCreateLimit } from "../../../../hooks/limits/useCreateLimit";
+import { useUpdateLimit } from "../../../../hooks/limits/useUpdateLimit";
+import type {  LimitType } from "../../../../types/limit/limitType";
+import { formatAmount } from "../../../../utils/amountFormatter";
 
 export default function AdministrationPageLimitsRetail() {
     const { notify } = useNotificationMessage();
@@ -46,7 +47,12 @@ export default function AdministrationPageLimitsRetail() {
             },
             { title: "User type", dataIndex: "userType", width: 120 },
             { title: "Max count", dataIndex: "maxCount", width: 110 },
-            { title: "Max amount", dataIndex: "maxAmount" , width: 140 },
+            {
+                title: "Max amount",
+                dataIndex: "maxAmount",
+                width: 140,
+                render: (value: number | null | undefined) => formatAmount(value),
+            },
             { title: "Currency", dataIndex: "currency", width: 90 },
             { title: "Period", dataIndex: "period", width: 120, sorter: (a, b) =>
                     String(a.period ?? "").localeCompare(String(b.period ?? ""), undefined, {
@@ -151,16 +157,17 @@ export default function AdministrationPageLimitsRetail() {
                         <Select
                             options={[
                                 { label: "ONETIME", value: "ONETIME" },
-                                { label: "MINUTE", value: "MINUTE" },
-                                { label: "HOUR", value: "HOUR" },
+                                // { label: "MINUTE", value: "MINUTE" },
+                                // { label: "HOUR", value: "HOUR" },
                                 { label: "DAY", value: "DAY" },
-                                { label: "MONTH", value: "MONTH" },
+                                // { label: "MONTH", value: "MONTH" },
                             ]}
                         />
                     </Form.Item>
                     <Form.Item label="User type" name="userType" rules={[{ required: true }]}>
                         <Select
                             options={[
+                                { label: "Online", value: "online" },
                                 { label: "Retail", value: "retail" },
                                 { label: "Private enterprener", value: "pe" },
                                 { label: "Corporate", value: "corporate" },

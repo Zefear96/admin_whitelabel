@@ -1,5 +1,5 @@
 import { Alert, Card, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { useGetNotificationTemplates } from "../../../hooks/push-notification/useGetNotificationTemplates";
 import type { NotificationTemplateType } from "../../../types/pushNotification/notificationTemplateType";
 import ButtonCreate from "../../../components/dataEntry/ButtonCreate";
@@ -9,10 +9,13 @@ import NotificationTemplateModalCreate from "./NotificationTemplateModalCreate";
 import { NotificationTemplateSkeleton } from "./NotificationTemplateSkeleton";
 
 export default function NotificationTemplateTab() {
-    const { data, isLoading, error } = useGetNotificationTemplates();
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(20);
+    const { data, isLoading, isFetching, error } = useGetNotificationTemplates(page, pageSize);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<NotificationTemplateType | null>(null);
+    const templates = data?.content ?? [];
 
     const columns: ColumnsType<NotificationTemplateType> = [
         {
@@ -57,6 +60,18 @@ export default function NotificationTemplateTab() {
         },
     ];
 
+    const handleTableChange = (pagination: TablePaginationConfig) => {
+        const nextPageSize = Number(pagination.pageSize ?? pageSize);
+
+        if (nextPageSize !== pageSize) {
+            setPageSize(nextPageSize);
+            setPage(0);
+            return;
+        }
+
+        setPage(Math.max((pagination.current ?? 1) - 1, 0));
+    };
+
     if (isLoading) {
         return <NotificationTemplateSkeleton />;
     }
@@ -78,10 +93,19 @@ export default function NotificationTemplateTab() {
                 data={selectedRow}
             />
             <Table
-                rowKey={(row) => row.code}
+                rowKey={(row) => row.id}
                 columns={columns}
-                dataSource={data ?? []}
-                pagination={{ pageSize: 20 }}
+                dataSource={templates}
+                loading={isFetching}
+                pagination={{
+                    current: page + 1,
+                    pageSize: data?.size ?? 20,
+                    total: data?.totalElements ?? templates.length,
+                    showSizeChanger: true,
+                    pageSizeOptions: [20, 30, 50],
+                    showTotal: (total) => `Всего: ${total}`,
+                }}
+                onChange={handleTableChange}
                 onRow={(record) => ({
                     onClick: () => {
                         setSelectedRow(record);

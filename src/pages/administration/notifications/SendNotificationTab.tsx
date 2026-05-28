@@ -1,8 +1,9 @@
-import { Button, Form, Input, Card } from "antd";
+import { Button, Form, Input, Card, Select } from "antd";
 import { useCreateGlobalNotification } from "../../../hooks/push-notification/useCreateGlobalNotification";
 import { useNotificationMessage } from "../../../components/dataDisplay/NotificationMessage";
-import type { RequestBodyNotificationType } from "../../../types/pushNotification/requestBodyNotificationType";
+import type { GlobalNotificationType } from "../../../types/pushNotification/GlobalNotificationType";
 import { SendOutlined } from "@ant-design/icons";
+import { NotificationTemplateCategoryEnum as GlobalNotificationCategoryEnum } from "../../../types/pushNotification/GlobalNotificationType";
 
 const { TextArea } = Input;
 
@@ -16,10 +17,10 @@ export default function SendNotificationTab() {
         try {
             const values = await form.validateFields();
 
-            const payload: RequestBodyNotificationType = {
-                // notificationType: "GLOBAL_EIB_NEWS",
+            const payload: GlobalNotificationType = {
                 title: values.title,
                 body: values.body,
+                category: values.category,
                 // imageUrl: values.imageUrl || null,
             };
 
@@ -57,7 +58,18 @@ export default function SendNotificationTab() {
                 >
                     <Input placeholder="Введите заголовок" />
                 </Form.Item>
-
+                <Form.Item
+                    label="Категория"
+                    name="category"
+                    rules={[{ required: true, message: "Выберите категорию" }]}
+                >
+                    <Select
+                        options={Object.values(GlobalNotificationCategoryEnum).map((value) => ({
+                            label: value,
+                            value,
+                        }))}
+                    />
+                </Form.Item>
                 <Form.Item
                     label="Текст"
                     name="body"
