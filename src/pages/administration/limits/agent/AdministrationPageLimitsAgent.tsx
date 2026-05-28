@@ -1,12 +1,13 @@
 import { Alert, Button, Card, Form, Input, InputNumber, Modal, Select, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useMemo, useState } from "react";
-import ButtonCreate from "../../../components/dataEntry/ButtonCreate";
-import { useNotificationMessage } from "../../../components/dataDisplay/NotificationMessage";
-import { useGetAgentLimits } from "../../../hooks/limits/useGetAgentLimits";
-import { useCreateAgentLimit } from "../../../hooks/limits/useCreateAgentLimit";
-import { useUpdateAgentLimit } from "../../../hooks/limits/useUpdateAgentLimit";
-import type { AgentLimitType } from "../../../types/limit/limitType";
+import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";
+import { useNotificationMessage } from "../../../../components/dataDisplay/NotificationMessage";
+import { useGetAgentLimits } from "../../../../hooks/limits/useGetAgentLimits";
+import { useCreateAgentLimit } from "../../../../hooks/limits/useCreateAgentLimit";
+import { useUpdateAgentLimit } from "../../../../hooks/limits/useUpdateAgentLimit";
+import type { AgentLimitType } from "../../../../types/limit/limitType";
+import { formatAmount } from "../../../../utils/amountFormatter";
 
 export default function AdministrationPageLimitsAgent() {
     const { notify } = useNotificationMessage();
@@ -31,8 +32,8 @@ export default function AdministrationPageLimitsAgent() {
             },
             { title: "Type", dataIndex: "transactionType", width: 160 },
             { title: "Direction", dataIndex: "direction", width: 120 },
-            { title: "Min amount", dataIndex: "minAmount", width: 120 },
-            { title: "Max amount", dataIndex: "maxAmount", width: 120 },
+            { title: "Min amount", dataIndex: "minAmount", width: 120, render: (value: number | null | undefined) => formatAmount(value) },
+            { title: "Max amount", dataIndex: "maxAmount", width: 120, render: (value: number | null | undefined) => formatAmount(value) },
             { title: "Currency", dataIndex: "currency", width: 90 },
         ],
         [],
