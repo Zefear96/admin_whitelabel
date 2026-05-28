@@ -4,3 +4,5 @@ export interface CountryType {
     litCode: string
     name: string
 }
+
+export type CountryUpdatePayload = Pick<CountryType, "id" | "name">
