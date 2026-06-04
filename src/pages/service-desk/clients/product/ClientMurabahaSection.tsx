@@ -3,7 +3,7 @@ import { useState } from "react";
 import { WalletOutlined } from "@ant-design/icons";
 import { Card, Empty, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { ResponseMurabahaBalanceType, ResponseMurabahaType } from "../../../../types/product/responseMurabahaType";
+import type { MurabahaBalanceDataType, MurabahaDataType } from "../../../../types/product/MurabahaDataType";
 import { useGetMurabaha } from "../../../../hooks/product/useGetMurabaha";
 import { useGetMurabahaBalance } from "../../../../hooks/product/useGetMurabahaBalance";
 import { ProductDetailsModal } from "./ProductDetailsModal";
@@ -12,7 +12,7 @@ import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
 
 interface ClientMurabahaSectionProps {
   keycloakClientId: string;
-  onRowClick?: (record: ResponseMurabahaType) => void;
+  onRowClick?: (record: MurabahaDataType) => void;
   icon?: ReactNode;
 }
 
@@ -22,10 +22,10 @@ export function ClientMurabahaSection({
   icon,
 }: ClientMurabahaSectionProps) {
   const { data, isLoading, error } = useGetMurabaha(keycloakClientId);
-  const [selectedMurabaha, setSelectedMurabaha] = useState<ResponseMurabahaType | null>(null);
+  const [selectedMurabaha, setSelectedMurabaha] = useState<MurabahaDataType | null>(null);
   const { data: balanceMurabaha } = useGetMurabahaBalance(selectedMurabaha?.productCode);
 
-  const columns: ColumnsType<ResponseMurabahaType> = [
+  const columns: ColumnsType<MurabahaDataType> = [
     {
       title: "Наименование продукта",
       dataIndex: "productName",
@@ -54,7 +54,7 @@ export function ClientMurabahaSection({
     },
   ];
 
-  const list = (data as ResponseMurabahaType[] | undefined) ?? [];
+  const list = (data as MurabahaDataType[] | undefined) ?? [];
   const murabahaExtraData = balanceMurabaha
     ? (Object.fromEntries(
         Object.entries(balanceMurabaha as unknown as Record<string, unknown>).filter(([key]) => key !== "murabahaId"),
@@ -87,7 +87,7 @@ export function ClientMurabahaSection({
   return (
     <Card>
       <SectionHeader title="Мурабаха" icon={icon} />
-      <Table<ResponseMurabahaType>
+      <Table<MurabahaDataType>
         size="small"
         rowKey={(row) => row.id}
         dataSource={list}
@@ -125,7 +125,7 @@ function MurabahaBalanceCell({ productCode, currency }: { productCode: string; c
     return <span>-</span>;
   }
 
-  const balance = (data as ResponseMurabahaBalanceType).outstandingAmount;
+  const balance = (data as MurabahaBalanceDataType).outstandingAmount;
 
   return (
     <span>

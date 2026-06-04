@@ -6,6 +6,7 @@ export const useGetTransactionTypeList = () => {
         queryKey: ['dictionary', 'transaction-type'],
         queryFn: () => {
            return DictionaryServiceApi.getTransactionTypes().then(res => res.data)
-        }
+        },
+        refetchOnMount: 'always',
     })
 }

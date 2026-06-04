@@ -1,4 +1,4 @@
-export interface ResponseMurabahaType {
+export interface MurabahaDataType {
     id: string
     productName: string
     productCode: string
@@ -7,7 +7,7 @@ export interface ResponseMurabahaType {
     expiryDate: string
 }
 
-export interface ResponseMurabahaBalanceType {
+export interface MurabahaBalanceDataType {
     murabahaId: string
     statusActive: boolean
     outstandingAmount: number
