@@ -2,7 +2,7 @@ import { Card, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { CurrencyType } from "../../../../types/dictionary/currencyType";
 import { useGetCurrencyList } from "../../../../hooks/dictionary/currency/useGetCurrencyList";
-import TableSkeleton from "../accounts/TableSkeleton";
+import TableSkeleton from "../TableSkeleton";
 import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";
 import { useState } from "react";
 import CreateCurrencyModal from "./CreateCurrencyModal";

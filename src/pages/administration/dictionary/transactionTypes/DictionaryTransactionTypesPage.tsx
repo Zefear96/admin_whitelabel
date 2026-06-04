@@ -4,6 +4,7 @@ import type { ColumnsType } from "antd/es/table";
 import type { TransactionType } from "../../../../types/dictionary/transactionType";
 import { useState } from "react";
 import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";
+import TableSkeleton from "../TableSkeleton";
 import CreateModalTransactionType from "./CreateModalTransactionType";
 
 export default function DictionaryTransactionTypesPage() {
@@ -23,9 +24,14 @@ export default function DictionaryTransactionTypesPage() {
             dataIndex: "serviceName",
         },
     ]
+
+    if (isLoading) {
+        return <TableSkeleton />
+    }
+
     return (
         <>
-        <Card title="Типы транзакций"
+        <Card title="Справочник типов транзакций"
         extra={<ButtonCreate title="Добавить тип" onClick={() => setIsModalOpen(true)} />}
         >
             {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}

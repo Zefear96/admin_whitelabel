@@ -2,7 +2,7 @@ import { Card, Table } from "antd";
 import { useGetSwiftList } from "../../../../hooks/dictionary/swift/useGetSwiftList";
 import type { ColumnsType } from "antd/es/table";
 import type { SwiftType } from "../../../../types/dictionary/swiftType";
-import TableSkeleton from "../accounts/TableSkeleton";
+import TableSkeleton from "../TableSkeleton";
 import { useState } from "react";
 import EditModalSwift from "./EditModalSwift";
 import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";

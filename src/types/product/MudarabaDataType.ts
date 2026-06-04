@@ -1,4 +1,4 @@
-export interface ResponseMudarabaType {
+export interface MudarabaDataType {
     id: string
     accountNumber: string
     productName: string
@@ -9,7 +9,7 @@ export interface ResponseMudarabaType {
     expiryDate: string
 }
 
-export interface ResponseMudarabaBalanceType {
+export interface MudarabaBalanceDataType {
     mudarabahId: string
     statusActive: boolean
     availableAmount: number
