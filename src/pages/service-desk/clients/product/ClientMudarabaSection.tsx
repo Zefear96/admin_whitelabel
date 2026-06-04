@@ -3,7 +3,7 @@ import { useState } from "react";
 import { WalletOutlined } from "@ant-design/icons";
 import { Card, Empty, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { ResponseMudarabaBalanceType, ResponseMudarabaType } from "../../../../types/product/responseMudarabaType";
+import type { MudarabaBalanceDataType, MudarabaDataType } from "../../../../types/product/MudarabaDataType";
 import { useGetMudaraba } from "../../../../hooks/product/useGetMudaraba";
 import { useGetMudarabaBalance } from "../../../../hooks/product/useGetMudarabaBalance";
 import { ProductDetailsModal } from "./ProductDetailsModal";
@@ -12,7 +12,7 @@ import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
 
 interface ClientMudarabaSectionProps {
   keycloakClientId: string;
-  onRowClick?: (record: ResponseMudarabaType) => void;
+  onRowClick?: (record: MudarabaDataType) => void;
   icon?: ReactNode;
 }
 
@@ -22,10 +22,10 @@ export function ClientMudarabaSection({
   icon,
 }: ClientMudarabaSectionProps) {
   const { data, isLoading, error } = useGetMudaraba(keycloakClientId);
-  const [selectedMudaraba, setSelectedMudaraba] = useState<ResponseMudarabaType | null>(null);
+  const [selectedMudaraba, setSelectedMudaraba] = useState<MudarabaDataType | null>(null);
   const { data: balanceMudaraba } = useGetMudarabaBalance(selectedMudaraba?.accountNumber);
 
-  const columns: ColumnsType<ResponseMudarabaType> = [
+  const columns: ColumnsType<MudarabaDataType> = [
     {
       title: "Номер счёта",
       dataIndex: "accountNumber",
@@ -65,7 +65,7 @@ export function ClientMudarabaSection({
       },
   ];
 
-  const list = (data as ResponseMudarabaType[] | undefined) ?? [];
+  const list = (data as MudarabaDataType[] | undefined) ?? [];
   const mudarabaExtraData = balanceMudaraba
     ? (Object.fromEntries(
         Object.entries(balanceMudaraba as unknown as Record<string, unknown>).filter(([key]) => key !== "mudarabahId"),
@@ -98,7 +98,7 @@ export function ClientMudarabaSection({
   return (
     <Card>
       <SectionHeader title="Мудараба" icon={icon} />
-      <Table<ResponseMudarabaType>
+      <Table<MudarabaDataType>
         size="small"
         rowKey={(row) => row.id}
         dataSource={list}
@@ -136,7 +136,7 @@ function MudarabaBalanceCell({ accountNumber, currency }: { accountNumber: strin
     return <span>-</span>;
   }
 
-  const balance = (data as ResponseMudarabaBalanceType).availableAmount;
+  const balance = (data as MudarabaBalanceDataType).availableAmount;
 
   return (
     <span>

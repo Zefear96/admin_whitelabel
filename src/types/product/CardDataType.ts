@@ -1,4 +1,4 @@
-export interface ResponseCardType {
+export interface CardDataType {
     id: string
     active: boolean
     cardNumber: string
@@ -6,7 +6,7 @@ export interface ResponseCardType {
     expiry: string
 }
 
-export interface ResponseCardBalanceType {
+export interface CardBalanceDataType {
     cardId: string
     cardNumber: string
     cardExpiry: string

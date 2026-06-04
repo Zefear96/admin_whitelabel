@@ -2,7 +2,7 @@ import { Button, Card, Descriptions, Modal, Table } from "antd";
 import { useGetAccountList } from "../../../../hooks/dictionary/account/useGetAccountList";
 import type { AccountEibType } from "../../../../types/dictionary/accountType";
 import type { ColumnsType } from "antd/es/table";
-import TableSkeleton from "./TableSkeleton";
+import TableSkeleton from "../TableSkeleton";
 import { useState } from "react";
 import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";
 import AccountCreateModal from "./AccountCreateModal";

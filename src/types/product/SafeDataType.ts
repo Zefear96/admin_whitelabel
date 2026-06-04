@@ -1,4 +1,4 @@
-export interface ResponseSafeType {
+export interface SafeDataType {
     id: string;
     cellNumber: string;
     availableRentAmount: string;
