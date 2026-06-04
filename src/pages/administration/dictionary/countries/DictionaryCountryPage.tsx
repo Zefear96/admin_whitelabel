@@ -1,6 +1,6 @@
 import { Card, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import TableSkeleton from "../accounts/TableSkeleton";
+import TableSkeleton from "../TableSkeleton";
 import { useGetCountryList } from "../../../../hooks/dictionary/country/useGetCountryList";
 import type { CountryType } from "../../../../types/dictionary/countryType";
 import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";

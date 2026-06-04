@@ -8,6 +8,7 @@ import { useCreateLimit } from "../../../../hooks/limits/useCreateLimit";
 import { useUpdateLimit } from "../../../../hooks/limits/useUpdateLimit";
 import type {  LimitType } from "../../../../types/limit/limitType";
 import { formatAmount } from "../../../../utils/amountFormatter";
+import TableSkeleton from "../../dictionary/TableSkeleton";
 
 export default function AdministrationPageLimitsRetail() {
     const { notify } = useNotificationMessage();
@@ -103,6 +104,10 @@ export default function AdministrationPageLimitsRetail() {
         }
     };
 
+    if (isLoadingLimits) {
+        return <TableSkeleton />;
+    }
+
     return (
         <Card
             title="Лимиты физических лиц"
@@ -169,9 +174,9 @@ export default function AdministrationPageLimitsRetail() {
                             options={[
                                 { label: "Online", value: "online" },
                                 { label: "Retail", value: "retail" },
-                                { label: "Private enterprener", value: "pe" },
+                                { label: "Private enterpreneur", value: "pe" },
                                 { label: "Corporate", value: "corporate" },
-                                { label: "Any", value: "ANY" },
+                                // { label: "Any", value: "ANY" },
                             ]}
                         />
                     </Form.Item>

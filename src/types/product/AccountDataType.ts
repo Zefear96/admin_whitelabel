@@ -1,4 +1,4 @@
-export interface ResponseAccountType {
+export interface AccountDataType {
     id: string
     iban: string
     accountNumber: string
@@ -7,7 +7,7 @@ export interface ResponseAccountType {
     currency: string
 }
 
-export interface ResponseAccountBalanceType {
+export interface AccountBalanceDataType {
     accountId: string
     accountNumber: string
     currency: string

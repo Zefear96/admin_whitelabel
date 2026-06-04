@@ -45,10 +45,10 @@ export default function AdministrationPageAgents() {
             width: 80,
             render: (status: boolean, row) => status ? (<Tag color="green">Active</Tag>) : (<Tag color="red">Inactive</Tag>)
         },
-        {
-            width: 10,
-            render: () => (<span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"><EyeTwoTone /></span>)
-        },
+        // {
+        //     width: 10,
+        //     render: () => (<span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"><EyeTwoTone /></span>)
+        // },
     ]
 
     if (isLoading) {
