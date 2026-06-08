@@ -66,7 +66,7 @@ export default function SidebarEib() {
       flexDirection: 'column',
       alignItems: 'center',
       color: colors.text,
-      backgroundColor: colors.background,
+      backgroundColor: colors.secondary,
     }}>
       <div style={{
         display: "flex",
@@ -111,7 +111,7 @@ export default function SidebarEib() {
         style={{
           marginTop: "20px",
           border: "none",
-          background: colors.background,
+          background: colors.secondary,
           color: colors.text,
           minWidth: "250px",
         }}
