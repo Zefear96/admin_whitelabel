@@ -27,3 +27,7 @@ dist-ssr
 .env
 *.log
 logs/
+
+# Локальные dev-сертификаты (генерируются через mkcert, в репозиторий не коммитятся)
+certs/*.pem
+certs/*.key
