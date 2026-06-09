@@ -4,19 +4,36 @@ import { useTheme } from "../../../hooks/useTheme";
 import { useGetAgentList } from "../../../hooks/dictionary/agent/useGetAgentList";
 import AgentOperationsPage from "./operations/AgentOperationsPage";
 import { EditOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import type { AgentType } from "../../../types/dictionary/agentType";
 import { formatRuDate } from "../../../utils/dateFormatter";
 import ButtonBack from "../../../components/dataEntry/ButtonBack";
 import AgentEditModal from "./AgentEditModal";
 import Title from "antd/es/typography/Title";
 
+const TAB_KEYS = ['info', 'operations'] as const;
+const DEFAULT_TAB = 'info';
+
 export default function AgentDetailsPage() {
     const { agent } = useParams<{ agent: string }>()
-    const [activeKey, setActiveKey] = useState('1');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tabParam = searchParams.get('tab');
+    const activeKey = TAB_KEYS.includes(tabParam as (typeof TAB_KEYS)[number])
+        ? (tabParam as string)
+        : DEFAULT_TAB;
     const { data: agentsList, isLoading, error } = useGetAgentList()
     const { colors } = useTheme()
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const onTabChange = (key: string) => {
+        setSearchParams(
+            (prev) => {
+                prev.set('tab', key);
+                return prev;
+            },
+            { replace: true }
+        );
+    };
 
     // Находим конкретного агента по code из URL параметра
     const agentData = agentsList?.find((agentItem: AgentType) => agentItem.code === agent)
@@ -28,7 +45,7 @@ export default function AgentDetailsPage() {
     const items: TabsProps["items"] = [
         {
             label: "Общая информация",
-            key: "1",
+            key: "info",
             children: agent ? (
                 <>
                     <Card>
@@ -82,7 +99,7 @@ export default function AgentDetailsPage() {
         },
         {
             label: "Операции агента",
-            key: "2",
+            key: "operations",
             children: <AgentOperationsPage agent={agent} />,
         }
     ];
@@ -94,7 +111,7 @@ export default function AgentDetailsPage() {
             </div>
             <Tabs
                 activeKey={activeKey}
-                onChange={setActiveKey}
+                onChange={onTabChange}
                 // type="card"
                 size="large"
                 items={items}
