@@ -3,7 +3,7 @@ import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { SorterResult } from "antd/es/table/interface";
 import { useState } from "react";
 import dayjs from "dayjs";
-import { useClientDevices } from "../../../../hooks/client/useClientDevices";
+import { useClientDevices } from "../../../../hooks/device/useClientDevices";
 import type { DeviceHistoryItem } from "../../../../types/client/deviceType";
 import { DeviceHistorySkeleton } from "./DeviceHistorySkeleton";
 

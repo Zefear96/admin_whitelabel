@@ -1,9 +1,10 @@
 // src/theme/ThemeContext.tsx
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import type { ReactNode } from "react";
+import { ConfigProvider } from 'antd';
 import type { ThemeMode, MenuMode } from '../types/theme';
 import { ThemeContext } from '../hooks/useTheme';
-import { themeConfig } from './themeConfig';
+import { themeConfig, getAntdTheme } from './themeConfig';
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
@@ -40,6 +41,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
     // Apply CSS variables
     const root = document.documentElement;
+
+    // Переключаем класс `dark`, чтобы активировались :root.dark переменные
+    root.classList.toggle('dark', themeMode === 'dark');
+
     const themeColors = themeConfig.colors[themeMode];
     Object.entries(themeColors).forEach(([key, value]) => {
       root.style.setProperty(`--color-${key}`, value);
@@ -55,7 +60,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <ThemeContext.Provider value={theme}>
-      {children}
+      <ConfigProvider theme={getAntdTheme(themeMode)}>
+        {children}
+      </ConfigProvider>
     </ThemeContext.Provider>
   );
 };
