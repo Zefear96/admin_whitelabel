@@ -6,6 +6,8 @@ export const useGetCurrencyList = () => {
         queryKey: ['dictionary', 'currency'],
         queryFn: () => {
             return DictionaryServiceApi.getCurrencies().then(res => res.data)
-        }
+        },
+        staleTime: 1000 * 30,
+        refetchOnMount: 'always',
     })
 }

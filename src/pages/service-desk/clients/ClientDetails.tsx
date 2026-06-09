@@ -1,10 +1,9 @@
-import { useState } from 'react';
 import type { TabsProps } from 'antd';
 import { Button, Descriptions, Tabs, Tag } from 'antd';
 import type { CustomerProfileType } from '../../../types/client/customerProfile';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useClientProfile } from '../../../hooks/client/useClientProfile';
-import { useClientDevices } from '../../../hooks/client/useClientDevices';
+import { useClientDevices } from '../../../hooks/device/useClientDevices';
 import DeviceHistory from './device-history/DeviceHistory';
 import './style.css'
 import { useTheme } from '../../../hooks/useTheme';
@@ -15,12 +14,29 @@ import Title from 'antd/es/typography/Title';
 import { ClientDetailsSkeleton } from './ClientDetailsSkeleton';
 
 
+const TAB_KEYS = ['info', 'device-history', 'products', 'transaction-history'] as const;
+const DEFAULT_TAB = 'info';
+
 export default function ClientDetails() {
   const { id } = useParams<{ id: string }>();
   const { data: client, isLoading, error } = useClientProfile(id)
-  const [activeKey, setActiveKey] = useState('1');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab');
+  const activeKey = TAB_KEYS.includes(tabParam as (typeof TAB_KEYS)[number])
+    ? (tabParam as string)
+    : DEFAULT_TAB;
   const { colors } = useTheme();
   const navigate = useNavigate();
+
+  const onTabChange = (key: string) => {
+    setSearchParams(
+      (prev) => {
+        prev.set('tab', key);
+        return prev;
+      },
+      { replace: true }
+    );
+  };
 
   if (isLoading) return <ClientDetailsSkeleton />;
   if (error) return <p>Ошибка загрузки клиента</p>;
@@ -29,7 +45,7 @@ export default function ClientDetails() {
   const items: TabsProps["items"] = [
     {
       label: "Общая информация",
-      key: "1",
+      key: "info",
       children: client ? (
         <Descriptions bordered column={1} size="middle" style={{ backgroundColor: colors.background, color: colors.text }}>
           <Descriptions.Item label="ID">{client.id}</Descriptions.Item>
@@ -79,19 +95,19 @@ export default function ClientDetails() {
     },
     {
       label: "История входов",
-      key: "2",
+      key: "device-history",
       children: <DeviceHistory absId={client.absClientId} />,
     },
     {
       label: "Продукты клиента",
-      key: "3",
+      key: "products",
       children: (
         <ClientProductPage keycloakClientId={client.keycloakClientId} />
       ),
     },
     {
       label: "История транзакций клиента",
-      key: "4",
+      key: "transaction-history",
       children: (
         <ClientTransactionHistory keycloakClientId={client.keycloakClientId} />
       ),
@@ -117,7 +133,7 @@ export default function ClientDetails() {
       </div>
       <Tabs
         activeKey={activeKey}
-        onChange={setActiveKey}
+        onChange={onTabChange}
         // type="card"
         size="large"
         items={items}

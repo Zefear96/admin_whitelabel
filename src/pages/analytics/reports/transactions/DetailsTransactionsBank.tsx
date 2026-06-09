@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { Button, Tabs, type TabsProps } from "antd";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
@@ -9,12 +9,29 @@ import { RollbackOutlined } from "@ant-design/icons";
 import IncomingTransactionsTab from "./IncomingTransactionsTab";
 import OutgoingTransactionsTab from "./OutgoingTransactionsTab";
 
+const TAB_KEYS = ['outgoing', 'incoming'] as const;
+const DEFAULT_TAB = 'outgoing';
+
 export default function DetailsTransactionsBank() {
     const navigate = useNavigate();
     const { code } = useParams();
     const bankCode = code ?? "null";
 
-    const [activeTab, setActiveTab] = useState<string>("1");
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tabParam = searchParams.get('tab');
+    const activeTab = TAB_KEYS.includes(tabParam as (typeof TAB_KEYS)[number])
+        ? (tabParam as string)
+        : DEFAULT_TAB;
+
+    const onTabChange = (key: string) => {
+        setSearchParams(
+            (prev) => {
+                prev.set('tab', key);
+                return prev;
+            },
+            { replace: true }
+        );
+    };
 
     const today = dayjs();
     const initialFrom = today.subtract(7, "day");
@@ -37,7 +54,7 @@ export default function DetailsTransactionsBank() {
     const items: TabsProps["items"] = [
         {
             label: "Исходящие транзакции",
-            key: "1",
+            key: "outgoing",
             children: (
                 <OutgoingTransactionsTab
                     bankCode={bankCode}
@@ -48,7 +65,7 @@ export default function DetailsTransactionsBank() {
         },
         {
             label: "Входящие транзакции",
-            key: "2",
+            key: "incoming",
             children: (
                 <IncomingTransactionsTab
                     bankCode={bankCode}
@@ -74,7 +91,7 @@ export default function DetailsTransactionsBank() {
             </div>
             <Tabs
                 activeKey={activeTab}
-                onChange={setActiveTab}
+                onChange={onTabChange}
                 // type="card"
                 size="large"
                 items={items}
