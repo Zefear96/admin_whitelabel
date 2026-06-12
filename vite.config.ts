@@ -7,6 +7,12 @@ import pkg from './package.json'
 
 
 // https://vite.dev/config/
+const keyPath = path.resolve(__dirname, 'certs/localhost-key.pem')
+const certPath = path.resolve(__dirname, 'certs/localhost.pem')
+const httpsConfig = fs.existsSync(keyPath) && fs.existsSync(certPath)
+  ? { key: fs.readFileSync(keyPath), cert: fs.readFileSync(certPath) }
+  : undefined
+
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(),],
   define: {
@@ -15,10 +21,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: true,
     port: 3001, // любой свободный порт
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'certs/localhost-key.pem')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'certs/localhost.pem')),
-    },
+    https: httpsConfig,
   },
   // base path для работы приложения в подпапке /backoffice
   // В production используем /backoffice/, в dev можно использовать / для локальной разработки
