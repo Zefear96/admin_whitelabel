@@ -62,7 +62,7 @@ export const ButtonReportOutgoingTransactions = ({ transactions, bankCode, fromD
 
     const tableData = transactions.map((tx, index) => ({
       index: index + 1,
-      date: dayjs(tx.date).format("DD.MM.YYYY HH:mm") || "-",
+      date: dayjs(tx.date).format("DD.MM.YYYY HH:mm:ss") || "-",
       paymentId: tx.paymentId || "-",
       transactionType: tx.transactionType || "-",
       receiverAccount: tx.receiverAccount || "-",

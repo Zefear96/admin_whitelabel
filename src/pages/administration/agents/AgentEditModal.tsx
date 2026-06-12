@@ -1,6 +1,6 @@
 import { Form, Input, Modal, Switch, Tabs, type TabsProps, Button } from "antd";
 import { useEffect, useState } from "react";
-import AgentOperationsPage from "./AgentOperationsPage";
+import AgentOperationsPage from "./operations/AgentOperationsPage";
 import type { AgentType } from "../../../types/dictionary/agentType";
 import { useUpdateAgent } from "../../../hooks/dictionary/agent/useUpdateAgent";
 import Popconfirm from "../../../components/dataDisplay/Popconfirm";
@@ -17,10 +17,11 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, data }: Mo
         if (isModalOpen && data) {
             form.setFieldsValue({
                 agent: data.agent,
+                code: data.code,
                 bic: data.bic,
                 bankAccount: data.bankAccount,
                 isActive: data.isActive,
-                logoUrl: data.logoUrl,
+                logoUrl: data.logoUrl || "https://assets.eib.kg/",
             });
         }
     }, [isModalOpen, data, form]);
@@ -37,10 +38,11 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, data }: Mo
             const payload: AgentType = {
                 ...data as AgentType,
                 agent: values.agent,
+                code: values.code,
                 bic: values.bic,
                 bankAccount: values.bankAccount,
                 isActive: values.isActive,
-                logoUrl: values.logoUrl,
+                logoUrl: values.logoUrl || "https://assets.eib.kg",
                 // changedBy: user?.name ?? agentData.changedBy,
                 // changeDate: new Date().toISOString(),
             };
@@ -62,37 +64,6 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, data }: Mo
         }
     };
 
-    const items: TabsProps["items"] = [
-        {
-            label: "Общая информация",
-            key: "1",
-            children: (
-                <Form form={form} layout="horizontal" labelCol={{ flex: '110px' }} wrapperCol={{ flex: 1 }} labelAlign="left" style={{ marginTop: "10px" }}>
-                    <Form.Item label="Имя агента" name="agent" rules={[{ required: true, message: "Введите наименование агента" }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="БИК" name="bic" rules={[{ required: false, message: "Введите BIC" }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="Счет" name="bankAccount" rules={[{ required: true, message: "Введите счёт" }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item label="Иконка" name="logoUrl" rules={[{ required: false, message: "Введите ссылку на иконку" }]}>
-                        <Input placeholder="https://example.com/icon.png" />
-                    </Form.Item>
-                    <Form.Item label="Активен" name="isActive" valuePropName="checked">
-                        <Switch checkedChildren="Да" unCheckedChildren="Нет" />
-                    </Form.Item>
-                </Form>
-            ),
-        },
-        {
-            label: "Операции агента",
-            key: "2",
-            children: <AgentOperationsPage agent={data?.code ?? "" as string} />,
-        },
-    ];
-
     return (
         <Modal
             open={isModalOpen}
@@ -101,13 +72,27 @@ export default function AgentEditModal({ isModalOpen, setIsModalOpen, data }: Mo
             style={{ minWidth: "60%" }}
             footer={null}
         >
-            <Tabs
-                activeKey={activeKey}
-                onChange={setActiveKey}
-                size="large"
-                items={items}
-                className="activeTab"
-            />
+            <Form form={form} layout="horizontal" labelCol={{ flex: '110px' }} wrapperCol={{ flex: 1 }} labelAlign="left" style={{ marginTop: "30px" }}>
+                <Form.Item label="Имя агента" name="agent" rules={[{ required: true, message: "Введите наименование агента" }]}>
+                    <Input />
+                </Form.Item>
+                <Form.Item label="Код агента" name="code" rules={[{ required: true, message: "Введите код агента" }]}>
+                    <Input />
+                </Form.Item>
+                <Form.Item label="БИК" name="bic" rules={[{ required: false, message: "Введите BIC" }]}>
+                    <Input />
+                </Form.Item>
+                <Form.Item label="Счет" name="bankAccount" rules={[{ required: true, message: "Введите счёт" }]}>
+                    <Input />
+                </Form.Item>
+                <Form.Item label="Иконка" name="logoUrl" rules={[{ required: false, message: "Введите ссылку на иконку" }]}>
+                    <Input placeholder="https://assets.eib.kg/resources/mobile/bank-logo.svg" />
+                </Form.Item>
+                <Form.Item label="Активен" name="isActive" valuePropName="checked">
+                    <Switch checkedChildren="Да" unCheckedChildren="Нет" />
+                </Form.Item>
+            </Form>
+
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16, gap: 8 }}>
                 <Button onClick={handleCancel}>
                     Отмена

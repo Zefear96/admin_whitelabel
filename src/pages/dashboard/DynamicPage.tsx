@@ -6,7 +6,7 @@ export default function DynamicPage({title}: {title?: string}) {
     return (
         <div style={{
             background: colors.background,
-            minHeight: '100vh',
+            minHeight: '100%',
             borderRadius: 15,
             padding: 20,
         }}>

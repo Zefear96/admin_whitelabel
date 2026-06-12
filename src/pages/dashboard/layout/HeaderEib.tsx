@@ -12,8 +12,8 @@ export default function HeaderEib() {
 
   return (
     <Header style={{
-      backgroundColor: '#f5f5f5',
-      // borderBottom: `1px solid ${colors.surface}`
+      backgroundColor: colors.secondary,
+      color: colors.text,
     }}>
       <div style={{
         display: "flex",

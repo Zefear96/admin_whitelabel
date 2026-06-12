@@ -1,6 +1,7 @@
 import type { AccountEibType } from "../../types/dictionary/accountType"
 import type { AgentOperationUpsertPayload } from "../../types/dictionary/agentOperationType"
 import type { AgentType } from "../../types/dictionary/agentType"
+import type { CountryType, CountryUpdatePayload } from "../../types/dictionary/countryType"
 import type { CurrencyType } from "../../types/dictionary/currencyType"
 import type { SwiftType } from "../../types/dictionary/swiftType"
 import type { TransactionType } from "../../types/dictionary/transactionType"
@@ -67,6 +68,18 @@ export const DictionaryServiceApi = {
     },
     createTransactionType(payload: TransactionType) {
         return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/transaction_type', payload)
-    }
+    },
+    updateCountry(payload: CountryUpdatePayload) {
+        return apiClient.put('/admin-backend/dictionary-service/api/v1/dictionary/country', payload)
+    },
+    importCountries(file: File) {
+        const formData = new FormData();
+        formData.append('countries', file);
+
+        return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/country/import', formData)
+    },
+    createCountry(payload: CountryType) {
+        return apiClient.post('/admin-backend/dictionary-service/api/v1/dictionary/country', payload)
+    },
 
 }

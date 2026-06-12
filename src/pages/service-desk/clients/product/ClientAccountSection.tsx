@@ -1,17 +1,18 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { BankOutlined } from "@ant-design/icons";
-import { Card, Empty, Spin, Table, Tag, Typography } from "antd";
+import { Card, Empty, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { ResponseAccountBalanceType, ResponseAccountType } from "../../../../types/product/responseAccountType";
+import type { AccountBalanceDataType, AccountDataType } from "../../../../types/product/AccountDataType";
 import { useGetAccounts } from "../../../../hooks/product/useGetAccounts";
 import { useGetAccountBalance } from "../../../../hooks/product/useGetAccountBalance";
 import { ProductDetailsModal } from "./ProductDetailsModal";
 import { formatAmount } from "../../../../utils/amountFormatter";
+import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
 
 interface ClientAccountSectionProps {
   keycloakClientId: string;
-  onRowClick?: (record: ResponseAccountType) => void;
+  onRowClick?: (record: AccountDataType) => void;
   icon?: ReactNode;
 }
 
@@ -21,10 +22,10 @@ export function ClientAccountSection({
   icon,
 }: ClientAccountSectionProps) {
   const { data, isLoading, error } = useGetAccounts(keycloakClientId);
-  const [selectedAccount, setSelectedAccount] = useState<ResponseAccountType | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<AccountDataType | null>(null);
   const { data: balanceAccount } = useGetAccountBalance(selectedAccount?.accountNumber);
 
-  const columns: ColumnsType<ResponseAccountType> = [
+  const columns: ColumnsType<AccountDataType> = [
     {
       title: "Наименование продукта",
       dataIndex: "productName",
@@ -60,7 +61,7 @@ export function ClientAccountSection({
     },
   ];
 
-  const list = (data as ResponseAccountType[] | undefined) ?? [];
+  const list = (data as AccountDataType[] | undefined) ?? [];
   const balanceExtraData = balanceAccount
     ? (Object.fromEntries(
         Object.entries(balanceAccount as unknown as Record<string, unknown>).filter(([key]) => key !== "accountId"),
@@ -68,14 +69,7 @@ export function ClientAccountSection({
     : null;
 
   if (isLoading) {
-    return (
-      <Card>
-        <SectionHeader title="Банковские счета" icon={icon} />
-        <div style={{ textAlign: "center", padding: 24 }}>
-          <Spin />
-        </div>
-      </Card>
-    );
+    return <ClientProductSectionSkeleton header={<SectionHeader title="Банковские счета" icon={icon} />} />;
   }
 
   if (error) {
@@ -100,7 +94,7 @@ export function ClientAccountSection({
   return (
     <Card>
       <SectionHeader title="Счета до востребования" icon={icon} />
-      <Table<ResponseAccountType>
+      <Table<AccountDataType>
         size="small"
         rowKey={(row) => row.id}
         dataSource={list}
@@ -138,7 +132,7 @@ function AccountBalanceCell({ accountNumber, currency }: { accountNumber: string
     return <span>-</span>;
   }
 
-  const balance = (data as ResponseAccountBalanceType).availableAmount;
+  const balance = (data as AccountBalanceDataType).availableAmount;
 
   return (
     <span>
@@ -158,7 +152,7 @@ function AccountStatusCell({ accountNumber }: { accountNumber: string }) {
     return <Tag>Нет данных</Tag>;
   }
 
-  const isActive = (data as ResponseAccountBalanceType).active;
+  const isActive = (data as AccountBalanceDataType).active;
   return isActive ? <Tag color="green">Активен</Tag> : <Tag color="red">Неактивен</Tag>;
 }
 
@@ -173,7 +167,7 @@ function AccountBlockedStatusCell({ accountNumber }: { accountNumber: string }) 
     return <Tag>Нет данных</Tag>;
   }
 
-  const isAmountBlocked = (data as ResponseAccountBalanceType).isAmountBlocked;
+  const isAmountBlocked = (data as AccountBalanceDataType).isAmountBlocked;
   return isAmountBlocked ? <Tag color="yellow">Блокирован</Tag> : <Tag color="green">Не блокирован</Tag>;
 }
 

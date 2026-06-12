@@ -1,17 +1,18 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { CreditCardOutlined } from "@ant-design/icons";
-import { Card, Empty, Spin, Table, Tag, Typography } from "antd";
+import { Card, Empty, Table, Tag, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { ResponseCardType, ResponseCardBalanceType } from "../../../../types/product/responseCardType";
+import type { CardDataType, CardBalanceDataType } from "../../../../types/product/CardDataType";
 import { useGetCards } from "../../../../hooks/product/useGetCards";
 import { useGetCardBalance } from "../../../../hooks/product/useGetCardBalance";
 import { ProductDetailsModal } from "./ProductDetailsModal";
 import { formatAmount } from "../../../../utils/amountFormatter";
+import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
 
 interface ClientCardSectionProps {
   keycloakClientId: string;
-  onRowClick?: (record: ResponseCardType) => void;
+  onRowClick?: (record: CardDataType) => void;
   icon?: ReactNode;
 }
 
@@ -21,10 +22,10 @@ export function ClientCardSection({
   icon,
 }: ClientCardSectionProps) {
   const { data, isLoading, error } = useGetCards(keycloakClientId);
-  const [selectedCard, setSelectedCard] = useState<ResponseCardType | null>(null);
+  const [selectedCard, setSelectedCard] = useState<CardDataType | null>(null);
   const { data: balanceCard } = useGetCardBalance(selectedCard?.id);
 
-  const columns: ColumnsType<ResponseCardType> = [
+  const columns: ColumnsType<CardDataType> = [
     {
       title: "Номер карты",
       dataIndex: "cardNumber",
@@ -52,17 +53,10 @@ export function ClientCardSection({
       },
   ];
 
-  const list = (data as ResponseCardType[] | undefined) ?? [];
+  const list = (data as CardDataType[] | undefined) ?? [];
 
   if (isLoading) {
-    return (
-      <Card>
-        <SectionHeader title="Карты" icon={icon} />
-        <div style={{ textAlign: "center", padding: 24 }}>
-          <Spin />
-        </div>
-      </Card>
-    );
+    return <ClientProductSectionSkeleton header={<SectionHeader title="Карты" icon={icon} />} />;
   }
 
   if (error) {
@@ -87,7 +81,7 @@ export function ClientCardSection({
   return (
     <Card>
       <SectionHeader title="Карты" icon={icon} />
-      <Table<ResponseCardType>
+      <Table<CardDataType>
         size="small"
         rowKey={(row) => row.id}
         dataSource={list}
@@ -125,7 +119,7 @@ function CardBalanceCell({ cardId, currency }: { cardId: string; currency: strin
     return <span>-</span>;
   }
 
-  const balance = (data as ResponseCardBalanceType).availableAmount;
+  const balance = (data as CardBalanceDataType).availableAmount;
 
   return (
     <span>

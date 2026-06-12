@@ -6,6 +6,7 @@ import { Avatar, Button, Card, Descriptions, Modal, Table, Tag } from "antd";
 import { EditOutlined, EyeOutlined, EyeTwoTone, PlusCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import AgentCreateModal from "./AgentCreateModal";
+import { AdministrationPageAgentsSkeleton } from "./AdministrationPageAgentsSkeleton";
 
 export default function AdministrationPageAgents() {
     const { data, isLoading, error } = useGetAgentList();
@@ -44,11 +45,16 @@ export default function AdministrationPageAgents() {
             width: 80,
             render: (status: boolean, row) => status ? (<Tag color="green">Active</Tag>) : (<Tag color="red">Inactive</Tag>)
         },
-        {
-            width: 10,
-            render: () => (<span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"><EyeTwoTone /></span>)
-        },
+        // {
+        //     width: 10,
+        //     render: () => (<span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200"><EyeTwoTone /></span>)
+        // },
     ]
+
+    if (isLoading) {
+        return <AdministrationPageAgentsSkeleton />;
+    }
+
     return (
         <>
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
@@ -57,12 +63,11 @@ export default function AdministrationPageAgents() {
             }>
                 {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
 
-                <AgentCreateModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                <AgentCreateModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={null} />
                 <Table<AgentType>
                     rowClassName={() => "group"}
                     rowKey={(row) => row.id}
                     columns={columns}
-                    loading={isLoading}
                     dataSource={data ?? []}
                     pagination={false}
                     onRow={(record) => ({
@@ -72,7 +77,6 @@ export default function AdministrationPageAgents() {
                     style={{ cursor: "pointer" }}
                 />
             </Card>
-
         </>
     )
 }

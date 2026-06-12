@@ -10,7 +10,7 @@ import { mapSectionsToRoutes } from "../utils/mapSectionsToRoutes";
 import Loader from "../components/dataDisplay/loader/Loader";
 import ServiceDeskClientsPage from "../pages/service-desk/clients/ServiceDeskClientsPage";
 import ServiceDeskRequestsPage from "../pages/service-desk/ServiceDeskRequestsPage";
-import ServiceDeskTransactionsPage from "../pages/service-desk/transactionHistory/ServiceDeskTransactionsPage";
+import ServiceDeskGlobalTransactionHistoryPage from "../pages/service-desk/transactionHistory/ServiceDeskGlobalTransactionHistoryPage";
 import ServiceDeskDisputesPage from "../pages/service-desk/ServiceDeskDisputesPage";
 import ClientDetails from "../pages/service-desk/clients/ClientDetails";
 // Access Control
@@ -34,13 +34,13 @@ import AdministrationPageProductsCards from "../pages/administration/products/Ad
 import AdministrationPageProductsMudaraba from "../pages/administration/products/AdministrationPageProductsMudaraba";
 import AdministrationPageProductsMurabaha from "../pages/administration/products/AdministrationPageProductsMurabaha";
 import AdministrationPageProductsSafe from "../pages/administration/products/AdministrationPageProductsSafe";
-import AdministrationPageNotifications from "../pages/administration/AdministrationPageNotifications";
+import AdministrationPageNotifications from "../pages/administration/notifications/AdministrationPageNotifications";
 import AdministrationPageServices from "../pages/administration/AdministrationPageServices";
 import AdministrationPageTariffs from "../pages/administration/AdministrationPageTariffs";
-import AdministrationPageLimitsCorporate from "../pages/administration/limits/AdministrationPageLimitsCorporate";
-import AdministrationPageLimitsPe from "../pages/administration/limits/AdministrationPageLimitsPe";
-import AdministrationPageLimitsRetail from "../pages/administration/limits/AdministrationPageLimitsRetail";
-import AdministrationPageLimitsOnline from "../pages/administration/limits/AdministrationPageLimitsOnline";
+import AdministrationPageLimitsCorporate from "../pages/administration/limits/corporate/AdministrationPageLimitsCorporate";
+import AdministrationPageLimitsPe from "../pages/administration/limits/pe/AdministrationPageLimitsPe";
+import AdministrationPageLimitsRetail from "../pages/administration/limits/retail/AdministrationPageLimitsRetail";
+import AdministrationPageLimitsOnline from "../pages/administration/limits/online/AdministrationPageLimitsOnline";
 // Marketing
 import MarketingPagePromotions from "../pages/marketing/MarketingPagePromotions";
 import MarketingPageBanners from "../pages/marketing/MarketingPageBanners";
@@ -54,6 +54,7 @@ import DictionaryTransactionTypesPage from "../pages/administration/dictionary/t
 import AdministrationPageAgents from "../pages/administration/agents/AdministrationPageAgents";
 import AgentDetailsPage from "../pages/administration/agents/AgentDetailsPage";
 import LogoutPage from "../pages/logout/LogoutPage";
+import AdministrationPageLimitsAgent from "../pages/administration/limits/agent/AdministrationPageLimitsAgent";
 
 export default function AppRoutes() {
   const [sections, setSections] = useState<SectionMenuType[]>([]);
@@ -106,7 +107,7 @@ export default function AppRoutes() {
         {/* Service Desk */}
         <Route path="/service-desk/clients" element={<ServiceDeskClientsPage/>}/>
         <Route path="/service-desk/requests" element={<ServiceDeskRequestsPage/>}/>
-        <Route path="/service-desk/transactions" element={<ServiceDeskTransactionsPage />}/>
+        <Route path="/service-desk/transactions" element={<ServiceDeskGlobalTransactionHistoryPage />}/>
         <Route path="/service-desk/disputes" element={<ServiceDeskDisputesPage/>}/>
         <Route path="/service-desk/clients/details/:id" element={<ClientDetails/>} />
         
@@ -119,6 +120,7 @@ export default function AppRoutes() {
         <Route path="/administration/notifications" element={<AdministrationPageNotifications/>}/>
         <Route path="/administration/services" element={<AdministrationPageServices/>}/>
         <Route path="/administration/tariffs" element={<AdministrationPageTariffs/>}/>
+        <Route path="/administration/limits/agents" element={<AdministrationPageLimitsAgent/>}/>
         <Route path="/administration/limits/corporate" element={<AdministrationPageLimitsCorporate/>}/>
         <Route path="/administration/limits/pe" element={<AdministrationPageLimitsPe/>}/>
         <Route path="/administration/limits/retail" element={<AdministrationPageLimitsRetail/>}/>

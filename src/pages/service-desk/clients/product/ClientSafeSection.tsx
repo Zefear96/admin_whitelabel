@@ -1,15 +1,16 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { SafetyCertificateOutlined } from "@ant-design/icons";
-import { Card, Empty, Spin, Table, Typography } from "antd";
+import { Card, Empty, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { ResponseSafeType } from "../../../../types/product/responseSafeType";
+import type { SafeDataType } from "../../../../types/product/SafeDataType";
 import { useGetSafe } from "../../../../hooks/product/useGetSafe";
 import { ProductDetailsModal } from "./ProductDetailsModal";
+import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
 
 interface ClientSafeSectionProps {
   keycloakClientId: string;
-  onRowClick?: (record: ResponseSafeType) => void;
+  onRowClick?: (record: SafeDataType) => void;
   icon?: ReactNode;
 }
 
@@ -19,9 +20,9 @@ export function ClientSafeSection({
   icon,
 }: ClientSafeSectionProps) {
   const { data, isLoading, error } = useGetSafe(keycloakClientId);
-  const [selectedSafe, setSelectedSafe] = useState<ResponseSafeType | null>(null);
+  const [selectedSafe, setSelectedSafe] = useState<SafeDataType | null>(null);
 
-  const columns: ColumnsType<ResponseSafeType> = [
+  const columns: ColumnsType<SafeDataType> = [
     {
       title: "Номер ячейки",
       dataIndex: "cellNumber",
@@ -55,17 +56,10 @@ export function ClientSafeSection({
     },
   ];
 
-  const list = (data as ResponseSafeType[] | undefined) ?? [];
+  const list = (data as SafeDataType[] | undefined) ?? [];
 
   if (isLoading) {
-    return (
-      <Card>
-        <SectionHeader title="Сейфовые ячейки" icon={icon} />
-        <div style={{ textAlign: "center", padding: 24 }}>
-          <Spin />
-        </div>
-      </Card>
-    );
+    return <ClientProductSectionSkeleton header={<SectionHeader title="Сейфовые ячейки" icon={icon} />} />;
   }
 
   if (error) {
@@ -90,7 +84,7 @@ export function ClientSafeSection({
   return (
     <Card>
       <SectionHeader title="Сейфовые ячейки" icon={icon} />
-      <Table<ResponseSafeType>
+      <Table<SafeDataType>
         size="small"
         rowKey={(row) => row.id}
         dataSource={list}
