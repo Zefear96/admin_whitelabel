@@ -16,6 +16,24 @@ export const USER_TYPE_OPTIONS = [
     { label: "Corporate", value: "corporate" },
 ];
 
+export const OPERATION_TYPE_OPTIONS = [
+    { label: "ALL - Limit for all operations ", value: "ALL" },
+    { label: "A2A_OWN - Account to account (between own clients)", value: "A2A_OWN" },
+    { label: "A2C_OWN - Account to card (between own clients)", value: "A2C_OWN" },
+    { label: "C2C_OWN - Card to card (between own clients)", value: "C2C_OWN" },
+    { label: "C2A_OWN - Card to account (between own clients)", value: "C2A_OWN" },
+    { label: "A2A - Account to account transfer (between other clients)", value: "A2A" },
+    { label: "A2C - Account to card transfer (between own clients)", value: "A2C" },
+    { label: "C2C - Card to card transfer (between other clients)", value: "C2C" },
+    { label: "C2A - Card to account transfer (not own)", value: "C2A" },
+    { label: "C2G - Payment for gov services with a bank card", value: "C2G" },
+    { label: "A2G - Payment for gov services with a bank account", value: "A2G" },
+    { label: "C2U - Payment for utilities with a bank card", value: "C2U" },
+    { label: "A2U - Payment for utilities with a bank account", value: "A2U" },
+    { label: "C2M - Payment for mobile services with a bank card", value: "C2M" },
+    { label: "A2M - Payment for mobile services with a bank account", value: "A2M" }
+];
+
 interface LimitFormProps {
     form: FormInstance<LimitType>;
 }
@@ -28,13 +46,22 @@ export default function LimitForm({ form }: LimitFormProps) {
         [currencies],
     );
 
+    const handleValuesChange = (changedValues: Partial<LimitType>) => {
+        if (!("operationType" in changedValues)) {
+            return;
+        }
+
+        const selectedType = OPERATION_TYPE_OPTIONS.find((option) => option.value === changedValues.operationType);
+        form.setFieldValue("description", selectedType?.label ?? "");
+    };
+
     return (
-        <Form form={form} layout="vertical" style={{ marginTop: 12 }}>
+        <Form form={form} layout="vertical" style={{ marginTop: 12 }} onValuesChange={handleValuesChange}>
             <Form.Item label="Operation type" name="operationType" rules={[{ required: true }]}>
-                <Input />
+                <Select options={OPERATION_TYPE_OPTIONS} virtual={false} />
             </Form.Item>
             <Form.Item label="Описание" name="description" rules={[{ required: true }]}>
-                <Input />
+                <Input disabled />
             </Form.Item>
             <Form.Item label="Currency" name="currency" rules={[{ required: true }]} style={{ cursor: "pointer" }}
             >

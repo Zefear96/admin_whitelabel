@@ -1,7 +1,10 @@
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal, Select } from "antd";
 import type { AccountEibType } from "../../../../types/dictionary/accountType";
 import { useCreateAccount } from "../../../../hooks/dictionary/account/useCreateAccount";
 import { useNotificationMessage } from "../../../../components/dataDisplay/NotificationMessage";
+import { useGetTransactionTypeList } from "../../../../hooks/dictionary/transaction/useGetTransactionTypeList";
+import { useMemo } from "react";
+import type { TransactionType } from "../../../../types/dictionary/transactionType";
 
 interface AccountCreateModalProps {
     isModalOpen: boolean;
@@ -11,7 +14,21 @@ interface AccountCreateModalProps {
 export default function AccountCreateModal({ isModalOpen, setIsModalOpen }: AccountCreateModalProps) {
     const [form] = Form.useForm<AccountEibType>();
     const { mutateAsync, isPending } = useCreateAccount();
+    const { data: transactionTypes } = useGetTransactionTypeList();
+    const transactionTypeOptions = useMemo(() => ((transactionTypes ?? []) as TransactionType[]).map((transactionType) => ({ label: transactionType.transactionType, value: transactionType.transactionType })), [transactionTypes]);
     const { notify } = useNotificationMessage();
+
+    const handleValuesChange = (changedValues: Partial<AccountEibType>) => {
+        if (!("transactionType" in changedValues)) {
+            return;
+        }
+
+        const selectedType = ((transactionTypes ?? []) as TransactionType[]).find(
+            (type) => type.transactionType === changedValues.transactionType,
+        );
+
+        form.setFieldValue("serviceName", selectedType?.serviceName ?? "");
+    };
 
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -70,20 +87,21 @@ export default function AccountCreateModal({ isModalOpen, setIsModalOpen }: Acco
                 wrapperCol={{ flex: 1 }}
                 labelAlign="left"
                 style={{ marginTop: "20px" }}
+                onValuesChange={handleValuesChange}
             >
                 <Form.Item
                     label="Тип транзакции"
                     name="transactionType"
                     rules={[{ required: true, message: "Укажите тип транзакции" }]}
                 >
-                    <Input />
+                    <Select options={transactionTypeOptions} virtual={false}/>
                 </Form.Item>
                 <Form.Item
                     label="Операция"
                     name="serviceName"
                     rules={[{ required: true, message: "Укажите операцию" }]}
                 >
-                    <Input />
+                    <Input disabled />
                 </Form.Item>
                 <Form.Item label="Счет KGS" name="kgsAccount">
                     <Input />
