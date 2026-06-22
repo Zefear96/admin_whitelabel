@@ -11,19 +11,19 @@ import { formatAmount } from "../../../../utils/amountFormatter";
 import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
 
 interface ClientMurabahaSectionProps {
-  keycloakClientId: string;
+  absId: string;
   onRowClick?: (record: MurabahaDataType) => void;
   icon?: ReactNode;
 }
 
 export function ClientMurabahaSection({
-  keycloakClientId,
+  absId,
   onRowClick,
   icon,
 }: ClientMurabahaSectionProps) {
-  const { data, isLoading, error } = useGetMurabaha(keycloakClientId);
+  const { data, isLoading, error } = useGetMurabaha(absId);
   const [selectedMurabaha, setSelectedMurabaha] = useState<MurabahaDataType | null>(null);
-  const { data: balanceMurabaha } = useGetMurabahaBalance(selectedMurabaha?.productCode);
+  const { data: balanceMurabaha } = useGetMurabahaBalance(selectedMurabaha?.creditCode.toString());
 
   const columns: ColumnsType<MurabahaDataType> = [
     {
@@ -33,8 +33,8 @@ export function ClientMurabahaSection({
     },
     {
       title: "Код продукта",
-      dataIndex: "productCode",
-      key: "productCode",
+      dataIndex: "creditCode",
+      key: "creditCode",
     },
     {
       title: "Дата открытия",
@@ -43,14 +43,29 @@ export function ClientMurabahaSection({
     },
     {
       title: "Дата закрытия",
-      dataIndex: "expiryDate",
-      key: "expiryDate",
+      dataIndex: "expireDate",
+      key: "expireDate",
     },
     {
       title: "Баланс",
       key: "balance",
       width: 160,
-      render: (_, record) => <MurabahaBalanceCell productCode={record.productCode} currency={record.currency} />,
+      render: (_, record) => <MurabahaBalanceCell creditCode={record.creditCode.toString()} currency={record.currency} />,
+    },
+    {
+      title: "Дата следующего платежа",
+      dataIndex: "nextPaymentDate",
+      key: "nextPaymentDate",
+    },
+    {
+      title: "Сумма следующего платежа",
+      dataIndex: "nextRepaymentSum",
+      key: "nextRepaymentSum",
+    },
+    {
+      title: "Счет для погашения",
+      dataIndex: "repaymentAccount",
+      key: "repaymentAccount",
     },
   ];
 
@@ -89,7 +104,7 @@ export function ClientMurabahaSection({
       <SectionHeader title="Мурабаха" icon={icon} />
       <Table<MurabahaDataType>
         size="small"
-        rowKey={(row) => row.id}
+        rowKey={(row) => row.creditCode.toString()}
         dataSource={list}
         columns={columns}
         pagination={list.length > 5 ? { pageSize: 5 } : false}
@@ -114,8 +129,8 @@ export function ClientMurabahaSection({
   );
 }
 
-function MurabahaBalanceCell({ productCode, currency }: { productCode: string; currency: string }) {
-  const { data, isLoading, error } = useGetMurabahaBalance(productCode);
+function MurabahaBalanceCell({ creditCode, currency }: { creditCode: string; currency: string }) {
+  const { data, isLoading, error } = useGetMurabahaBalance(creditCode);
 
   if (isLoading) {
     return <span>...</span>;
