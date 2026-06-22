@@ -21,7 +21,10 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: true,
     port: 3001, // любой свободный порт
-    https: httpsConfig,
+    https: process.env.NODE_ENV === 'development' ? {
+      key: fs.readFileSync('./certs/localhost-key.pem'),
+      cert: fs.readFileSync('./certs/localhost.pem'),
+    } : undefined,
   },
   // base path для работы приложения в подпапке /backoffice
   // В production используем /backoffice/, в dev можно использовать / для локальной разработки

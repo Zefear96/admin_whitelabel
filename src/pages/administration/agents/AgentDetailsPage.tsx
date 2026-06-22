@@ -1,4 +1,4 @@
-import { Button, Card, Descriptions, Tabs, Tag, type TabsProps } from "antd";
+import { Alert, Button, Card, Descriptions, Skeleton, Tabs, Tag, type TabsProps } from "antd";
 import { useState } from "react";
 import { useTheme } from "../../../hooks/useTheme";
 import { useGetAgentList } from "../../../hooks/dictionary/agent/useGetAgentList";
@@ -10,6 +10,9 @@ import { formatRuDate } from "../../../utils/dateFormatter";
 import ButtonBack from "../../../components/dataEntry/ButtonBack";
 import AgentEditModal from "./AgentEditModal";
 import Title from "antd/es/typography/Title";
+import { useGetAccountInfoByNumber } from "../../../hooks/abs-adapter/useGetAccountInfoByNumber";
+import { formatAmount } from "../../../utils/amountFormatter";
+import { AgentDetailsPageSkeleton } from "./AgentDetailsPageSkeleton";
 
 const TAB_KEYS = ['info', 'operations'] as const;
 const DEFAULT_TAB = 'info';
@@ -21,7 +24,8 @@ export default function AgentDetailsPage() {
     const activeKey = TAB_KEYS.includes(tabParam as (typeof TAB_KEYS)[number])
         ? (tabParam as string)
         : DEFAULT_TAB;
-    const { data: agentsList, isLoading, error } = useGetAgentList()
+    const { data: agentsList, isLoading, error } = useGetAgentList();
+    const { data: accountInfo, isLoading: isLoadingAccountInfo } = useGetAccountInfoByNumber(agentsList?.find((agentItem: AgentType) => agentItem.code === agent)?.bankAccount ?? '');
     const { colors } = useTheme()
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -38,9 +42,25 @@ export default function AgentDetailsPage() {
     // Находим конкретного агента по code из URL параметра
     const agentData = agentsList?.find((agentItem: AgentType) => agentItem.code === agent)
 
-    if (isLoading) return <p>Загрузка...</p>;
-    if (error) return <h3>Ошибка загрузки данных</h3>;
-    if (!agentData) return <h3>Данные агента отсутствуют</h3>;
+    if (isLoading) return <AgentDetailsPageSkeleton />;
+
+    if (error) {
+        return (
+            <>
+                <ButtonBack />
+                <Alert type="error" showIcon message="Ошибка загрузки данных" style={{ marginTop: 16 }} />
+            </>
+        );
+    }
+
+    if (!agentData) {
+        return (
+            <>
+                <ButtonBack />
+                <Alert type="warning" showIcon message="Данные агента отсутствуют" style={{ marginTop: 16 }} />
+            </>
+        );
+    }
 
     const items: TabsProps["items"] = [
         {
@@ -85,6 +105,13 @@ export default function AgentDetailsPage() {
                             <Descriptions.Item label="Change date">
                                 {formatRuDate(agentData.changeDate) ?? "—"}
                             </Descriptions.Item>
+                            <Descriptions.Item label="Agent balance">
+                                {isLoadingAccountInfo ? (
+                                    <Skeleton.Button active size="small" style={{ width: 120 }} />
+                                ) : (
+                                    <Tag color="cyan">{formatAmount(Math.abs(accountInfo?.balance ?? 0)) ?? "—"} KGS</Tag>
+                                )}
+                            </Descriptions.Item>
                         </Descriptions>
                         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16, gap: 8 }}>
                             <Button color="cyan" variant="solid" onClick={() => setIsModalOpen(true)} >
@@ -105,7 +132,7 @@ export default function AgentDetailsPage() {
     ];
     return (
         <>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent:"space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, justifyContent: "space-between" }}>
                 <ButtonBack />
                 <Title level={3}> {agentData.agent} </Title>
             </div>

@@ -1,14 +1,30 @@
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal, Select } from "antd";
 import type { AccountEibType } from "../../../../types/dictionary/accountType";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useUpdateAccount } from "../../../../hooks/dictionary/account/useUpdateAccount";
 import { useNotificationMessage } from "../../../../components/dataDisplay/NotificationMessage";
 import type { ModalPropsType } from "../../../../types/components/modalPropsType";
+import { useGetTransactionTypeList } from "../../../../hooks/dictionary/transaction/useGetTransactionTypeList";
+import type { TransactionType } from "../../../../types/dictionary/transactionType";
 
 export default function AccountEditModal({ isModalOpen, setIsModalOpen, data }: ModalPropsType<AccountEibType>) {
     const [form] = Form.useForm<AccountEibType>();
     const { mutateAsync, isPending } = useUpdateAccount();
+    const { data: transactionTypes } = useGetTransactionTypeList();
+    const transactionTypeOptions = useMemo(() => ((transactionTypes ?? []) as TransactionType[]).map((transactionType) => ({ label: transactionType.transactionType, value: transactionType.transactionType })), [transactionTypes]);
     const { notify } = useNotificationMessage();
+
+    const handleValuesChange = (changedValues: Partial<AccountEibType>) => {
+        if (!("transactionType" in changedValues)) {
+            return;
+        }
+
+        const selectedType = ((transactionTypes ?? []) as TransactionType[]).find(
+            (type) => type.transactionType === changedValues.transactionType,
+        );
+
+        form.setFieldValue("serviceName", selectedType?.serviceName ?? "");
+    };
 
     useEffect(() => {
         if (data) {
@@ -83,20 +99,21 @@ export default function AccountEditModal({ isModalOpen, setIsModalOpen, data }: 
             <Form
                 form={form}
                 layout="vertical"
+                onValuesChange={handleValuesChange}
             >
                 <Form.Item
                     label="Тип транзакции"
                     name="transactionType"
                     rules={[{ required: true, message: "Укажите тип транзакции" }]}
                 >
-                    <Input />
+                    <Select options={transactionTypeOptions} virtual={false} />
                 </Form.Item>
                 <Form.Item
                     label="Операция"
                     name="serviceName"
                     rules={[{ required: true, message: "Укажите операцию" }]}
                 >
-                    <Input />
+                    <Input disabled />
                 </Form.Item>
                 <Form.Item label="Счет KGS" name="kgsAccount">
                     <Input />
