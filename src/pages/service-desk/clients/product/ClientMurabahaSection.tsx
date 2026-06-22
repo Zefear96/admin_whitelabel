@@ -3,12 +3,12 @@ import { useState } from "react";
 import { WalletOutlined } from "@ant-design/icons";
 import { Card, Empty, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { MurabahaBalanceDataType, MurabahaDataType } from "../../../../types/product/MurabahaDataType";
-import { useGetMurabaha } from "../../../../hooks/product/useGetMurabaha";
-import { useGetMurabahaBalance } from "../../../../hooks/product/useGetMurabahaBalance";
+import type { MurabahaBalanceDataType, MurabahaDataType } from "../../../../types/abs-adapter/MurabahaDataType";
+import { useGetMurabahaBalance } from "../../../../hooks/abs-adapter/useGetMurabahaBalance";
 import { ProductDetailsModal } from "./ProductDetailsModal";
 import { formatAmount } from "../../../../utils/amountFormatter";
 import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
+import { useGetMurabahaListByAbsId } from "../../../../hooks/abs-adapter/useGetMurabahaListByAbsId";
 
 interface ClientMurabahaSectionProps {
   absId: string;
@@ -21,7 +21,7 @@ export function ClientMurabahaSection({
   onRowClick,
   icon,
 }: ClientMurabahaSectionProps) {
-  const { data, isLoading, error } = useGetMurabaha(absId);
+  const { data, isLoading, error } = useGetMurabahaListByAbsId(absId);
   const [selectedMurabaha, setSelectedMurabaha] = useState<MurabahaDataType | null>(null);
   const { data: balanceMurabaha } = useGetMurabahaBalance(selectedMurabaha?.creditCode.toString());
 
