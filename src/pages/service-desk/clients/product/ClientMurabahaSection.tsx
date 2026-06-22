@@ -11,17 +11,17 @@ import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
 import { useGetMurabahaListByAbsId } from "../../../../hooks/abs-adapter/useGetMurabahaListByAbsId";
 
 interface ClientMurabahaSectionProps {
-  absId: string;
+  absClientId: string;
   onRowClick?: (record: MurabahaDataType) => void;
   icon?: ReactNode;
 }
 
 export function ClientMurabahaSection({
-  absId,
+  absClientId,
   onRowClick,
   icon,
 }: ClientMurabahaSectionProps) {
-  const { data, isLoading, error } = useGetMurabahaListByAbsId(absId);
+  const { data, isLoading, error } = useGetMurabahaListByAbsId(absClientId);
   const [selectedMurabaha, setSelectedMurabaha] = useState<MurabahaDataType | null>(null);
   const { data: balanceMurabaha } = useGetMurabahaBalance(selectedMurabaha?.creditCode.toString());
 
