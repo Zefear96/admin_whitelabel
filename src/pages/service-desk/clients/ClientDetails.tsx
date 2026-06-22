@@ -102,7 +102,10 @@ export default function ClientDetails() {
       label: "Продукты клиента",
       key: "products",
       children: (
-        <ClientProductPage keycloakClientId={client.keycloakClientId} />
+        <ClientProductPage
+          keycloakClientId={client.keycloakClientId}
+          absClientId={client.absClientId}
+        />
       ),
     },
     {
