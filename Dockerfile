@@ -20,6 +20,10 @@ RUN echo '#!/bin/sh' > /app/entrypoint.sh && \
     echo 'exec serve -s dist -l 3000' >> /app/entrypoint.sh && \
     chmod +x /app/entrypoint.sh
 
+RUN addgroup -S appuser && adduser -S appuser -G appuser \
+    && chown -R appuser:appuser /app
+USER appuser
+
 EXPOSE 3000
 
 # Запускаем через скрипт

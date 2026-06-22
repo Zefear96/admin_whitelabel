@@ -7,6 +7,12 @@ import pkg from './package.json'
 
 
 // https://vite.dev/config/
+const keyPath = path.resolve(__dirname, 'certs/localhost-key.pem')
+const certPath = path.resolve(__dirname, 'certs/localhost.pem')
+const httpsConfig = fs.existsSync(keyPath) && fs.existsSync(certPath)
+  ? { key: fs.readFileSync(keyPath), cert: fs.readFileSync(certPath) }
+  : undefined
+
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(),],
   define: {
