@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { ProductServiceApi } from "../../api/clients/productServiceApi";
+import { AbsAdapterApi } from "../../api/clients/abs-adapter";
 
-export const useGetMurabaha = (keycloakClientId: string | undefined) => {
+export const useGetMurabaha = (absId: string | undefined) => {
   return useQuery({
-    queryKey: ["product", "murabaha", keycloakClientId],
+    queryKey: ["product", "murabaha", absId],
     queryFn: () =>
-      ProductServiceApi.getMurabaha(keycloakClientId!).then((res) => res.data ?? []),
-    enabled: !!keycloakClientId,
+      AbsAdapterApi.getMurabahaListByAbsId(absId!).then((res) => res.data ?? []),
+    enabled: !!absId,
   });
 };
