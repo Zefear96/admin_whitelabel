@@ -1,14 +1,18 @@
 export interface MurabahaDataType {
-    id: string
     productName: string
-    productCode: string
     currency: string
     openDate: string
-    expiryDate: string
+    expireDate: string
+    creditCode: number
+    murabahaNo: string
+    financeAmount: number
+    repaymentScheduleCode: string
 }
 
 export interface MurabahaBalanceDataType {
-    murabahaId: string
-    statusActive: boolean
     outstandingAmount: number
+    active: boolean
+    nextPaymentDate: string
+    nextRepaymentSum: number
+    repaymentAccount: string
 }

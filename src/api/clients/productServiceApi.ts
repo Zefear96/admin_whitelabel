@@ -10,9 +10,6 @@ export const ProductServiceApi = {
     getMudaraba(keycloakClientId: string) {
         return apiClient.get(`/admin-backend/product-service/api/v1/mudarabahs?userId=${keycloakClientId}`)
     },
-    getMurabaha(keycloakClientId: string) {
-        return apiClient.get(`/admin-backend/product-service/api/v1/murabahas?userId=${keycloakClientId}`)
-    },
     getSafe(keycloakClientId: string) {
         return apiClient.get(`/admin-backend/product-service/api/v1/safe-deposit-boxes?userId=${keycloakClientId}`)
     },
@@ -25,8 +22,5 @@ export const ProductServiceApi = {
     },
     getMudarabaBalance(mudarabaNumber: string) {
         return apiClient.get(`/admin-backend/product-service/api/v1/mudarabahs/status/by-account-number/${mudarabaNumber}`)
-    },
-    getMurabahaBalance(murabahaProductCode: string) {
-        return apiClient.get(`/admin-backend/product-service/api/v1/murabahas/status/by-product-code/${murabahaProductCode}`)
     },
 }
