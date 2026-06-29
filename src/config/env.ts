@@ -51,7 +51,7 @@ export const ENV = {
   // Auth / session UX (all are optional; defaults below)
   SESSION_IDLE_THRESHOLD_MS:
     numberFrom(fromRuntime("VITE_SESSION_IDLE_THRESHOLD_MS") ?? fromVite("VITE_SESSION_IDLE_THRESHOLD_MS")) ??
-    60_000,
+    120_000,
   SESSION_CONFIRMATION_TIMEOUT_MS:
     numberFrom(fromRuntime("VITE_SESSION_CONFIRMATION_TIMEOUT_MS") ?? fromVite("VITE_SESSION_CONFIRMATION_TIMEOUT_MS")) ??
     15_000,
