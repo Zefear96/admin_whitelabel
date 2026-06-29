@@ -9,6 +9,8 @@ declare global {
       VITE_BASE_URL?: string;
       VITE_KEYCLOAK_REALM?: string;
       VITE_KEYCLOAK_CLIENT?: string;
+      VITE_SESSION_IDLE_THRESHOLD_MS?: string;
+      VITE_SESSION_CONFIRMATION_TIMEOUT_MS?: string;
     };
   }
 }

@@ -16,6 +16,12 @@ const required = (value: string | undefined, name: string): string => {
   return value;
 };
 
+const numberFrom = (value: string | undefined): number | undefined => {
+  if (!value) return undefined;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : undefined;
+};
+
 export const ENV = {
   APP_NAME: required(
     fromRuntime("VITE_APP_NAME") ?? fromVite("VITE_APP_NAME"),
@@ -41,6 +47,14 @@ export const ENV = {
     fromRuntime("VITE_KEYCLOAK_CLIENT") ?? fromVite("VITE_KEYCLOAK_CLIENT"),
     "VITE_KEYCLOAK_CLIENT"
   ),
+
+  // Auth / session UX (all are optional; defaults below)
+  SESSION_IDLE_THRESHOLD_MS:
+    numberFrom(fromRuntime("VITE_SESSION_IDLE_THRESHOLD_MS") ?? fromVite("VITE_SESSION_IDLE_THRESHOLD_MS")) ??
+    60_000,
+  SESSION_CONFIRMATION_TIMEOUT_MS:
+    numberFrom(fromRuntime("VITE_SESSION_CONFIRMATION_TIMEOUT_MS") ?? fromVite("VITE_SESSION_CONFIRMATION_TIMEOUT_MS")) ??
+    15_000,
 };
 
 

@@ -51,22 +51,7 @@ export function ClientMurabahaSection({
       key: "balance",
       width: 160,
       render: (_, record) => <MurabahaBalanceCell creditCode={record.creditCode.toString()} currency={record.currency} />,
-    },
-    {
-      title: "Дата следующего платежа",
-      dataIndex: "nextPaymentDate",
-      key: "nextPaymentDate",
-    },
-    {
-      title: "Сумма следующего платежа",
-      dataIndex: "nextRepaymentSum",
-      key: "nextRepaymentSum",
-    },
-    {
-      title: "Счет для погашения",
-      dataIndex: "repaymentAccount",
-      key: "repaymentAccount",
-    },
+    }
   ];
 
   const list = (data as MurabahaDataType[] | undefined) ?? [];

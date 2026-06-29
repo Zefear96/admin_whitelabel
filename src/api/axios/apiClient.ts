@@ -1,7 +1,6 @@
 // src/api/apiClient.ts
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { ENV } from "../../config/env";
-import keycloakInstance from "../../auth/keycloak";
 import { keycloakService } from "../../auth/keycloakService";
 
 type RetryableRequestConfig = InternalAxiosRequestConfig & {
@@ -30,14 +29,16 @@ apiClient.interceptors.response.use(
 
     if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
-      const token = await keycloakService.refreshAccessToken(true);
+      let token = await keycloakService.refreshAccessToken(false);
+
+      if (!token) {
+        token = await keycloakService.refreshAccessToken(true);
+      }
 
       if (token) {
         originalRequest.headers.Authorization = `Bearer ${token}`;
         return apiClient(originalRequest);
       }
-
-      keycloakInstance.logout({ redirectUri: window.location.origin });
     }
 
     return Promise.reject(error);
