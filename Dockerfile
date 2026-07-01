@@ -18,8 +18,8 @@ RUN echo '#!/bin/sh' > /app/entrypoint.sh && \
     echo 'sed -i "s|__VITE_BASE_URL__|${VITE_BASE_URL}|g" /app/dist/env-config.js' >> /app/entrypoint.sh && \
     echo 'sed -i "s|__VITE_KEYCLOAK_REALM__|${VITE_KEYCLOAK_REALM}|g" /app/dist/env-config.js' >> /app/entrypoint.sh && \
     echo 'sed -i "s|__VITE_KEYCLOAK_CLIENT__|${VITE_KEYCLOAK_CLIENT}|g" /app/dist/env-config.js' >> /app/entrypoint.sh && \
-    echo 'sed -i "s|__VITE_SESSION_IDLE_THRESHOLD_MS__|${VITE_SESSION_IDLE_THRESHOLD_MS}|g" /app/dist/env-config.js' >> /app/entrypoint.sh && \
-    echo 'sed -i "s|__VITE_SESSION_CONFIRMATION_TIMEOUT_MS__|${VITE_SESSION_CONFIRMATION_TIMEOUT_MS}|g" /app/dist/env-config.js' >> /app/entrypoint.sh && \
+    echo 'sed -i "s|__VITE_SESSION_IDLE_THRESHOLD_MS__|${VITE_SESSION_IDLE_THRESHOLD_MS:-120000}|g" /app/dist/env-config.js' >> /app/entrypoint.sh && \
+    echo 'sed -i "s|__VITE_SESSION_CONFIRMATION_TIMEOUT_MS__|${VITE_SESSION_CONFIRMATION_TIMEOUT_MS:-15000}|g" /app/dist/env-config.js' >> /app/entrypoint.sh && \
     echo 'exec serve -s dist -l 3000' >> /app/entrypoint.sh && \
     chmod +x /app/entrypoint.sh
 
