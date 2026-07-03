@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { AbsAdapterApi } from "../../api/clients/abs-adapter"
+import { AbsAdapterApi } from "../../api/clients/absAdapterApi"
 import type { AccountInfoType } from "../../types/abs-adapter/AccountInfoType"
 import type { AxiosError } from "axios"
 

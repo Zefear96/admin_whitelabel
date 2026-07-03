@@ -120,6 +120,9 @@ export function ClientMudarabaSection({
         onClose={() => setSelectedMudaraba(null)}
         data={selectedMudaraba as unknown as Record<string, unknown>}
         extraData={mudarabaExtraData}
+        statementType="account"
+        productId={selectedMudaraba?.id}
+        userId={keycloakClientId}
       />
     </Card>
   );
