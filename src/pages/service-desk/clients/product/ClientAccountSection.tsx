@@ -116,6 +116,9 @@ export function ClientAccountSection({
         onClose={() => setSelectedAccount(null)}
         data={selectedAccount as unknown as Record<string, unknown>}
         extraData={balanceExtraData}
+        statementType="account"
+        productId={selectedAccount?.id}
+        userId={keycloakClientId}
       />
     </Card>
   );

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ProductServiceApi } from "../../api/clients/productServiceApi";
 import type { MurabahaBalanceDataType } from "../../types/abs-adapter/MurabahaDataType";
 import type { AxiosError } from "axios";
-import { AbsAdapterApi } from "../../api/clients/abs-adapter";
+import { AbsAdapterApi } from "../../api/clients/absAdapterApi";
 
 export const useGetMurabahaBalance = (murabahaId: string | undefined) => {
   return useQuery<MurabahaBalanceDataType, AxiosError>({
