@@ -7,9 +7,10 @@ import { ClientSafeSection } from "./ClientSafeSection";
 
 interface ClientProductPageProps {
   keycloakClientId: string;
+  absClientId: string;
 }
 
-export default function ClientProductPage({ keycloakClientId }: ClientProductPageProps) {
+export default function ClientProductPage({ keycloakClientId, absClientId }: ClientProductPageProps) {
   return (
     <div style={{ padding: "8px 0" }}>
       <Row gutter={[16, 16]}>
@@ -23,7 +24,7 @@ export default function ClientProductPage({ keycloakClientId }: ClientProductPag
           <ClientMudarabaSection keycloakClientId={keycloakClientId} />
         </Col>
         <Col xs={24} lg={12} xl={24}>
-          <ClientMurabahaSection keycloakClientId={keycloakClientId} />
+          <ClientMurabahaSection absClientId={absClientId} />
         </Col>
         <Col xs={24} lg={12} xl={24}>
           <ClientSafeSection keycloakClientId={keycloakClientId} />

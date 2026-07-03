@@ -3,25 +3,25 @@ import { useState } from "react";
 import { WalletOutlined } from "@ant-design/icons";
 import { Card, Empty, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { MurabahaBalanceDataType, MurabahaDataType } from "../../../../types/product/MurabahaDataType";
-import { useGetMurabaha } from "../../../../hooks/product/useGetMurabaha";
-import { useGetMurabahaBalance } from "../../../../hooks/product/useGetMurabahaBalance";
+import type { MurabahaBalanceDataType, MurabahaDataType } from "../../../../types/abs-adapter/MurabahaDataType";
+import { useGetMurabahaBalance } from "../../../../hooks/abs-adapter/useGetMurabahaBalance";
 import { ProductDetailsModal } from "./ProductDetailsModal";
 import { formatAmount } from "../../../../utils/amountFormatter";
 import { ClientProductSectionSkeleton } from "./ClientProductSectionSkeleton";
+import { useGetMurabahaListByAbsId } from "../../../../hooks/abs-adapter/useGetMurabahaListByAbsId";
 
 interface ClientMurabahaSectionProps {
-  absId: string;
+  absClientId: string;
   onRowClick?: (record: MurabahaDataType) => void;
   icon?: ReactNode;
 }
 
 export function ClientMurabahaSection({
-  absId,
+  absClientId,
   onRowClick,
   icon,
 }: ClientMurabahaSectionProps) {
-  const { data, isLoading, error } = useGetMurabaha(absId);
+  const { data, isLoading, error } = useGetMurabahaListByAbsId(absClientId);
   const [selectedMurabaha, setSelectedMurabaha] = useState<MurabahaDataType | null>(null);
   const { data: balanceMurabaha } = useGetMurabahaBalance(selectedMurabaha?.creditCode.toString());
 
@@ -51,22 +51,7 @@ export function ClientMurabahaSection({
       key: "balance",
       width: 160,
       render: (_, record) => <MurabahaBalanceCell creditCode={record.creditCode.toString()} currency={record.currency} />,
-    },
-    {
-      title: "Дата следующего платежа",
-      dataIndex: "nextPaymentDate",
-      key: "nextPaymentDate",
-    },
-    {
-      title: "Сумма следующего платежа",
-      dataIndex: "nextRepaymentSum",
-      key: "nextRepaymentSum",
-    },
-    {
-      title: "Счет для погашения",
-      dataIndex: "repaymentAccount",
-      key: "repaymentAccount",
-    },
+    }
   ];
 
   const list = (data as MurabahaDataType[] | undefined) ?? [];
