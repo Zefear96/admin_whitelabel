@@ -3,21 +3,35 @@ import { Modal } from "antd";
 import { AuthContext } from "./AuthContext";
 import keycloakInstance from "./keycloak";
 import { keycloakService } from "./keycloakService";
+import { ENV } from "../config/env";
 import type { UserKeycloakType } from "../types/keycloak/userKeycloakType";
 import type { Props } from "../types/propsType";
 import type { AuthContextType } from "../types/keycloak/authContextType";
 
 const USER_STORAGE_KEY = "kc_user";
+const SESSION_CONFIRMATION_TIMEOUT_MS = ENV.SESSION_CONFIRMATION_TIMEOUT_MS;
+const SESSION_CONFIRMATION_COUNTDOWN_SEC = Math.ceil(
+  ENV.SESSION_CONFIRMATION_TIMEOUT_MS / 1000
+);
+const IDLE_THRESHOLD_MS = ENV.SESSION_IDLE_THRESHOLD_MS;
 
 export default function AuthProvider({ children }: Props) {
   const isRun = useRef(false);
   const logoutRef = useRef<() => void>(() => {});
   const sessionModalResolverRef = useRef<((result: boolean) => void) | null>(null);
+  const sessionModalTimeoutRef = useRef<number | null>(null);
+  const sessionModalIntervalRef = useRef<number | null>(null);
+
+  const lastActivityAtRef = useRef<number>(Date.now());
+  const isIdleRef = useRef<boolean>(false);
 
   const [initialized, setInitialized] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
+  const [sessionCountdownSec, setSessionCountdownSec] = useState<number>(
+    SESSION_CONFIRMATION_COUNTDOWN_SEC
+  );
 
   const [user, setUser] = useState<UserKeycloakType | null>(() => {
     try {
@@ -50,6 +64,45 @@ export default function AuthProvider({ children }: Props) {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
   }, []);
 
+  // ---------------- IDLE TRACKING ----------------
+  useEffect(() => {
+    const markActivity = () => {
+      lastActivityAtRef.current = Date.now();
+      isIdleRef.current = false;
+    };
+
+    const events: Array<keyof WindowEventMap> = [
+      "mousemove",
+      "mousedown",
+      "keydown",
+      "scroll",
+      "touchstart",
+      "focus",
+    ];
+
+    events.forEach((e) => window.addEventListener(e, markActivity, { passive: true }));
+
+    const intervalId = window.setInterval(() => {
+      isIdleRef.current = Date.now() - lastActivityAtRef.current > IDLE_THRESHOLD_MS;
+    }, 5_000);
+
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, markActivity));
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  const clearSessionModalTimers = useCallback(() => {
+    if (sessionModalTimeoutRef.current != null) {
+      window.clearTimeout(sessionModalTimeoutRef.current);
+      sessionModalTimeoutRef.current = null;
+    }
+    if (sessionModalIntervalRef.current != null) {
+      window.clearInterval(sessionModalIntervalRef.current);
+      sessionModalIntervalRef.current = null;
+    }
+  }, []);
+
   const requestSessionContinuation = useCallback(async (): Promise<boolean> => {
     if (sessionModalResolverRef.current) {
       return new Promise<boolean>((resolve) => {
@@ -62,17 +115,63 @@ export default function AuthProvider({ children }: Props) {
     }
 
     setIsSessionModalOpen(true);
+    setSessionCountdownSec(SESSION_CONFIRMATION_COUNTDOWN_SEC);
+    clearSessionModalTimers();
+
+    sessionModalIntervalRef.current = window.setInterval(() => {
+      setSessionCountdownSec((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1_000);
+
+    sessionModalTimeoutRef.current = window.setTimeout(() => {
+      // no confirmation in time -> treat as отказ and logout will happen upstream
+      closeSessionModal(false);
+    }, SESSION_CONFIRMATION_TIMEOUT_MS);
+
     return new Promise<boolean>((resolve) => {
       sessionModalResolverRef.current = resolve;
     });
-  }, []);
+  }, [clearSessionModalTimers]);
 
   const closeSessionModal = useCallback((result: boolean) => {
     setIsSessionModalOpen(false);
+    clearSessionModalTimers();
     const resolver = sessionModalResolverRef.current;
     sessionModalResolverRef.current = null;
     resolver?.(result);
+  }, [clearSessionModalTimers]);
+
+  const forceLogout = useCallback(() => {
+    setAuthenticated(false);
+    localStorage.removeItem(USER_STORAGE_KEY);
+    setUser(null);
+    logoutRef.current();
   }, []);
+
+  const refreshWithPossibleConfirmation = useCallback(
+    async (reason: "interval" | "expired"): Promise<void> => {
+      const token = await keycloakService.refreshAccessToken(false);
+      if (token) {
+        saveUserFromToken();
+        return;
+      }
+
+      // Если есть refreshToken, но клиент не активен — спрашиваем подтверждение.
+      // Если не подтвердил за 15 сек -> refreshAccessToken(true) вернёт null -> разлогиниваем.
+      if (keycloakInstance.refreshToken && isIdleRef.current) {
+        const confirmedToken = await keycloakService.refreshAccessToken(true);
+        if (confirmedToken) {
+          saveUserFromToken();
+          return;
+        }
+      }
+
+      // Если refresh невозможен/неуспешен — завершаем сессию.
+      // (reason оставлен для возможной диагностики, но сейчас не логируем)
+      void reason;
+      forceLogout();
+    },
+    [forceLogout, saveUserFromToken]
+  );
 
   // ---------------- INIT ----------------
   useEffect(() => {
@@ -155,19 +254,16 @@ export default function AuthProvider({ children }: Props) {
       setUser(null);
     };
 
-    keycloakInstance.onTokenExpired = () => {
-      console.log("🟡 [AuthProvider] onTokenExpired triggered");
-      keycloakService.refreshAccessToken(true).then((token) => {
-        if (token) {
-          saveUserFromToken();
-          return;
-        }
+    keycloakInstance.onAuthRefreshSuccess = () => {
+      saveUserFromToken();
+    };
 
-        setAuthenticated(false);
-        localStorage.removeItem(USER_STORAGE_KEY);
-        setUser(null);
-        logoutRef.current();
-      });
+    keycloakInstance.onAuthRefreshError = () => {
+      console.error("[AuthProvider] onAuthRefreshError");
+    };
+
+    keycloakInstance.onTokenExpired = () => {
+      refreshWithPossibleConfirmation("expired");
     };
 
     // Пытаемся восстановить сессию из localStorage, передавая токены в init,
@@ -257,7 +353,7 @@ export default function AuthProvider({ children }: Props) {
           // console.log("🟡 [AuthProvider] check-sso returned false, but refreshToken exists");
           // console.log("🟡 [AuthProvider] Attempting token refresh...");
           try {
-            const refreshed = await keycloakInstance.updateToken(30);
+            const refreshed = await keycloakInstance.updateToken(60);
             console.log("Token refresh result:", {
               refreshed,
               authenticated: keycloakInstance.authenticated,
@@ -359,7 +455,7 @@ export default function AuthProvider({ children }: Props) {
               console.log("🟡 [AuthProvider] Delayed check: attempting token refresh...");
               try {
                 if (keycloakInstance.refreshToken && !keycloakInstance.authenticated) {
-                  const refreshed = await keycloakInstance.updateToken(30);
+                  const refreshed = await keycloakInstance.updateToken(60);
                   console.log("🟡 [AuthProvider] Delayed refresh result:", {
                     refreshed,
                     authenticated: keycloakInstance.authenticated,
@@ -453,6 +549,19 @@ export default function AuthProvider({ children }: Props) {
     logoutRef.current = logout;
   }, [logout]);
 
+  // Проактивное обновление access-токена (живёт ~2 мин, refresh — год)
+  useEffect(() => {
+    if (!authenticated || !initialized) return;
+
+    const refreshIntervalMs = 55_000;
+
+    const intervalId = window.setInterval(() => {
+      refreshWithPossibleConfirmation("interval");
+    }, refreshIntervalMs);
+
+    return () => window.clearInterval(intervalId);
+  }, [authenticated, initialized, refreshWithPossibleConfirmation]);
+
   useEffect(() => {
     keycloakService.setSessionContinuationHandler(requestSessionContinuation);
     return () => {
@@ -501,7 +610,8 @@ export default function AuthProvider({ children }: Props) {
         cancelText="Выйти"
         onOk={() => closeSessionModal(true)}
       >
-        Время сессии истекло. Продолжить работу и обновить токен?
+        Время сессии истекло. Продолжить работу и обновить токен? Автовыход через{" "}
+        <b>{sessionCountdownSec}</b> сек.
       </Modal>
     </AuthContext.Provider>
   );

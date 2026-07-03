@@ -101,8 +101,11 @@ export function ClientCardSection({
         title="Информация о карте"
         open={!!selectedCard}
         onClose={() => setSelectedCard(null)}
-        // data={selectedCard as unknown as Record<string, unknown>}
+        data={selectedCard as unknown as Record<string, unknown>}
         extraData={balanceCard as unknown as Record<string, unknown>}
+        statementType="card"
+        productId={selectedCard?.id}
+        userId={keycloakClientId}
       />
     </Card>
   );

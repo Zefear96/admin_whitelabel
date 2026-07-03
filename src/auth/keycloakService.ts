@@ -2,6 +2,9 @@ import keycloakInstance from "./keycloak";
 
 type SessionContinuationHandler = () => Promise<boolean>;
 
+/** Обновляем access-токен, если до истечения осталось меньше minValidity секунд */
+const TOKEN_MIN_VALIDITY_SEC = 60;
+
 let refreshPromise: Promise<string | null> | null = null;
 let continuationHandler: SessionContinuationHandler | null = null;
 
@@ -9,13 +12,15 @@ const setSessionContinuationHandler = (handler: SessionContinuationHandler | nul
     continuationHandler = handler;
 };
 
+const canRefreshToken = (): boolean => !!keycloakInstance.refreshToken;
+
 const refreshAccessToken = async (withConfirmation = false): Promise<string | null> => {
-    if (!keycloakInstance.authenticated) return null;
+    if (!canRefreshToken()) return null;
     if (refreshPromise) return refreshPromise;
 
     refreshPromise = (async () => {
         try {
-            await keycloakInstance.updateToken(30);
+            await keycloakInstance.updateToken(TOKEN_MIN_VALIDITY_SEC);
             return keycloakInstance.token || null;
         } catch (err) {
             if (!withConfirmation || !continuationHandler) {
@@ -43,6 +48,8 @@ const refreshAccessToken = async (withConfirmation = false): Promise<string | nu
 
 // Возвращаем актуальный токен. Обновляет его при необходимости.
 const getAccessToken = async (): Promise<string | null> => {
+    if (!keycloakInstance.token && !canRefreshToken()) return null;
+    if (!canRefreshToken()) return keycloakInstance.token || null;
     return refreshAccessToken(false);
 };
 

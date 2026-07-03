@@ -1,4 +1,6 @@
-import { Modal, Descriptions } from "antd";
+import { Descriptions, Modal } from "antd";
+import { ProductStatementSection } from "./ProductStatementSection";
+import type { ProductStatementType } from "../../../../types/product/StatementDataType";
 
 const PRODUCT_LABEL_MAP: Record<string, string> = {
   id: "ID",
@@ -22,8 +24,6 @@ const PRODUCT_LABEL_MAP: Record<string, string> = {
   availableAmount: " Доступная сумма",
   blockedAmount: " Заблокированная сумма",
   isAmountBlocked: "Статус блокировки",
-
-  // Баланс карты
   cardExpiry: "Срок действия (баланс)",
   cardId: "ID карты",
   initialAmount: "Исходная сумма",
@@ -32,8 +32,6 @@ const PRODUCT_LABEL_MAP: Record<string, string> = {
   lockedBackofficeAmount: "Заблокировано (backoffice)",
   lockedBackofficeAmountOffline: "Заблокировано offline (backoffice)",
   lockedAmount: "Заблокировано всего",
-
-  // Баланс мурабахи / мударабы
   outstandingAmount: "Остаток задолженности",
   statusActive: "Активен",
   profitAmount: "Сумма прибыли",
@@ -73,6 +71,9 @@ interface ProductDetailsModalProps {
   data?: Record<string, unknown> | null;
   extraData?: Record<string, unknown> | null;
   width?: number;
+  statementType?: ProductStatementType;
+  productId?: string;
+  userId?: string;
 }
 
 export function ProductDetailsModal({
@@ -81,7 +82,10 @@ export function ProductDetailsModal({
   onClose,
   data,
   extraData,
-  width = 640,
+  width = 840,
+  statementType,
+  productId,
+  userId,
 }: ProductDetailsModalProps) {
   if (!data && !extraData) return null;
 
@@ -90,10 +94,18 @@ export function ProductDetailsModal({
     ...(extraData ?? {}),
   };
 
+  const showStatement = !!statementType && !!productId && !!userId;
+
   return (
     <Modal title={title} open={open} onCancel={onClose} footer={null} width={width}>
       {renderDetails(merged)}
+      {showStatement && (
+        <ProductStatementSection
+          statementType={statementType}
+          productId={productId}
+          userId={userId}
+        />
+      )}
     </Modal>
   );
 }
-
