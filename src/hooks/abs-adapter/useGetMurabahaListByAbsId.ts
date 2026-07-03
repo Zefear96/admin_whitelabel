@@ -1,5 +1,5 @@
 import type { AxiosError } from "axios"
-import { AbsAdapterApi } from "../../api/clients/abs-adapter"
+import { AbsAdapterApi } from "../../api/clients/absAdapterApi"
 import { useQuery } from "@tanstack/react-query"
 import type { MurabahaDataType } from "../../types/abs-adapter/MurabahaDataType"
 
