@@ -1,4 +1,4 @@
 include:
   - project: 'devops/ci-templates'
     ref: master
-    file: '/harbor-docker/.gitlab-ci.yml'
+    file: '/harbor-docker-test-sec-check/.gitlab-ci.yml'
