@@ -4,9 +4,7 @@ import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { useState } from "react";
 import { useGetTransactionsByAgent } from "../../../../hooks/banking-gateway/useGetAllTransactionsByAgent";
-import { useGetAgentList } from "../../../../hooks/dictionary/agent/useGetAgentList";
 import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
-import type { AgentType } from "../../../../types/dictionary/agentType";
 import { RollbackOutlined } from "@ant-design/icons";
 import IncomingTransactionsTab from "./IncomingTransactionsTab";
 import OutgoingTransactionsTab from "./OutgoingTransactionsTab";
@@ -18,14 +16,6 @@ export default function DetailsTransactionsBank() {
     const navigate = useNavigate();
     const { code } = useParams();
     const bankCode = code ?? "null";
-
-    const { data: agentList } = useGetAgentList();
-
-    // Имя агента ищем по `code` из URL в словаре агентов, чтобы избежать проблем
-    // с несовпадающим/несвежим `location.state`.
-    const agentListTyped = agentList as AgentType[] | undefined;
-    const agentNameFromCode = agentListTyped?.find((a) => a.code === bankCode)?.agent;
-    const agentName = agentNameFromCode ?? bankCode.toUpperCase();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const tabParam = searchParams.get('tab');
@@ -68,7 +58,6 @@ export default function DetailsTransactionsBank() {
             children: (
                 <OutgoingTransactionsTab
                     bankCode={bankCode}
-                    agentName={agentName}
                     dateRange={dateRange}
                     setDateRange={setDateRange}
                 />
@@ -80,7 +69,6 @@ export default function DetailsTransactionsBank() {
             children: (
                 <IncomingTransactionsTab
                     bankCode={bankCode}
-                    agentName={agentName}
                     dateRange={dateRange}
                     setDateRange={setDateRange}
                     incomingTransactions={incomingTransactionsArray}
@@ -95,11 +83,11 @@ export default function DetailsTransactionsBank() {
 
     return (
         <>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
                 <Button onClick={() => navigate(-1)}>
                     Назад <RollbackOutlined />
                 </Button>
-                <h1 style={{ fontSize: 24, fontWeight: 600, margin: 0 }}>{agentName}</h1>
+                
             </div>
             <Tabs
                 activeKey={activeTab}

@@ -16,14 +16,12 @@ const { RangePicker } = DatePicker;
 
 interface OutgoingTransactionsTabProps {
   bankCode: string;
-  agentName: string;
   dateRange: [Dayjs | null, Dayjs | null] | null;
   setDateRange: Dispatch<SetStateAction<[Dayjs | null, Dayjs | null] | null>>;
 }
 
 export default function OutgoingTransactionsTab({
   bankCode,
-  agentName,
   dateRange,
   setDateRange,
 }: OutgoingTransactionsTabProps) {
@@ -93,7 +91,7 @@ export default function OutgoingTransactionsTab({
 
   const columns: ColumnsType<Content> = [
     {
-      title: "ID платежа",
+      title: "ID",
       dataIndex: "transactionId",
       width: 220,
       render: (transactionId: string) => <div>{transactionId}</div>,
@@ -166,8 +164,6 @@ export default function OutgoingTransactionsTab({
         allowClear
         style={{ margin: "20px", color: "black", cursor: "pointer" }}
         placeholder={["Дата начала", "Дата окончания"]}
-        format="DD.MM.YYYY"
-        disabledDate={(current) => current && current > dayjs().endOf("day")}
       />
       <Button
         type="primary"
@@ -203,9 +199,8 @@ export default function OutgoingTransactionsTab({
         <Button
           variant="outlined"
           color="cyan"
-          disabled={!taskId || !isDoneStatus}
+          disabled={!taskId}
           onClick={async () => {
-            if (!taskId || !isDoneStatus) return;
             if (!taskId) return;
             try {
               await registryAgentServiceApi.generateXlsxRegistry(taskId);
@@ -235,7 +230,7 @@ export default function OutgoingTransactionsTab({
         </div>
       </div>
 
-      <Card title={`Исходящие транзакции агента ${agentName}`} style={{ margin: 20 }}>
+      <Card title={`Исходящие транзакции агента ${bankCode.toUpperCase()}`} style={{ margin: 20 }}>
         {(errorRegistryTask || errorRegistryData) && <p style={{ color: "red" }}>Ошибка загрузки</p>}
         <Table<Content>
           rowKey={(row) => `${row.taskId}-${row.id}`}
