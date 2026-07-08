@@ -152,7 +152,10 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
           <Typography.Title level={5} style={{ margin: 0 }}>
             История транзакций клиента
           </Typography.Title>
-          <RangePicker value={dates} onChange={handleDateChange} />
+          <RangePicker value={dates} onChange={handleDateChange}
+            format="DD.MM.YYYY" 
+            disabledDate={(current) => current && current > dayjs().endOf("day")}
+          />
         </div>
         <Empty description="Нет данных" image={Empty.PRESENTED_IMAGE_SIMPLE} />
         <ProductDetailsModal
@@ -183,13 +186,13 @@ export default function ClientTransactionHistory({ keycloakClientId }: ClientTra
         pagination={
           data && data.totalElements > 0
             ? {
-                current: page + 1,
-                pageSize,
-                total: data.totalElements,
-                showSizeChanger: true,
-                pageSizeOptions: [20, 30, 50],
-                showTotal: (total) => `Всего ${total}`,
-              }
+              current: page + 1,
+              pageSize,
+              total: data.totalElements,
+              showSizeChanger: true,
+              pageSizeOptions: [20, 30, 50],
+              showTotal: (total) => `Всего ${total}`,
+            }
             : false
         }
         onChange={handleTableChange}
