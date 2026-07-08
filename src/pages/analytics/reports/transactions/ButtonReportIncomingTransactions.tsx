@@ -10,6 +10,7 @@ import type { IncomingTransactionType } from "../../../../types/banking-gateway/
 interface ExportButtonProps {
   transactions: IncomingTransactionType[];
   bankCode: string;
+  agentName: string;
   fromDate?: string;
   toDate?: string;
 }
@@ -24,7 +25,7 @@ interface TableRow {
   amount: string;
 }
 
-export const ButtonReportIncomingTransactions = ({ transactions, bankCode, fromDate, toDate }: ExportButtonProps) => {
+export const ButtonReportIncomingTransactions = ({ transactions, bankCode, agentName, fromDate, toDate }: ExportButtonProps) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const totalAmount = transactions.reduce((sum, tx) => {
@@ -48,7 +49,7 @@ export const ButtonReportIncomingTransactions = ({ transactions, bankCode, fromD
 
     // Заголовок документа
     doc.text("Реестр входящих платежей, проведенных с использованием", pageWidth / 2, 20, { align: "center" });
-    doc.text(`Системы Агента «${bankCode.toUpperCase()}»`, pageWidth / 2, 28, { align: "center" });
+    doc.text(`cистемы aгента ${agentName}`, pageWidth / 2, 28, { align: "center" });
     doc.text(dateRangeStr, pageWidth / 2, 36, { align: "center" });
 
     const tableColumns: { header: string; dataKey: keyof TableRow }[] = [
@@ -77,6 +78,7 @@ export const ButtonReportIncomingTransactions = ({ transactions, bankCode, fromD
       body: tableData.map(row => tableColumns.map(c => row[c.dataKey])),
       foot: [["", "Итого:", "", "", "", "", totalAmount.toFixed(2)]],
       theme: "grid",
+      showFoot: "lastPage",
       headStyles: {
         fillColor: [220, 220, 220],
         textColor: 0,
