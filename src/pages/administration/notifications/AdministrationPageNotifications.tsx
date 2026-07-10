@@ -1,7 +1,7 @@
 import { Tabs } from "antd";
 import { useSearchParams } from "react-router-dom";
 import SendNotificationTab from "./SendNotificationTab";
-import NotificationTemplateTab from "./NotificationTemplateTab";
+import NotificationTemplateTab from "./template/NotificationTemplateTab";
 
 const TAB_KEYS = ["send", "templates"] as const;
 const DEFAULT_TAB = "send";

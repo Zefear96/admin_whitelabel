@@ -1,19 +1,29 @@
 import { EditOutlined } from "@ant-design/icons";
-import type { ModalPropsType } from "../../../types/components/modalPropsType";
-import type { NotificationTemplateType } from "../../../types/pushNotification/notificationTemplateType";
-import { Button, Card, Descriptions, Modal, Tag } from "antd";
+import type { ModalPropsType } from "../../../../types/components/modalPropsType";
+import type { NotificationTemplateType } from "../../../../types/pushNotification/notificationTemplateType";
+import { Button, Card, Descriptions, Modal } from "antd";
+
+interface NotificationTemplateModalProps extends ModalPropsType<NotificationTemplateType> {
+    onEditClick: () => void;
+}
 
 export default function NotificationTemplateModal({
     isModalOpen,
     setIsModalOpen,
     data,
-}: ModalPropsType<NotificationTemplateType>) {
+    onEditClick,
+}: NotificationTemplateModalProps) {
+    const handleEdit = () => {
+        setIsModalOpen(false);
+        onEditClick();
+    };
+
     return (
         <Modal
             open={isModalOpen}
             onCancel={() => setIsModalOpen(false)}
             footer={null}
-            title="Просмотр шаблона уведомления"
+            title="Детали шаблона уведомления"
             style={{ minWidth: "60%" }}
         >
             <Card>
@@ -32,7 +42,15 @@ export default function NotificationTemplateModal({
                 </Descriptions>
             </Card>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16, gap: 8 }}>
-                <Button variant="solid" color="cyan" icon={<EditOutlined />} onClick={() => setIsModalOpen(true)}>Редактировать</Button>
+                <Button
+                    variant="solid"
+                    color="cyan"
+                    icon={<EditOutlined />}
+                    onClick={handleEdit}
+                    disabled={!data}
+                >
+                    Редактировать
+                </Button>
             </div>
         </Modal>
     );
