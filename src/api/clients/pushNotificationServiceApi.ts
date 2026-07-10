@@ -1,6 +1,9 @@
 import { apiClient } from "../axios/apiClient";
 import type { GlobalNotificationType } from "../../types/pushNotification/GlobalNotificationType";
-import type { NotificationTemplateUpsertPayload } from "../../types/pushNotification/notificationTemplateType";
+import type {
+  NotificationTemplateUpdatePayload,
+  NotificationTemplateUpsertPayload,
+} from "../../types/pushNotification/notificationTemplateType";
 
 export const PushNotificationServiceApi = {
   sendGlobalNotification(payload: GlobalNotificationType) {
@@ -25,11 +28,12 @@ export const PushNotificationServiceApi = {
       payload,
     );
   },
-  // updateNotificationTemplate(payload: NotificationTemplateType) {
-  //   return apiClient.put(
-  //     "/admin-backend/push-notification-service/api/v1/notifications/templates",
-  //     payload);
-  // },
+  updateNotificationTemplate(id: string, payload: NotificationTemplateUpdatePayload) {
+    return apiClient.patch(
+      `/admin-backend/push-notification-service/api/v1/notification-templates/${id}`,
+      payload,
+    );
+  },
   // deleteNotificationTemplate(id: string) {
   //   return apiClient.delete(`/admin-backend/push-notification-service/api/v1/notifications/templates/${id}`);
   // },
