@@ -72,3 +72,8 @@ export type NotificationTemplateUpsertPayload = Omit<NotificationTemplateType, "
     id?: string
     createdAt?: string
 }
+
+export type NotificationTemplateUpdatePayload = Omit<
+    NotificationTemplateUpsertPayload,
+    "code" | "category" | "serviceName"
+>

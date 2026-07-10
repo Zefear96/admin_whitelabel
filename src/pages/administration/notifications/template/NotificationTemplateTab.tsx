@@ -1,11 +1,12 @@
 import { Alert, Card, Table } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
-import { useGetNotificationTemplates } from "../../../hooks/push-notification/useGetNotificationTemplates";
-import type { NotificationTemplateType } from "../../../types/pushNotification/notificationTemplateType";
-import ButtonCreate from "../../../components/dataEntry/ButtonCreate";
+import { useGetNotificationTemplates } from "../../../../hooks/push-notification/useGetNotificationTemplates";
+import type { NotificationTemplateType } from "../../../../types/pushNotification/notificationTemplateType";
+import ButtonCreate from "../../../../components/dataEntry/ButtonCreate";
 import { useState } from "react";
 import NotificationTemplateModal from "./NotificationTemplateModal";
 import NotificationTemplateModalCreate from "./NotificationTemplateModalCreate";
+import NotificationTemplateModalUpdate from "./NotificationTemplateModalUpdate";
 import { NotificationTemplateSkeleton } from "./NotificationTemplateSkeleton";
 
 export default function NotificationTemplateTab() {
@@ -14,6 +15,7 @@ export default function NotificationTemplateTab() {
     const { data, isLoading, isFetching, error } = useGetNotificationTemplates(page, pageSize);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<NotificationTemplateType | null>(null);
     const templates = data?.content ?? [];
 
@@ -90,6 +92,12 @@ export default function NotificationTemplateTab() {
             <NotificationTemplateModal
                 isModalOpen={isPreviewModalOpen}
                 setIsModalOpen={setIsPreviewModalOpen}
+                data={selectedRow}
+                onEditClick={() => setIsEditModalOpen(true)}
+            />
+            <NotificationTemplateModalUpdate
+                isModalOpen={isEditModalOpen}
+                setIsModalOpen={setIsEditModalOpen}
                 data={selectedRow}
             />
             <Table

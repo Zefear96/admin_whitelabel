@@ -1,12 +1,12 @@
-import type { ModalPropsType } from "../../../types/components/modalPropsType";
-import type { NotificationTemplateUpsertPayload } from "../../../types/pushNotification/notificationTemplateType";
+import type { ModalPropsType } from "../../../../types/components/modalPropsType";
+import type { NotificationTemplateUpsertPayload } from "../../../../types/pushNotification/notificationTemplateType";
 import { Button, Form, Input, Modal, Select } from "antd";
 import {
   NotificationTemplateCategoryEnum,
   NotificationTemplateContentBlockTypeEnum,
-} from "../../../types/pushNotification/notificationTemplateType";
-import { useCreateNotificationTemplate } from "../../../hooks/push-notification/useCreateNotificationTemplate";
-import { useNotificationMessage } from "../../../components/dataDisplay/NotificationMessage";
+} from "../../../../types/pushNotification/notificationTemplateType";
+import { useCreateNotificationTemplate } from "../../../../hooks/push-notification/useCreateNotificationTemplate";
+import { useNotificationMessage } from "../../../../components/dataDisplay/NotificationMessage";
 
 const { TextArea } = Input;
 
