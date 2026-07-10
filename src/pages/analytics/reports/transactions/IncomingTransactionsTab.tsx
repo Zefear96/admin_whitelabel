@@ -10,6 +10,7 @@ const { RangePicker } = DatePicker;
 
 interface IncomingTransactionsTabProps {
   bankCode: string;
+  agentName: string;
   dateRange: [Dayjs | null, Dayjs | null] | null;
   setDateRange: Dispatch<SetStateAction<[Dayjs | null, Dayjs | null] | null>>;
   incomingTransactions: IncomingTransactionType[];
@@ -21,6 +22,7 @@ interface IncomingTransactionsTabProps {
 
 export default function IncomingTransactionsTab({
   bankCode,
+  agentName,
   dateRange,
   setDateRange,
   incomingTransactions,
@@ -43,7 +45,7 @@ export default function IncomingTransactionsTab({
 
   const columns: ColumnsType<IncomingTransactionType> = [
     {
-      title: "ID",
+      title: "ID платежа",
       dataIndex: "id",
       width: 50,
       render: (id: string) => <div>{id}</div>,
@@ -125,16 +127,19 @@ export default function IncomingTransactionsTab({
         allowClear
         style={{ margin: "20px", color: "black", cursor: "pointer" }}
         placeholder={["Дата начала", "Дата окончания"]}
+        format="DD.MM.YYYY"
+        disabledDate={(current) => current && current > dayjs().endOf("day")}
       />
 
       <ButtonReportIncomingTransactions
         transactions={filteredIncomingTransactions}
         bankCode={bankCode}
+        agentName={agentName}
         fromDate={fromDate}
         toDate={toDate}
       />
 
-      <Card title={`Входящие транзакции агента ${bankCode.toUpperCase()}`} style={{ margin: 20 }}>
+      <Card title={`Входящие транзакции агента ${agentName}`} style={{ margin: 20 }}>
         {Boolean(errorIncomingTransactions) && (
           <Alert
             type="error"
