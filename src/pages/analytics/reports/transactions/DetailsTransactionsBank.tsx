@@ -3,9 +3,7 @@ import { Button, Tabs, type TabsProps } from "antd";
 import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { useState } from "react";
-import { useGetTransactionsByAgent } from "../../../../hooks/banking-gateway/useGetAllTransactionsByAgent";
 import { useGetAgentList } from "../../../../hooks/dictionary/agent/useGetAgentList";
-import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
 import type { AgentType } from "../../../../types/dictionary/agentType";
 import { RollbackOutlined } from "@ant-design/icons";
 import IncomingTransactionsTab from "./IncomingTransactionsTab";
@@ -48,19 +46,6 @@ export default function DetailsTransactionsBank() {
 
     const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null] | null>([initialFrom, today]);
 
-    const apiFromDate = (dateRange?.[0] ?? initialFrom).format("YYYY-MM-DD");
-    const apiToDate = (dateRange?.[1] ?? today).format("YYYY-MM-DD");
-
-    const fromDate = dateRange?.[0]?.toISOString();
-    const toDate = dateRange?.[1]?.toISOString();
-
-    const {
-        data: IncomingTransactions,
-        isLoading: isLoadingIncomingTransactions,
-        error: errorIncomingTransactions,
-    } = useGetTransactionsByAgent(bankCode, 0, 20, "creationDate", "DESC");
-    const incomingTransactionsArray: IncomingTransactionType[] = (IncomingTransactions?.content ?? []) as IncomingTransactionType[];
-
     const items: TabsProps["items"] = [
         {
             label: "Исходящие транзакции",
@@ -83,11 +68,6 @@ export default function DetailsTransactionsBank() {
                     agentName={agentName}
                     dateRange={dateRange}
                     setDateRange={setDateRange}
-                    incomingTransactions={incomingTransactionsArray}
-                    isLoadingIncomingTransactions={isLoadingIncomingTransactions}
-                    errorIncomingTransactions={errorIncomingTransactions}
-                    fromDate={fromDate ?? ""}
-                    toDate={toDate ?? ""}
                 />
             ),
         },

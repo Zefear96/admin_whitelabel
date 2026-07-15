@@ -32,7 +32,8 @@ export const OPERATION_TYPE_OPTIONS = [
     { label: "A2U - Payment for utilities with a bank account", value: "A2U" },
     { label: "C2M - Payment for mobile services with a bank card", value: "C2M" },
     { label: "A2M - Payment for mobile services with a bank account", value: "A2M" },
-    {label: "IPC - Payment from ELCART", value: "IPC"}
+    {label: "IPC - Payment from ELCART", value: "IPC"},
+    {label: "QR - QR payment", value: "QR"}
 ];
 
 interface LimitFormProps {

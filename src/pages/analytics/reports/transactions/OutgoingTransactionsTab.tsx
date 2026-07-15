@@ -1,4 +1,4 @@
-import { Button, Card, DatePicker, Table, Tag } from "antd";
+import { Button, Card, DatePicker, Empty, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
@@ -60,7 +60,8 @@ export default function OutgoingTransactionsTab({
   const { data: registryStatus } = useGetRegistryStatus(taskId, initialStatus);
   const currentStatus = registryStatus?.status ?? initialStatus ?? "";
   const normalizedStatus = currentStatus.toUpperCase();
-  const isDoneStatus = currentStatus.toUpperCase() === "DONE";
+  const isDoneStatus = normalizedStatus === "DONE";
+  const isPendingStatus = normalizedStatus === "PENDING";
   const isActualDateRangeTask =
     submittedTask?.dateFrom === apiFromDate &&
     submittedTask?.dateTo === apiToDate;
@@ -238,9 +239,10 @@ export default function OutgoingTransactionsTab({
       <Card title={`Исходящие транзакции агента ${agentName}`} style={{ margin: 20 }}>
         {(errorRegistryTask || errorRegistryData) && <p style={{ color: "red" }}>Ошибка загрузки</p>}
         <Table<Content>
+          locale={{ emptyText: <Empty description="Нет данных" /> }}
           rowKey={(row) => `${row.taskId}-${row.id}`}
           columns={columns}
-          loading={isCreatingRegistryTask || isLoadingRegistryData}
+          loading={isCreatingRegistryTask || isLoadingRegistryData || isPendingStatus}
           dataSource={isDoneStatus && isActualDateRangeTask ? rows : []}
           pagination={{
             current: (itemsMeta?.number ?? registryPage) + 1,

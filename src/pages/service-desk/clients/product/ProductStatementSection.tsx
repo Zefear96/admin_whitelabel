@@ -82,6 +82,7 @@ export function ProductStatementSection({ statementType, productId, userId }: Pr
             allowClear={false}
             format="DD.MM.YYYY"
             style={{ cursor: "pointer" }}
+            disabledDate={(current) => current > today}
           />
           <Button type="primary" loading={isPending} onClick={handleGetStatement}>
             Получить выписку

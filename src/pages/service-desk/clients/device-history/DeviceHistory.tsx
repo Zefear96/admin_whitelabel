@@ -1,4 +1,4 @@
-import { Descriptions, Modal, Table } from "antd";
+import { Descriptions, Empty, Modal, Table } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { SorterResult } from "antd/es/table/interface";
 import { useState } from "react";
@@ -84,6 +84,7 @@ export default function DeviceHistory({ absId }: { absId: string }) {
   return (
     <>
       <Table<DeviceHistoryItem>
+        locale={{ emptyText: <Empty description="Нет данных" /> }}
         rowKey={(row) => `${row.deviceFingerprint.deviceId}-${row.lastSeenAt}`}
         columns={columns}
         dataSource={data?.content || []}

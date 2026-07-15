@@ -12,7 +12,7 @@ export const useUpdateNotificationTemplate = () => {
             return PushNotificationServiceApi.updateNotificationTemplate(id, payload);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["notificationTemplate"] });
+            queryClient.invalidateQueries({ queryKey: ["push-notification", "templates"] });
             // toast.success("Шаблон уведомления успешно обновлен");
         },
         onError: (error) => {

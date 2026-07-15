@@ -135,7 +135,7 @@ export const ButtonReportIncomingTransactions = ({ transactions, bankCode, agent
     <>
       {/* <Button onClick={generatePdf} variant="outlined" color="cyan" >Сформировать документ</Button> */}
 
-      <Button onClick={handlePreview} style={{ marginRight: 8 }} icon={<PrinterOutlined />} color="cyan" variant="outlined">Сформировать документ</Button>
+      <Button onClick={handlePreview} style={{ marginRight: 8, backgroundColor: "#4a99b0", color: "#fff" }} icon={<PrinterOutlined />}  variant="solid">Сформировать реестр</Button>
 
       <Modal
         title="Предпросмотр PDF"

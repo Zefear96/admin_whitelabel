@@ -1,23 +1,42 @@
-import { Alert, Card, DatePicker, Table, Tag } from "antd";
+import { Alert, Card, DatePicker, Empty, Select, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import type { IncomingTransactionType } from "../../../../types/banking-gateway/transactionsType";
+import { useGetTransactionsByAgent } from "../../../../hooks/banking-gateway/useGetAllTransactionsByAgent";
 import { ButtonReportIncomingTransactions } from "./ButtonReportIncomingTransactions";
 
 const { RangePicker } = DatePicker;
+
+type StatusFilter = "" | "SUCCESS" | "DECLINED" | "PENDING" | "FAILED" | "FAILURE";
+
+const STATUS_OPTIONS: { label: string; value: StatusFilter }[] = [
+  { label: "Все", value: "" },
+  { label: "Успешные", value: "SUCCESS" },
+  { label: "Отклонённые", value: "DECLINED" },
+  { label: "Ожидающие", value: "PENDING" },
+  // { label: "Неуспешные", value: "FAILED" },
+  { label: "Неуспешные", value: "FAILURE" },
+];
+
+const toApiDateTime = (value: Dayjs) => {
+  // Как в API: creationDateMin/Max = YYYY-MM-DDT00:00:00Z
+  return `${value.format("YYYY-MM-DD")}T00:00:00Z`;
+};
+
+const toApiStatus = (statusFilter: StatusFilter) => {
+  // Пустой статус = все транзакции (параметр status не отправляется)
+  if (!statusFilter) return "";
+  return statusFilter.toUpperCase();
+};
 
 interface IncomingTransactionsTabProps {
   bankCode: string;
   agentName: string;
   dateRange: [Dayjs | null, Dayjs | null] | null;
   setDateRange: Dispatch<SetStateAction<[Dayjs | null, Dayjs | null] | null>>;
-  incomingTransactions: IncomingTransactionType[];
-  isLoadingIncomingTransactions: boolean;
-  errorIncomingTransactions: unknown;
-  fromDate: string;
-  toDate: string;
 }
 
 export default function IncomingTransactionsTab({
@@ -25,23 +44,35 @@ export default function IncomingTransactionsTab({
   agentName,
   dateRange,
   setDateRange,
-  incomingTransactions,
-  isLoadingIncomingTransactions,
-  errorIncomingTransactions,
-  fromDate,
-  toDate,
 }: IncomingTransactionsTabProps) {
-  const filteredIncomingTransactions = (incomingTransactions ?? []).filter((tx) => {
-    if (!dateRange || !dateRange[0] || !dateRange[1]) return true;
-    const [start, end] = dateRange;
-    if (!start || !end) return true;
-    const txDate = dayjs(tx.creationDate);
-    if (!txDate.isValid()) return false;
-    return (
-      (txDate.isAfter(start, "day") || txDate.isSame(start, "day")) &&
-      (txDate.isBefore(end, "day") || txDate.isSame(end, "day"))
-    );
-  });
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("SUCCESS");
+
+  const fallbackFrom = dayjs().subtract(7, "day");
+  const fallbackTo = dayjs();
+  const fromDate = dateRange?.[0] ?? fallbackFrom;
+  const toDate = dateRange?.[1] ?? fallbackTo;
+
+  const creationDateMin = toApiDateTime(fromDate);
+  const creationDateMax = toApiDateTime(toDate);
+  const statusParam = toApiStatus(statusFilter);
+
+  const {
+    data: IncomingTransactions,
+    isLoading: isLoadingIncomingTransactions,
+    error: errorIncomingTransactions,
+  } = useGetTransactionsByAgent(
+    bankCode,
+    0,
+    20,
+    "creationDate",
+    "DESC",
+    creationDateMin,
+    creationDateMax,
+    statusParam,
+  );
+
+  const incomingTransactions: IncomingTransactionType[] =
+    (IncomingTransactions?.content ?? []) as IncomingTransactionType[];
 
   const columns: ColumnsType<IncomingTransactionType> = [
     {
@@ -93,10 +124,10 @@ export default function IncomingTransactionsTab({
       dataIndex: "status",
       width: 80,
       render: (status: string) =>
-        status === "SUCCESS" ? (
+        String(status).toUpperCase() === "SUCCESS" ? (
           <Tag color="green">SUCCESS</Tag>
         ) : (
-          <Tag color="red">FAILED</Tag>
+          <Tag color="red">{String(status).toUpperCase()}</Tag>
         ),
     },
     {
@@ -131,13 +162,22 @@ export default function IncomingTransactionsTab({
         disabledDate={(current) => current && current > dayjs().endOf("day")}
       />
 
-      <ButtonReportIncomingTransactions
-        transactions={filteredIncomingTransactions}
-        bankCode={bankCode}
-        agentName={agentName}
-        fromDate={fromDate}
-        toDate={toDate}
-      />
+      <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "0 20px 12px" }}>
+        <Select
+          value={statusFilter}
+          onChange={setStatusFilter}
+          options={STATUS_OPTIONS}
+          style={{ width: 180 }}
+          placeholder="Статус"
+        />
+        <ButtonReportIncomingTransactions
+          transactions={incomingTransactions}
+          bankCode={bankCode}
+          agentName={agentName}
+          fromDate={fromDate.toISOString()}
+          toDate={toDate.toISOString()}
+        />
+      </div>
 
       <Card title={`Входящие транзакции агента ${agentName}`} style={{ margin: 20 }}>
         {Boolean(errorIncomingTransactions) && (
@@ -150,16 +190,17 @@ export default function IncomingTransactionsTab({
           />
         )}
         <Table<IncomingTransactionType>
+          locale={{ emptyText: <Empty description="Нет данных" /> }}  
           rowKey={(row) => row.id}
           columns={columns}
           loading={isLoadingIncomingTransactions}
-          dataSource={filteredIncomingTransactions}
+          dataSource={incomingTransactions}
           pagination={{ pageSize: 10 }}
           style={{ cursor: "pointer" }}
           scroll={{ x: "max-content" }}
+
         />
       </Card>
     </>
   );
 }
-
