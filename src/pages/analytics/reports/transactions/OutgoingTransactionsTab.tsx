@@ -1,4 +1,4 @@
-import { Button, Card, DatePicker, Empty, Table, Tag } from "antd";
+import { Button, Card, DatePicker, Empty, Menu, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
@@ -34,7 +34,7 @@ export default function OutgoingTransactionsTab({
     dateTo: string;
     initialStatus?: string;
   } | null>(null);
-  const [statusFilter, setStatusFilter] = useState<"ALL" | "SUCCESS" | "FAILED">("SUCCESS");
+  const [statusFilter, setStatusFilter] = useState<"ALL" | "SUCCESS" | "FAILED">("ALL");
   const [registryPage, setRegistryPage] = useState(0);
   const [registryPageSize, setRegistryPageSize] = useState(20);
 
@@ -142,10 +142,27 @@ export default function OutgoingTransactionsTab({
       dataIndex: "status",
       width: 120,
       filters: [
+        { text: "Все", value: "ALL" },
         { text: "Успешные", value: "SUCCESS" },
-        { text: "Неуспешные", value: "FAILED" },
+        { text: "Неуспешные", value: "FAILED" }
       ],
-      filteredValue: statusFilter === "ALL" ? null : [statusFilter],
+      filteredValue: [statusFilter],
+      filterMultiple: false,
+      filterDropdown:({setSelectedKeys, selectedKeys, confirm}) => (
+        <Menu
+          selectable
+          selectedKeys={(selectedKeys as string[]) ?? [statusFilter]}
+          items={[
+            { key: "ALL", label: "Все" },
+            { key: "SUCCESS", label: "Успешные" },
+            { key: "FAILED", label: "Неуспешные" },
+          ]}
+          onClick={({ key }) => {
+            setSelectedKeys([key]);
+            confirm({ closeDropdown: true });
+          }}
+        />
+      ),
       render: (status: string) =>
         String(status).toUpperCase() === "SUCCESS" ? (
           <Tag color="green">SUCCESS</Tag>
@@ -265,7 +282,9 @@ export default function OutgoingTransactionsTab({
           onChange={(_, filters) => {
             const selected = filters.status?.[0];
             const nextFilter: "ALL" | "SUCCESS" | "FAILED" =
-              selected === "SUCCESS" || selected === "FAILED" ? selected : "ALL";
+              selected === "SUCCESS" || selected === "FAILED" || selected === "ALL"
+                ? selected
+                : "ALL";
             if (nextFilter !== statusFilter) {
               setRegistryPage(0);
             }

@@ -20,8 +20,12 @@ export const registryAgentServiceApi = {
             "taskId": taskId,
             "page": page?.toString() ?? "0",
             "size": size?.toString() ?? "20",
-            "isSuccess": isSuccess?.toString() ?? "false",
         });
+
+        // ALL = без isSuccess; SUCCESS=true; FAILED=false
+        if (typeof isSuccess === "boolean") {
+            params.set("isSuccess", String(isSuccess));
+        }
 
         return apiClient.get(`/admin-backend/transaction-history-service/api/v1/registry/items?${params.toString()}`)
     },
