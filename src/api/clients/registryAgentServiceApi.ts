@@ -29,12 +29,19 @@ export const registryAgentServiceApi = {
 
         return apiClient.get(`/admin-backend/transaction-history-service/api/v1/registry/items?${params.toString()}`)
     },
-    async generateXlsxRegistry(taskId: string) {
+    async generateXlsxRegistry(
+        taskId: string,
+        agent: string,
+        dateFrom: string,
+        dateTo: string,
+    ) {
         const response = await apiClient.post(
             `/admin-backend/transaction-history-service/api/v1/registry/generate-file/xlsx?taskId=${taskId}`,
             null,
             { responseType: "blob" },
         );
+
+        const filename = `registry_${agent.toLowerCase()}-${dateFrom} - ${dateTo}.xlsx`;
 
         const blob = new Blob([response.data], {
             type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -42,7 +49,7 @@ export const registryAgentServiceApi = {
         const fileUrl = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = fileUrl;
-        link.download = `registry_${taskId}.xlsx`;
+        link.download = filename;
         document.body.appendChild(link);
         link.click();
         link.remove();

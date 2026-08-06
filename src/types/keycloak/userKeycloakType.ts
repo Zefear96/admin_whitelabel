@@ -9,9 +9,8 @@ export interface UserKeycloakType {
   id: string;
   roles: Role[];
   /**
-   * Ниже – технические поля для восстановления сессии Keycloak
-   * при перезагрузке страницы. Все опциональные, чтобы не ломать
-   * уже сохранённые записи в localStorage.
+   * In-memory only (React state / keycloak-js). Never persisted to localStorage.
+   * After F5 the session is restored via Keycloak check-sso + silent SSO.
    */
   refreshToken?: string;
   idToken?: string;

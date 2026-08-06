@@ -1,8 +1,36 @@
+import type { SearchClientsParams } from "../../types/client/customerProfile";
 import {apiClient} from "../axios/apiClient";
+
 
 export const ClientProfileApi = {
     getClientByAbs(absClientId: string) {
         return apiClient.get(`/admin-backend/client-profile/api/v1/client/${absClientId}/by-abs-id`)
+    },
+    searchClients({
+        absNumber,
+        inn,
+        phoneNumber,
+        firstname,
+        surName,
+        page,
+        size,
+        sort,
+    }: SearchClientsParams = {}) {
+        const params = new URLSearchParams()
+
+        if (absNumber) params.set("absNumber", absNumber)
+        if (inn) params.set("inn", inn)
+        if (phoneNumber) params.set("phoneNumber", phoneNumber)
+        if (firstname) params.set("firstname", firstname)
+        if (surName) params.set("surName", surName)
+        if (page !== undefined) params.set("page", page.toString())
+        if (size !== undefined) params.set("size", size.toString())
+        if (sort) params.set("sort", sort)
+
+        const query = params.toString()
+        return apiClient.get(
+            `/admin-backend/client-profile/api/v1/client/search${query ? `?${query}` : ""}`,
+        )
     },
     getClientList(page?: number, size?: number, sort?: string) {
         const params = new URLSearchParams({

@@ -223,10 +223,14 @@ export default function OutgoingTransactionsTab({
           color="cyan"
           disabled={!taskId || !isDoneStatus}
           onClick={async () => {
-            if (!taskId || !isDoneStatus) return;
-            if (!taskId) return;
+            if (!taskId || !isDoneStatus || !submittedTask) return;
             try {
-              await registryAgentServiceApi.generateXlsxRegistry(taskId);
+              await registryAgentServiceApi.generateXlsxRegistry(
+                taskId,
+                bankCode,
+                submittedTask.dateFrom,
+                submittedTask.dateTo,
+              );
             } catch (error: any) {
               if (error?.response?.status === 409) {
                 notify({
