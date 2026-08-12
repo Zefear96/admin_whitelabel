@@ -10,8 +10,8 @@ export const ClientProfileApi = {
         absNumber,
         inn,
         phoneNumber,
-        firstname,
-        surName,
+        firstName,
+        lastName,
         page,
         size,
         sort,
@@ -21,8 +21,8 @@ export const ClientProfileApi = {
         if (absNumber) params.set("absNumber", absNumber)
         if (inn) params.set("inn", inn)
         if (phoneNumber) params.set("phoneNumber", phoneNumber)
-        if (firstname) params.set("firstname", firstname)
-        if (surName) params.set("surName", surName)
+        if (firstName) params.set("firstName", firstName)
+        if (lastName) params.set("lastName", lastName)
         if (page !== undefined) params.set("page", page.toString())
         if (size !== undefined) params.set("size", size.toString())
         if (sort) params.set("sort", sort)

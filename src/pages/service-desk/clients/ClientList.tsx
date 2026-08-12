@@ -2,11 +2,11 @@ import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { CustomerProfileType } from "../../../types/client/customerProfile";
 import { useGetClientList } from "../../../hooks/client/useGetClientList";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClientListSkeleton } from "./ClientListSkeleton";
 
-export default function ClientList(){
+function ClientList(){
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(20);
     const [sort, setSort] = useState("createdDate,ASC");
@@ -91,3 +91,5 @@ export default function ClientList(){
         </>
     )
 }
+
+export default memo(ClientList);

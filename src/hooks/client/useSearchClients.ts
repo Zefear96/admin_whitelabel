@@ -5,7 +5,7 @@ import type { SearchClientsParams } from "../../types/client/customerProfile";
 import type { CustomerListType } from "../../types/client/customerList";
 
 const hasSearchField = (params: SearchClientsParams) =>
-    !!(params.absNumber || params.inn || params.phoneNumber || params.firstname || params.surName);
+    !!(params.absNumber || params.inn || params.phoneNumber || params.firstName || params.lastName);
 
 export const useSearchClients = (params: SearchClientsParams = {}) => {
     const query = useQuery<CustomerListType, AxiosError>({
@@ -14,8 +14,8 @@ export const useSearchClients = (params: SearchClientsParams = {}) => {
             params.absNumber,
             params.inn,
             params.phoneNumber,
-            params.firstname,
-            params.surName,
+            params.firstName,
+            params.lastName,
             params.page,
             params.size,
             params.sort,

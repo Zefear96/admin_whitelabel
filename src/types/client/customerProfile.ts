@@ -36,8 +36,8 @@ export interface SearchClientsParams {
   absNumber?: string
   inn?: string
   phoneNumber?: string
-  firstname?: string
-  surName?: string
+  firstName?: string
+  lastName?: string
   page?: number
   size?: number
   sort?: string

@@ -11,16 +11,47 @@ const { Search } = Input;
 
 type SearchField = keyof Pick<
   SearchClientsParams,
-  'absNumber' | 'inn' | 'phoneNumber' | 'firstname' | 'surName'
+  'absNumber' | 'inn' | 'phoneNumber' | 'firstName' | 'lastName'
 >;
 
 const SEARCH_FIELD_OPTIONS: { value: SearchField; label: string; placeholder: string }[] = [
-  { value: 'absNumber', label: 'АБС', placeholder: 'Поиск клиента по АБС' },
-  { value: 'inn', label: 'ИНН', placeholder: 'Поиск клиента по ИНН' },
-  { value: 'phoneNumber', label: 'Телефон', placeholder: 'Поиск клиента по телефону' },
-  { value: 'firstname', label: 'Имя', placeholder: 'Поиск клиента по имени' },
-  { value: 'surName', label: 'Фамилия', placeholder: 'Поиск клиента по фамилии' },
+  { value: 'absNumber', label: 'АБС номер', placeholder: 'Введите АБС номер клиента' },
+  { value: 'inn', label: 'ИНН', placeholder: 'Введите ИНН клиента' },
+  { value: 'phoneNumber', label: 'Телефон', placeholder: 'Введите номер телефона без кода страны' },
+  { value: 'firstName', label: 'Имя', placeholder: 'Введите имя клиента' },
+  { value: 'lastName', label: 'Фамилия', placeholder: 'Введите фамилию клиента' },
 ];
+
+const SEARCH_FIELD_RULES: Record<
+  SearchField,
+  { maxLength: number; sanitize: (value: string) => string; errorMessage: string }
+> = {
+  absNumber: {
+    maxLength: 7,
+    sanitize: (value) => value.replace(/\D/g, '').slice(0, 7),
+    errorMessage: 'АБС номер: только цифры, максимум 7',
+  },
+  inn: {
+    maxLength: 14,
+    sanitize: (value) => value.replace(/\D/g, '').slice(0, 14),
+    errorMessage: 'ИНН: только цифры, максимум 14',
+  },
+  phoneNumber: {
+    maxLength: 9,
+    sanitize: (value) => value.replace(/\D/g, '').slice(0, 9),
+    errorMessage: 'Телефон: только цифры, максимум 9',
+  },
+  firstName: {
+    maxLength: 100,
+    sanitize: (value) => value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '').slice(0, 100),
+    errorMessage: 'Имя: только буквы, максимум 100',
+  },
+  lastName: {
+    maxLength: 100,
+    sanitize: (value) => value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, '').slice(0, 100),
+    errorMessage: 'Фамилия: только буквы, максимум 100',
+  },
+};
 
 const columns: ColumnsType<CustomerProfileType> = [
   { title: 'ABS number', dataIndex: 'absClientId' },
@@ -33,6 +64,7 @@ const columns: ColumnsType<CustomerProfileType> = [
 
 export default function ServiceDeskClientsPage() {
   const [searchField, setSearchField] = useState<SearchField>('absNumber');
+  const [searchValue, setSearchValue] = useState('');
   const [submittedParams, setSubmittedParams] = useState<SearchClientsParams>({});
   const navigate = useNavigate();
   const { notify } = useNotificationMessage();
@@ -43,15 +75,17 @@ export default function ServiceDeskClientsPage() {
     submittedParams.absNumber ||
     submittedParams.inn ||
     submittedParams.phoneNumber ||
-    submittedParams.firstname ||
-    submittedParams.surName
+    submittedParams.firstName ||
+    submittedParams.lastName
   );
 
   const clients = data?.clients ?? [];
+  const fieldRule = SEARCH_FIELD_RULES[searchField];
   const placeholder = useMemo(
     () => SEARCH_FIELD_OPTIONS.find((o) => o.value === searchField)?.placeholder ?? '',
     [searchField],
   );
+  const defaultClientList = useMemo(() => <ClientList />, []);
 
   useEffect(() => {
     if (!hasActiveSearch || !isSuccess || isFetching) return;
@@ -75,17 +109,39 @@ export default function ServiceDeskClientsPage() {
     });
   }, [error, notify]);
 
+  const handleFieldChange = (value: SearchField) => {
+    setSearchField(value);
+    setSearchValue('');
+    setSubmittedParams({});
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchValue(SEARCH_FIELD_RULES[searchField].sanitize(value));
+  };
+
   const handleSearch = (value: string) => {
-    const trimmed = value.trim();
-    if (!trimmed) {
+    const sanitized = SEARCH_FIELD_RULES[searchField].sanitize(value).trim();
+    setSearchValue(sanitized);
+
+    if (!sanitized) {
       setSubmittedParams({});
       return;
     }
-    setSubmittedParams({ [searchField]: trimmed });
+
+    if (sanitized !== value.trim()) {
+      notify({
+        type: 'warning',
+        title: 'Некорректный ввод',
+        message: fieldRule.errorMessage,
+      });
+      return;
+    }
+
+    setSubmittedParams({ [searchField]: sanitized });
   };
 
   const renderSearchResults = () => {
-    if (!hasActiveSearch) return <ClientList />;
+    if (!hasActiveSearch) return defaultClientList;
     if (isLoading && !data) return <Skeleton />;
     if (error || clients.length === 0) return <Card>Клиент не найден</Card>;
 
@@ -134,13 +190,16 @@ export default function ServiceDeskClientsPage() {
       <Space.Compact style={{ width: '100%' }}>
         <Select
           value={searchField}
-          onChange={(value: SearchField) => setSearchField(value)}
+          onChange={handleFieldChange}
           options={SEARCH_FIELD_OPTIONS.map(({ value, label }) => ({ value, label }))}
           size="large"
           style={{ width: 140 }}
         />
         <Search
+          value={searchValue}
           placeholder={placeholder}
+          maxLength={fieldRule.maxLength}
+          onChange={(e) => handleSearchChange(e.target.value)}
           onSearch={handleSearch}
           size="large"
           enterButton
