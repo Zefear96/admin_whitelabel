@@ -3,11 +3,17 @@ import { apiClient } from "../axios/apiClient";
 
 export const authApi = {
     manualBlockUser: async (userId: string, requestBody: RequestBodyAntifraud) => {
-        const response = await apiClient.post(`/admin-backend/auth/api/v1/internal/manual/users/${userId}/blocking`, requestBody);
-            userId
+        const response = await apiClient.post(
+            `/admin-backend/auth/api/v1/internal/manual/users/${userId}/blocking`,
+            requestBody
+        );
+        return response.data;
     },
     manualUnblockUser: async (userId: string, requestBody: RequestBodyAntifraud) => {
-        const response = await apiClient.post(`/admin-backend/auth/api/v1/internal/manual/users/${userId}/blocking/unblock`, requestBody);
+        const response = await apiClient.post(
+            `/admin-backend/auth/api/v1/internal/manual/users/${userId}/blocking/unblock`,
+            requestBody
+        );
         return response.data;
     },
     getStatusUser: async (userId: string) => {

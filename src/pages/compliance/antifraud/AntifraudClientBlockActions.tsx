@@ -1,15 +1,18 @@
-import { Button, Space, Tag } from "antd";
+import { useState } from "react";
+import { Button, Input, Modal, Space, Tag } from "antd";
 import { LockOutlined, UnlockOutlined } from "@ant-design/icons";
 import type { AxiosError } from "axios";
-import Popconfirm from "../../../components/dataDisplay/Popconfirm";
 import useNotificationMessage from "../../../components/dataDisplay/NotificationMessage";
 import { useGetAntifraudStatusUser } from "../../../hooks/auth/useGetStatusUser";
 import { useManualBlockUser } from "../../../hooks/auth/useManualBlockUser";
 import { useManualUnblockUser } from "../../../hooks/auth/useManualUnblockUser";
+import { REASON_TEXT_MAX_LENGTH } from "../../../types/auth/requestBodyAntifraud";
 
 type AntifraudClientBlockActionsProps = {
   userId?: string;
 };
+
+type ReasonAction = "block" | "unblock";
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   const axiosError = error as AxiosError<{ message?: string }>;
@@ -22,75 +25,105 @@ export default function AntifraudClientBlockActions({ userId }: AntifraudClientB
   const { mutateAsync: unblockUser, isPending: isUnblocking } = useManualUnblockUser();
   const { notify } = useNotificationMessage();
 
+  const [reasonAction, setReasonAction] = useState<ReasonAction | null>(null);
+  const [reasonText, setReasonText] = useState("");
+
   const isBlocked = !!data?.blocked;
   const isBusy = isBlocking || isUnblocking;
+  const isBlockAction = reasonAction === "block";
 
-  const handleBlock = async () => {
-    if (!userId) return;
-
-    try {
-      await blockUser({ userId, requestBody: { reasonText: "Блокировка клиента" } });
-      notify({
-        type: "success",
-        title: "Успешно",
-        message: "Клиент заблокирован",
-      });
-    } catch (error) {
-      notify({
-        type: "error",
-        title: "Ошибка",
-        message: getErrorMessage(error, "Не удалось заблокировать клиента"),
-      });
-    }
+  const closeReasonModal = () => {
+    setReasonAction(null);
+    setReasonText("");
   };
 
-  const handleUnblock = async () => {
+  const handleSubmitReason = async () => {
     if (!userId) return;
 
-    try {
-      await unblockUser({ userId, requestBody: { reasonText: "Разблокировка клиента" } });
+    const trimmedReason = reasonText.trim();
+    if (!trimmedReason) {
       notify({
-        type: "success",
-        title: "Успешно",
-        message: "Клиент разблокирован",
+        type: "error",
+        title: "Ошибка",
+        message: "Укажите причину",
       });
+      return;
+    }
+
+    try {
+      if (isBlockAction) {
+        await blockUser({ userId, requestBody: { reasonText: trimmedReason } });
+        notify({
+          type: "success",
+          title: "Успешно",
+          message: "Клиент заблокирован",
+        });
+      } else {
+        await unblockUser({ userId, requestBody: { reasonText: trimmedReason } });
+        notify({
+          type: "success",
+          title: "Успешно",
+          message: "Клиент разблокирован",
+        });
+      }
+      closeReasonModal();
     } catch (error) {
       notify({
         type: "error",
         title: "Ошибка",
-        message: getErrorMessage(error, "Не удалось разблокировать клиента"),
+        message: getErrorMessage(
+          error,
+          isBlockAction ? "Не удалось заблокировать клиента" : "Не удалось разблокировать клиента"
+        ),
       });
     }
   };
 
   return (
-    <Space style={{ width: "100%", justifyContent: "space-between" }}>
-      <Tag color={isBlocked ? "red" : "green"}>
-        {isLoading ? "Загрузка статуса..." : isBlocked ? "Блок" : "Активен"}
-      </Tag>
-      {isBlocked ? (
-        <Popconfirm
-          title="Разблокировать клиента?"
-          onConfirm={handleUnblock}
-          okButtonProps={{ loading: isUnblocking }}
-          disabled={!userId}
-        >
-          <Button icon={<UnlockOutlined />} loading={isBusy} disabled={!userId}>
+    <>
+      <Space style={{ width: "100%", justifyContent: "space-between" }}>
+        <Tag color={isBlocked ? "red" : "green"}>
+          {isLoading ? "Загрузка статуса..." : isBlocked ? "Блок" : "Активен"}
+        </Tag>
+        {isBlocked ? (
+          <Button
+            icon={<UnlockOutlined />}
+            loading={isBusy}
+            disabled={!userId}
+            onClick={() => setReasonAction("unblock")}
+          >
             Разблокировать
           </Button>
-        </Popconfirm>
-      ) : (
-        <Popconfirm
-          title="Заблокировать клиента?"
-          onConfirm={handleBlock}
-          okButtonProps={{ loading: isBlocking, danger: true }}
-          disabled={!userId}
-        >
-          <Button danger icon={<LockOutlined />} loading={isBusy} disabled={!userId}>
+        ) : (
+          <Button
+            danger
+            icon={<LockOutlined />}
+            loading={isBusy}
+            disabled={!userId}
+            onClick={() => setReasonAction("block")}
+          >
             Заблокировать
           </Button>
-        </Popconfirm>
-      )}
-    </Space>
+        )}
+      </Space>
+      <Modal
+        open={reasonAction !== null}
+        title={isBlockAction ? "Заблокировать клиента" : "Разблокировать клиента"}
+        okText={isBlockAction ? "Заблокировать" : "Разблокировать"}
+        okButtonProps={{ danger: isBlockAction, loading: isBusy, disabled: !reasonText.trim() }}
+        onOk={handleSubmitReason}
+        onCancel={closeReasonModal}
+        destroyOnHidden
+      >
+        <Input.TextArea
+          value={reasonText}
+          onChange={(event) => setReasonText(event.target.value.slice(0, REASON_TEXT_MAX_LENGTH))}
+          placeholder="Укажите причину"
+          maxLength={REASON_TEXT_MAX_LENGTH}
+          showCount
+          rows={4}
+        />
+      </Modal>
+    </>
   );
 }
