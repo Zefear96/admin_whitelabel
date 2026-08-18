@@ -122,6 +122,7 @@ export default function AntifraudClientBlockActions({ userId }: AntifraudClientB
           maxLength={REASON_TEXT_MAX_LENGTH}
           showCount
           rows={4}
+          style={{ marginBottom: 20 }}
         />
       </Modal>
     </>
