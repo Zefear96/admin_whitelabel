@@ -21,7 +21,8 @@ import AccessControlPageProfiles from "../pages/backoffice/access-control/Access
 import CompliancePageClients from "../pages/compliance/CompliancePageClients";
 import CompliancePageOperations from "../pages/compliance/CompliancePageOperations";
 import CompliancePageBlacklist from "../pages/compliance/CompliancePageBlacklist";
-import CompliancePageAntifraud from "../pages/compliance/CompliancePageAntifraud";
+import CompliancePageAntifraud from "../pages/compliance/antifraud/CompliancePageAntifraud";
+import AntifraudClientDetails from "../pages/compliance/antifraud/AntifraudClientDetails";
 // Analytics
 import AnalyticsPageReportsClients from "../pages/analytics/reports/clients/AnalyticsPageReportsClients";
 import AnalyticsPageReportsTransactions from "../pages/analytics/reports/transactions/AnalyticsPageReportsTransactions";
@@ -95,6 +96,7 @@ export default function AppRoutes() {
         <Route path="/compliance/operations" element={<CompliancePageOperations/>}/>
         <Route path="/compliance/blacklist" element={<CompliancePageBlacklist/>}/>
         <Route path="/compliance/antifraud" element={<CompliancePageAntifraud/>}/>
+        <Route path="/compliance/antifraud/details/:id" element={<AntifraudClientDetails />}/>
         
         {/* Analytics */}
         <Route path="/analytics/reports/clients" element={<AnalyticsPageReportsClients/>}/>

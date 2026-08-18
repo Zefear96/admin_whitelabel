@@ -171,9 +171,10 @@ export default function AuthProvider({ children }: Props) {
   }, [clearSessionModalTimers, closeSessionModal]);
 
   const forceLogout = useCallback(() => {
-    clearAuthState();
+    // Don't clear React auth first — ProtectedRoute would call login()
+    // and race with Keycloak logout (SSO would sign the user back in).
     logoutRef.current();
-  }, [clearAuthState]);
+  }, []);
 
   const refreshWithPossibleConfirmation = useCallback(
     async (reason: "interval" | "expired"): Promise<void> => {
@@ -209,7 +210,12 @@ export default function AuthProvider({ children }: Props) {
     }
 
     const basePath = getBasePath();
-    const redirectUri = `${window.location.origin}${basePath}`;
+    // After Keycloak logout we land on /logout. Keep check-sso returning there
+    // instead of bouncing to "/" (which would auto-login via ProtectedRoute).
+    const isLogoutReturn = window.location.pathname.replace(/\/$/, "").endsWith("/logout");
+    const redirectUri = isLogoutReturn
+      ? `${window.location.origin}${basePath}/logout`
+      : `${window.location.origin}${basePath}`;
 
     keycloakInstance.onAuthSuccess = () => {
       saveUserFromToken();
@@ -283,10 +289,11 @@ export default function AuthProvider({ children }: Props) {
   // ---------------- LOGOUT ----------------
   const logout = useCallback(() => {
     const basePath = getBasePath();
-    clearAuthState();
+    const redirectUri = `${window.location.origin}${basePath}/logout`;
 
-    keycloakInstance.logout({
-      redirectUri: `${window.location.origin}${basePath}/logout`,
+    void keycloakInstance.logout({ redirectUri }).catch((error) => {
+      console.error("[AuthProvider] Keycloak logout failed:", error);
+      clearAuthState();
     });
   }, [clearAuthState]);
 

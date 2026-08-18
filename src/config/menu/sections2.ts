@@ -45,7 +45,7 @@ export const sections2: SectionMenuType[] = [
     },
     {
         "id": "fa5cc36c-236b-4226-b3d8-f49e733a4095",
-        "name": "Комплаенс*",
+        "name": "Комплаенс",
         "link": null,
         "icon": null,
         "isEnabled": true,
@@ -84,7 +84,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "2f65bc3c-f499-41fc-9eb7-9796f4613252",
-                "name": "Антифрод*",
+                "name": "Антифрод",
                 "link": "/compliance/antifraud",
                 "icon": null,
                 "isEnabled": true,
