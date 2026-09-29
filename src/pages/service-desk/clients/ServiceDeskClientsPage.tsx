@@ -22,6 +22,23 @@ const SEARCH_FIELD_OPTIONS: { value: SearchField; label: string; placeholder: st
   { value: 'lastName', label: 'Фамилия', placeholder: 'Введите фамилию клиента' },
 ];
 
+const SEARCH_FIELD_STORAGE_KEY = 'service-desk-clients-search-field';
+
+const isSearchField = (value: string): value is SearchField =>
+  SEARCH_FIELD_OPTIONS.some((option) => option.value === value);
+
+const readStoredSearchField = (): SearchField => {
+  try {
+    const stored = window.localStorage.getItem(SEARCH_FIELD_STORAGE_KEY);
+    if (stored && isSearchField(stored)) {
+      return stored;
+    }
+  } catch {
+    // ignore storage access errors
+  }
+  return 'absNumber';
+};
+
 const SEARCH_FIELD_RULES: Record<
   SearchField,
   { maxLength: number; sanitize: (value: string) => string; errorMessage: string }
@@ -63,11 +80,19 @@ const columns: ColumnsType<CustomerProfileType> = [
 ];
 
 export default function ServiceDeskClientsPage() {
-  const [searchField, setSearchField] = useState<SearchField>('absNumber');
+  const [searchField, setSearchField] = useState<SearchField>(readStoredSearchField);
   const [searchValue, setSearchValue] = useState('');
   const [submittedParams, setSubmittedParams] = useState<SearchClientsParams>({});
   const navigate = useNavigate();
   const { notify } = useNotificationMessage();
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(SEARCH_FIELD_STORAGE_KEY, searchField);
+    } catch {
+      // ignore storage access errors
+    }
+  }, [searchField]);
 
   const { data, isLoading, isFetching, error, isSuccess } = useSearchClients(submittedParams);
 

@@ -1,13 +1,14 @@
 import { apiClient } from "../axios/apiClient"
 
 export const registryAgentServiceApi = {
-    createOutgoingTransactionsRegistry(agent: string, dateFrom?: string, dateTo?: string) {
+    createOutgoingTransactionsRegistry(agent: string, dateFrom?: string, dateTo?: string, force?: boolean) {
         const normalizedAgent = agent.toUpperCase();
 
         const params = new URLSearchParams({
             "agent": normalizedAgent,
             "dateFrom": dateFrom ?? "",
             "dateTo": dateTo ?? "",
+            "force": 'true',
         });
 
         return apiClient.post(`/admin-backend/transaction-history-service/api/v1/registry?${params.toString()}`)

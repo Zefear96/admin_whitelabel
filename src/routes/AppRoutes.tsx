@@ -56,6 +56,7 @@ import AdministrationPageAgents from "../pages/administration/agents/Administrat
 import AgentDetailsPage from "../pages/administration/agents/AgentDetailsPage";
 import LogoutPage from "../pages/logout/LogoutPage";
 import AdministrationPageLimitsAgent from "../pages/administration/limits/agent/AdministrationPageLimitsAgent";
+import AdministrationPageClientsSettings from "../pages/administration/clients-settings/AdministrationPageClientsSettings";
 
 export default function AppRoutes() {
   const [sections, setSections] = useState<SectionMenuType[]>([]);
@@ -134,6 +135,7 @@ export default function AppRoutes() {
         <Route path="/administration/dictionary/transaction-types" element={<DictionaryTransactionTypesPage/>}/>
         <Route path="/administration/agents" element={<AdministrationPageAgents/>}/>
         <Route path="/administration/agents/:agent" element={<AgentDetailsPage />}/>
+        <Route path="/administration/clients/settings" element={<AdministrationPageClientsSettings/>}/>
 
         {/* Marketing */}
         <Route path="/marketing/promotions" element={<MarketingPagePromotions/>}/>

@@ -543,8 +543,8 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "70f1ea76-3c80-45f4-b7d2-2222fec746c3",
-                "name": "Клиентские настройки*",
-                "link": null,
+                "name": "Клиентские настройки",
+                "link": '/administration/clients/settings',
                 "icon": null,
                 "isEnabled": true,
                 "iconPosition": "left",
