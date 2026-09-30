@@ -1,8 +1,8 @@
 import { Button, Form, InputNumber, Modal, Switch } from "antd";
 import type { AxiosError } from "axios";
-import { useNotificationMessage } from "../../../components/dataDisplay/NotificationMessage";
-import { useCreateVersion } from "../../../hooks/version-service/useCreateVersion";
-import type { VersionType } from "../../../types/version-service/versionType";
+import { useNotificationMessage } from "../../../../../components/dataDisplay/NotificationMessage";
+import { useCreateVersion } from "../../../../../hooks/version-service/useCreateVersion";
+import type { VersionType } from "../../../../../types/version-service/versionType";
 
 interface CreateVersionModalProps {
     isModalOpen: boolean;

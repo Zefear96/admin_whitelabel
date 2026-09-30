@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { Button, Input, Modal, Space, Tag } from "antd";
+import { Button, Input, Modal, Select, Space, Tag } from "antd";
 import { LockOutlined, UnlockOutlined } from "@ant-design/icons";
 import type { AxiosError } from "axios";
 import useNotificationMessage from "../../../components/dataDisplay/NotificationMessage";
 import { useGetAntifraudStatusUser } from "../../../hooks/auth/useGetStatusUser";
-import { useManualBlockUser } from "../../../hooks/auth/useManualBlockUser";
-import { useManualUnblockUser } from "../../../hooks/auth/useManualUnblockUser";
-import { REASON_TEXT_MAX_LENGTH } from "../../../types/auth/requestBodyAntifraud";
+import { useBlockUser } from "../../../hooks/auth/useBlockUser";
+import { useManualUnblockUser } from "../../../hooks/auth/useUnblockUser";
+import { REASON_TEXT_MAX_LENGTH, type BlockType } from "../../../types/auth/afsType";
+
+const BLOCK_TYPE_OPTIONS = [
+  { label: "Антифрод", value: "ANTIFRAUD" },
+  { label: "Сотрудник", value: "STAFF" },
+];
 
 type AntifraudClientBlockActionsProps = {
   userId?: string;
@@ -21,12 +26,13 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 
 export default function AntifraudClientBlockActions({ userId }: AntifraudClientBlockActionsProps) {
   const { data, isLoading } = useGetAntifraudStatusUser(userId);
-  const { mutateAsync: blockUser, isPending: isBlocking } = useManualBlockUser();
+  const { mutateAsync: blockUser, isPending: isBlocking } = useBlockUser();
   const { mutateAsync: unblockUser, isPending: isUnblocking } = useManualUnblockUser();
   const { notify } = useNotificationMessage();
 
   const [reasonAction, setReasonAction] = useState<ReasonAction | null>(null);
   const [reasonText, setReasonText] = useState("");
+  const [blockType, setBlockType] = useState<BlockType>("ANTIFRAUD");
 
   const isBlocked = !!data?.blocked;
   const isBusy = isBlocking || isUnblocking;
@@ -52,14 +58,14 @@ export default function AntifraudClientBlockActions({ userId }: AntifraudClientB
 
     try {
       if (isBlockAction) {
-        await blockUser({ userId, requestBody: { reasonText: trimmedReason } });
+        await blockUser({ userId, blockType, reason: trimmedReason });
         notify({
           type: "success",
           title: "Успешно",
           message: "Клиент заблокирован",
         });
       } else {
-        await unblockUser({ userId, requestBody: { reasonText: trimmedReason } });
+        await unblockUser({ userId, blockType, reason: trimmedReason });
         notify({
           type: "success",
           title: "Успешно",
@@ -115,15 +121,24 @@ export default function AntifraudClientBlockActions({ userId }: AntifraudClientB
         onCancel={closeReasonModal}
         destroyOnHidden
       >
-        <Input.TextArea
-          value={reasonText}
-          onChange={(event) => setReasonText(event.target.value.slice(0, REASON_TEXT_MAX_LENGTH))}
-          placeholder="Укажите причину"
-          maxLength={REASON_TEXT_MAX_LENGTH}
-          showCount
-          rows={4}
-          style={{ marginBottom: 20 }}
-        />
+        <Space direction="vertical" size={12} style={{ width: "100%" }}>
+          <Select
+            value={blockType}
+            onChange={(value) => setBlockType(value)}
+            options={BLOCK_TYPE_OPTIONS}
+            placeholder="Тип блокировки"
+            style={{ width: "100%" }}
+          />
+          <Input.TextArea
+            value={reasonText}
+            onChange={(event) => setReasonText(event.target.value.slice(0, REASON_TEXT_MAX_LENGTH))}
+            placeholder="Укажите причину"
+            maxLength={REASON_TEXT_MAX_LENGTH}
+            showCount
+            rows={4}
+            style={{ marginBottom: 20 }}
+          />
+        </Space>
       </Modal>
     </>
   );

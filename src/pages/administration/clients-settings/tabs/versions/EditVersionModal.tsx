@@ -1,11 +1,11 @@
 import { Button, Form, InputNumber, Modal, Switch } from "antd";
 import { useEffect } from "react";
-import { useNotificationMessage } from "../../../components/dataDisplay/NotificationMessage";
-import Popconfirm from "../../../components/dataDisplay/Popconfirm";
-import { useDeleteVersion } from "../../../hooks/version-service/useDeleteVersion";
-import { useUpdateVersion } from "../../../hooks/version-service/useUpdateVersion";
-import type { ModalPropsType } from "../../../types/components/modalPropsType";
-import type { VersionType } from "../../../types/version-service/versionType";
+import { useNotificationMessage } from "../../../../../components/dataDisplay/NotificationMessage";
+import Popconfirm from "../../../../../components/dataDisplay/Popconfirm";
+import { useDeleteVersion } from "../../../../../hooks/version-service/useDeleteVersion";
+import { useUpdateVersion } from "../../../../../hooks/version-service/useUpdateVersion";
+import type { ModalPropsType } from "../../../../../types/components/modalPropsType";
+import type { VersionType } from "../../../../../types/version-service/versionType";
 
 export default function EditVersionModal({ isModalOpen, setIsModalOpen, data }: ModalPropsType<VersionType>) {
     const [form] = Form.useForm<VersionType>();

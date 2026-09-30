@@ -1,21 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../../api/clients/authApi";
 import type { AxiosError } from "axios";
-import type { RequestBodyAntifraud } from "../../types/auth/requestBodyAntifraud";
+import type { BlockType } from "../../types/auth/afsType";
 
-type ManualUnblockVariables = {
+type ManualBlockVariables = {
   userId: string;
-  requestBody: RequestBodyAntifraud;
+  blockType: BlockType;
+  reason: string;
 };
 
-export const useManualUnblockUser = () => {
+export const useBlockUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, AxiosError, ManualUnblockVariables>({
-    mutationFn: ({ userId, requestBody }) => authApi.manualUnblockUser(userId, requestBody),
+  return useMutation<unknown, AxiosError, ManualBlockVariables>({
+    mutationFn: ({ userId, blockType, reason }) => authApi.blockUser(userId, blockType, reason),
     onSuccess: (_data, { userId }) => {
       queryClient.invalidateQueries({ queryKey: ["auth", "block-status", userId] });
       queryClient.invalidateQueries({ queryKey: ["client-profile"] });
+      queryClient.invalidateQueries({ queryKey: ["getBlockedUsers"] });
     },
   });
 };

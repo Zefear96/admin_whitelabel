@@ -74,7 +74,7 @@ export const sections2: SectionMenuType[] = [
             },
             {
                 "id": "c4beb81b-1402-4a77-8494-1a77d65ecf65",
-                "name": "Блэклист*",
+                "name": "Блэклист",
                 "link": "/compliance/blacklist",
                 "icon": null,
                 "isEnabled": true,

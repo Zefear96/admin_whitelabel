@@ -1,84 +1,54 @@
-import { Card, Table, Tag } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { useState } from "react";
-import ButtonCreate from "../../../components/dataEntry/ButtonCreate";
-import { useGetVersion } from "../../../hooks/version-service/useGetVersion";
-import type { VersionType } from "../../../types/version-service/versionType";
-import TableSkeleton from "../dictionary/TableSkeleton";
-import CreateVersionModal from "./CreateVersionModal";
-import EditVersionModal from "./EditVersionModal";
+import { Card, Tabs } from "antd";
+import { useSearchParams } from "react-router-dom";
+import VersioningTab from "./tabs/versions/VersioningTab";
+import Title from "antd/es/typography/Title";
+import LocalizationsTab from "./tabs/localizations/LocalizationsTab";
+import DocumentsTab from "./tabs/documents/DocumentsTab";
 
-const formatVersion = (row: VersionType) => `${row.major}.${row.minor}.${row.patch}.${row.build}`;
+const TAB_KEYS = ["versioning", "localizations", "documents"] as const;
+const DEFAULT_TAB = "versioning";
 
 export default function AdministrationPageClientsSettings() {
-    const { data, isLoading, error } = useGetVersion();
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [selectedRow, setSelectedRow] = useState<VersionType | null>(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tabParam = searchParams.get("tab");
+    const activeKey = TAB_KEYS.includes(tabParam as (typeof TAB_KEYS)[number])
+        ? (tabParam as string)
+        : DEFAULT_TAB;
 
-    const columns: ColumnsType<VersionType> = [
-        {
-            title: "Версия",
-            key: "version",
-            render: (_, row) => formatVersion(row),
-        },
-        {
-            title: "Major",
-            dataIndex: "major",
-        },
-        {
-            title: "Minor",
-            dataIndex: "minor",
-        },
-        {
-            title: "Patch",
-            dataIndex: "patch",
-        },
-        {
-            title: "Build",
-            dataIndex: "build",
-        },
-        {
-            title: "Force update",
-            dataIndex: "forceUpdate",
-            render: (value: boolean) => (
-                <Tag color={value ? "red" : "default"}>{value ? "Да" : "Нет"}</Tag>
-            ),
-        },
-    ];
-
-    if (isLoading) {
-        return <TableSkeleton />;
-    }
+    const onTabChange = (key: string) => {
+        setSearchParams(
+            (prev) => {
+                prev.set("tab", key);
+                return prev;
+            },
+            { replace: true },
+        );
+    };
 
     return (
-        <>
-            <Card
-                title="Клиентские настройки"
-                extra={<ButtonCreate title="Добавить версию" onClick={() => setIsCreateModalOpen(true)} />}
-            >
-                {error && <p style={{ color: "red" }}>Ошибка загрузки</p>}
-                <Table
-                    rowKey={(row) => row.id ?? formatVersion(row)}
-                    columns={columns}
-                    loading={isLoading}
-                    dataSource={data?.versions ?? []}
-                    pagination={false}
-                    onRow={(record) => ({
-                        onClick: () => {
-                            setSelectedRow(record);
-                            setIsEditModalOpen(true);
-                        },
-                    })}
-                    style={{ cursor: "pointer" }}
-                />
-            </Card>
-            <CreateVersionModal isModalOpen={isCreateModalOpen} setIsModalOpen={setIsCreateModalOpen} />
-            <EditVersionModal
-                isModalOpen={isEditModalOpen}
-                setIsModalOpen={setIsEditModalOpen}
-                data={selectedRow}
+        <div>
+            <Title level={3}>Клиентские настройки</Title>
+            <Tabs
+                activeKey={activeKey}
+                onChange={onTabChange}
+                items={[
+                    {
+                        key: "versioning",
+                        label: "Версионирование",
+                        children: <VersioningTab />,
+                    },
+                    {
+                        key: "documents",
+                        label: "Документы",
+                        children: <DocumentsTab />,
+                    },
+                    {
+                        key: "localizations",
+                        label: "Локализация",
+                        children: <LocalizationsTab />,
+                    },
+                ]}
             />
-        </>
+        </div>
     );
 }

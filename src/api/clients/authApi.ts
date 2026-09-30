@@ -1,23 +1,26 @@
-import type { RequestBodyAntifraud } from "../../types/auth/requestBodyAntifraud";
+import type { BlockType, ResponseBlockedUserType } from "../../types/auth/afsType";
 import { apiClient } from "../axios/apiClient";
 
+const userBlocksUrl = (userId: string, blockType: BlockType, reason: string) => {
+    const params = new URLSearchParams({ blockType, reason });
+    return `/admin-backend/auth/api/v1/internal/users/${userId}/blocks?${params.toString()}`;
+};
+
 export const authApi = {
-    manualBlockUser: async (userId: string, requestBody: RequestBodyAntifraud) => {
-        const response = await apiClient.post(
-            `/admin-backend/auth/api/v1/internal/manual/users/${userId}/blocking`,
-            requestBody
-        );
+    blockUser: async (userId: string, blockType: BlockType, reason: string) => {
+        const response = await apiClient.post(userBlocksUrl(userId, blockType, reason));
         return response.data;
     },
-    manualUnblockUser: async (userId: string, requestBody: RequestBodyAntifraud) => {
-        const response = await apiClient.post(
-            `/admin-backend/auth/api/v1/internal/manual/users/${userId}/blocking/unblock`,
-            requestBody
-        );
+    unblockUser: async (userId: string, blockType: BlockType, reason: string) => {
+        const response = await apiClient.delete(userBlocksUrl(userId, blockType, reason));
         return response.data;
     },
     getStatusUser: async (userId: string) => {
-        const response = await apiClient.get(`/admin-backend/auth/api/v1/internal/users/${userId}/block-status`);
+        const response = await apiClient.get(`/admin-backend/auth/api/v1/internal/users/${userId}/blocking-status`);
+        return response.data;
+    },
+    getBlockedUsers: async (): Promise<ResponseBlockedUserType[]>    => {
+        const response = await apiClient.get(`/admin-backend/auth/api/v1/internal/users/blocks`);
         return response.data;
     }
 }

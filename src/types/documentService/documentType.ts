@@ -15,3 +15,15 @@ export interface DocumentResponseType {
     status: 'ACTIVE' | 'INACTIVE';
     createdAt: string;
 }
+
+export const DOCUMENT_TYPE_LABELS: Record<DocumentRequestType["type"], string> = {
+    OFFER: "Оферта",
+    PERSONAL_DATA_CONSENT: "Согласие на обработку персональных данных",
+    PRIVACY_POLICY: "Политика конфиденциальности",
+    CONFIDENTIALITY_RESPONSIBILITY: "Конфиденциальность и ответственность",
+};
+
+export const DOCUMENT_STATUS_LABELS: Record<DocumentResponseType["status"], string> = {
+    ACTIVE: "Активен",
+    INACTIVE: "Неактивен",
+};
